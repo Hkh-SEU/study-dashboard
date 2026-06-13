@@ -156,6 +156,16 @@ def docsify_anchor_id(title: str) -> str:
     return anchor.strip("-")
 
 
+def problem_section_anchor(target: str, date: str, problem: str | None = None) -> str:
+    stem = Path(target).stem.lower()
+    date_part = docsify_anchor_id(date)
+    if problem is None:
+        return f"{stem}-{date_part}"
+    number_match = re.search(r"\d+", problem)
+    problem_part = number_match.group(0).zfill(2) if number_match else docsify_anchor_id(problem)
+    return f"{stem}-{date_part}-{problem_part}"
+
+
 def document_route_label(document: PublishedDocument) -> str:
     stem = Path(document.target).stem.lower()
     labels = {
@@ -211,9 +221,9 @@ def load_config() -> tuple[SiteConfig, list[DocumentConfig], DeployConfig]:
     deploy_raw = raw.get("deploy", {})
     public_url = str(deploy_raw.get("public_url", "")).strip()
     deploy = DeployConfig(
-        provider=str(deploy_raw.get("provider", "cloudflare_pages")).strip() or "cloudflare_pages",
+        provider=str(deploy_raw.get("provider", "github_pages")).strip() or "github_pages",
         public_url=public_url,
-        root_directory=str(deploy_raw.get("root_directory", "study_tools/study-dashboard")).strip(),
+        root_directory=str(deploy_raw.get("root_directory", "")).strip(),
         output_directory=str(deploy_raw.get("output_directory", output_dir_name)).strip() or output_dir_name,
         git_enabled=bool(deploy_raw.get("git_enabled", False)),
         default_branch=str(deploy_raw.get("default_branch", "main")).strip() or "main",
@@ -360,7 +370,7 @@ def strip_duplicate_title(content: str, title: str) -> str:
 
 
 def build_document_markdown(document: PublishedDocument, published_at: str) -> str:
-    content = strip_duplicate_title(document.content, document.title)
+    content = add_problem_heading_anchors(document, strip_duplicate_title(document.content, document.title))
     return f"""# {document.title}
 
 {document_nav(document.target)}
@@ -369,40 +379,62 @@ def build_document_markdown(document: PublishedDocument, published_at: str) -> s
   <span>更新：{published_at}</span>
 </div>
 
-<details class="publish-details">
-  <summary>发布详情</summary>
-  <div>来源：{html.escape(document.source.as_posix())}</div>
-  <div>源文件最后修改：{document.modified}</div>
-  <div>发布时间：{published_at}</div>
-</details>
-
 ---
 
 {content}"""
 
 
-def extract_problem_sections(document: PublishedDocument) -> list[tuple[str, list[str]]]:
-    content = strip_duplicate_title(document.content, document.title)
+def add_problem_heading_anchors(document: PublishedDocument, content: str) -> str:
     if Path(document.target).stem.lower() not in {"math", "major"}:
-        return []
+        return content
 
-    sections: list[tuple[str, list[str]]] = []
+    lines: list[str] = []
+    current_date: str | None = None
     for line in content.splitlines():
         date_match = re.match(r"^##\s+(.+?)\s*$", line)
         if date_match:
             title = strip_markdown_marks(date_match.group(1))
             if re.search(r"\d{1,2}[-/.]\d{1,2}", title):
-                sections.append((title, []))
+                current_date = title
+                lines.append(f'<span id="{problem_section_anchor(document.target, title)}"></span>')
+            lines.append(line)
+            continue
+
+        problem_match = re.match(r"^###\s+(.+?)\s*$", line)
+        if problem_match and current_date and "错题" in problem_match.group(1):
+            title = strip_markdown_marks(problem_match.group(1))
+            lines.append(f'<span id="{problem_section_anchor(document.target, current_date, title)}"></span>')
+            lines.append(line)
+            continue
+
+        lines.append(line)
+
+    return "\n".join(lines) + ("\n" if content.endswith("\n") else "")
+
+
+def extract_problem_sections(document: PublishedDocument) -> list[tuple[str, str, list[tuple[str, str]]]]:
+    content = strip_duplicate_title(document.content, document.title)
+    if Path(document.target).stem.lower() not in {"math", "major"}:
+        return []
+
+    sections: list[tuple[str, str, list[tuple[str, str]]]] = []
+    for line in content.splitlines():
+        date_match = re.match(r"^##\s+(.+?)\s*$", line)
+        if date_match:
+            title = strip_markdown_marks(date_match.group(1))
+            if re.search(r"\d{1,2}[-/.]\d{1,2}", title):
+                sections.append((title, problem_section_anchor(document.target, title), []))
             continue
 
         problem_match = re.match(r"^###\s+(.+?)\s*$", line)
         if problem_match and "错题" in problem_match.group(1):
             title = strip_markdown_marks(problem_match.group(1))
             if not sections:
-                sections.append(("本页", []))
-            sections[-1][1].append(title)
+                sections.append(("本页", problem_section_anchor(document.target, "本页"), []))
+            date = sections[-1][0]
+            sections[-1][2].append((title, problem_section_anchor(document.target, date, title)))
 
-    return [(date, items) for date, items in sections if items]
+    return [(date, date_anchor, items) for date, date_anchor, items in sections if items]
 
 
 def resolve_asset_path(raw_ref: str, source: Path) -> Path | None:
@@ -522,10 +554,9 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
     for document in ordered_documents:
         route = docsify_route(document.target)
         lines.append(f"- [{document_route_label(document)}]({route})")
-        for date, problems in extract_problem_sections(document):
-            lines.append(f"  - {date}")
-            for problem in problems:
-                anchor = docsify_anchor_id(problem)
+        for date, date_anchor, problems in extract_problem_sections(document):
+            lines.append(f"  - [{date}]({route}?id={date_anchor})")
+            for problem, anchor in problems:
                 lines.append(f"    - [{problem}]({route}?id={anchor})")
     return "\n".join(lines) + "\n"
 
@@ -533,7 +564,8 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
 def build_index(site: SiteConfig) -> str:
     title = html.escape(site.title)
     description = html.escape(site.description)
-    js_title = json.dumps(site.title, ensure_ascii=False)
+    sidebar_title = "复习目录"
+    js_title = json.dumps(sidebar_title, ensure_ascii=False)
     return f"""<!doctype html>
 <html lang="zh-CN">
   <head>
@@ -600,6 +632,7 @@ body {
 
 .app-name-link {
   color: #1d7a68;
+  font-size: 1.18rem;
   font-weight: 800;
 }
 
@@ -608,9 +641,33 @@ body {
   background: #fff;
 }
 
+.sidebar ul {
+  padding-left: 18px;
+}
+
+.sidebar ul li {
+  margin: 2px 0;
+}
+
 .sidebar ul li a {
   color: #39413b;
-  line-height: 1.65;
+  line-height: 1.55;
+  text-decoration: none;
+}
+
+.sidebar > ul > li > a {
+  color: #1d342f;
+  font-weight: 700;
+}
+
+.sidebar ul li ul li > a {
+  color: #1d564c;
+  font-weight: 650;
+}
+
+.sidebar ul li ul li ul li > a {
+  color: #39413b;
+  font-weight: 500;
 }
 
 .sidebar ul li.active > a {
@@ -747,21 +804,21 @@ body {
 .markdown-section li input[type="checkbox"] {
   width: 1.05em;
   height: 1.05em;
-  margin: 0 0.38em 0.18em -1.15em;
+  margin: 0 0.42em 0.16em -1.15em;
   vertical-align: middle;
   accent-color: #1d7a68;
 }
 
 .markdown-section li:has(input[type="checkbox"]) {
   list-style: none;
-  margin: 0.14rem 0 0.14rem 0.15rem;
-  padding: 0.08rem 0.24rem;
+  margin: 0.12rem 0 0.12rem 0.12rem;
+  padding: 0.04rem 0.16rem;
   border-radius: 6px;
 }
 
 .markdown-section li:has(input[type="checkbox"]:checked) {
   color: #5f6963;
-  background: #f1f5ef;
+  background: transparent;
 }
 
 .publish-meta {
@@ -779,23 +836,6 @@ body {
   padding: 3px 8px;
   background: #f2f6f3;
   line-height: 1.45;
-}
-
-.publish-details {
-  margin: -8px 0 18px;
-  color: var(--muted);
-  font-size: 0.78rem;
-}
-
-.publish-details summary {
-  cursor: pointer;
-  width: fit-content;
-  color: #5e6a63;
-}
-
-.publish-details div {
-  margin-top: 4px;
-  overflow-wrap: anywhere;
 }
 
 .doc-nav {
@@ -933,7 +973,7 @@ body {
   }
 
   .markdown-section {
-    padding: 16px 14px 96px;
+    padding: 16px 14px 82px;
     font-size: 16px;
     line-height: 1.76;
   }
@@ -1011,7 +1051,7 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 4px 0 12px;
+    margin: 2px 0 12px;
     font-size: 0.78rem;
   }
 
@@ -1024,49 +1064,46 @@ body {
     overflow-wrap: anywhere;
   }
 
-  .publish-details {
-    margin: -8px 0 14px;
-    font-size: 0.74rem;
-  }
-
   .mobile-bottom-nav {
     position: fixed;
-    right: 12px;
-    bottom: max(12px, env(safe-area-inset-bottom));
-    left: 12px;
-    z-index: 40;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    left: 72px;
+    z-index: 35;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 2px;
+    gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
-    border-radius: 14px;
-    padding: 5px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 8px 24px rgba(24, 47, 40, 0.12);
+    border-radius: 12px;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
     backdrop-filter: blur(8px);
   }
 
   .mobile-bottom-nav-link {
     position: relative;
-    border-radius: 10px;
-    padding: 7px 4px 8px;
+    min-height: 34px;
+    border-radius: 9px;
+    padding: 5px 2px 6px;
     color: #1d564c;
-    font-size: 0.78rem;
-    font-weight: 800;
+    font-size: 0.72rem;
+    font-weight: 750;
+    line-height: 1.15;
     text-align: center;
     text-decoration: none;
   }
 
   .mobile-bottom-nav-link.active {
     color: #1d7a68;
-    background: #edf7f4;
+    background: #f1f8f5;
   }
 
   .mobile-bottom-nav-link.active::after {
     position: absolute;
-    right: 28%;
-    bottom: 3px;
-    left: 28%;
+    right: 30%;
+    bottom: 2px;
+    left: 30%;
     height: 2px;
     border-radius: 999px;
     background: #1d7a68;

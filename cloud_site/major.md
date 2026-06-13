@@ -3,20 +3,15 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/">首页</a><a class="doc-nav-link" href="#/plan">今日计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link active" href="#/major">专业课</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-13 16:59:20</span>
+  <span>更新：2026-06-13 17:31:56</span>
 </div>
-
-<details class="publish-details">
-  <summary>发布详情</summary>
-  <div>来源：C:/Desktop/错题本—专业课.md</div>
-  <div>源文件最后修改：2026-06-12 18:14:40</div>
-  <div>发布时间：2026-06-13 16:59:20</div>
-</details>
 
 ---
 
+<span id="major-06-04"></span>
 ## 06-04
 
+<span id="major-06-04-01"></span>
 ### 错题 01
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2001.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2001.png" alt="题目截图"></a>
@@ -32,6 +27,7 @@
 - [ ] Easy：熟练掌握
 
 
+<span id="major-06-04-02"></span>
 ### 错题 02
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2002.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2002.png" alt="题目截图"></a>
@@ -46,6 +42,7 @@
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-04-03"></span>
 ### 错题 03
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2003.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2003.png" alt="题目截图"></a>
@@ -60,8 +57,10 @@
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-05"></span>
 ## 06-05
 
+<span id="major-06-05-01"></span>
 ### 错题 01
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2001-2.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2001-2.png" alt="题目截图"></a>
@@ -76,6 +75,7 @@
 - [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-05-02"></span>
 ### 错题 02
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2002-2.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2002-2.png" alt="题目截图"></a>
@@ -90,6 +90,7 @@
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-05-03"></span>
 ### 错题 03
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2003-2.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2003-2.png" alt="题目截图"></a>
@@ -104,6 +105,7 @@
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-05-04"></span>
 ### 错题 04
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2004.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2004.png" alt="题目截图"></a>
@@ -118,8 +120,10 @@
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-08"></span>
 ## 06-08
 
+<span id="major-06-08-01"></span>
 ### 错题 01
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2001-3.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2001-3.png" alt="题目截图"></a>
@@ -134,6 +138,7 @@
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
+<span id="major-06-08-02"></span>
 ### 错题 02
 
 <a class="image-link" href="assets/media/major/%E9%94%99%E9%A2%98%2002-3.png" target="_blank" rel="noopener"><img src="assets/media/major/%E9%94%99%E9%A2%98%2002-3.png" alt="题目截图"></a>
