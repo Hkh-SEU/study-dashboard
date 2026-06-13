@@ -39,9 +39,18 @@ class SiteConfig:
 
 
 @dataclass(frozen=True)
+class BackupUrl:
+    name: str
+    url: str
+    enabled: bool
+
+
+@dataclass(frozen=True)
 class DeployConfig:
     provider: str
+    primary_url: str
     public_url: str
+    backup_urls: list[BackupUrl]
     root_directory: str
     output_directory: str
     git_enabled: bool
@@ -88,6 +97,46 @@ def is_external_link(value: str) -> bool:
         or lowered.startswith("#")
         or lowered.startswith("mailto:")
     )
+
+
+def is_http_url(value: str) -> bool:
+    lowered = value.strip().lower()
+    return lowered.startswith("https://") or lowered.startswith("http://")
+
+
+def primary_public_url(deploy: DeployConfig) -> str:
+    return deploy.primary_url or deploy.public_url
+
+
+def enabled_backup_urls(deploy: DeployConfig) -> list[BackupUrl]:
+    return [item for item in deploy.backup_urls if item.enabled and item.url]
+
+
+def all_access_urls(deploy: DeployConfig) -> list[tuple[str, str]]:
+    urls: list[tuple[str, str]] = []
+    primary = primary_public_url(deploy)
+    if primary:
+        urls.append(("主站", primary))
+    urls.extend((item.name, item.url) for item in enabled_backup_urls(deploy))
+    return urls
+
+
+def print_access_entries(deploy: DeployConfig) -> None:
+    primary = primary_public_url(deploy)
+    print("")
+    print("Access entries:")
+    if primary:
+        print(f"  Primary: {primary}")
+    else:
+        print("  Primary: not configured")
+
+    backups = enabled_backup_urls(deploy)
+    if backups:
+        print("  Backups:")
+        for item in backups:
+            print(f"    - {item.name}: {item.url}")
+    else:
+        print("  Backups: not configured")
 
 
 def markdown_url(path: str) -> str:
@@ -184,6 +233,23 @@ def load_raw_config() -> dict[str, Any]:
     return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
 
+def load_backup_urls(raw_value: Any) -> list[BackupUrl]:
+    if raw_value is None:
+        return []
+    if not isinstance(raw_value, list):
+        raise ValueError("deploy.backup_urls must be a list")
+
+    backup_urls: list[BackupUrl] = []
+    for index, item in enumerate(raw_value, start=1):
+        if not isinstance(item, dict):
+            raise ValueError(f"deploy.backup_urls #{index} must be an object")
+        name = str(item.get("name", f"Backup {index}")).strip() or f"Backup {index}"
+        url = str(item.get("url", "")).strip()
+        enabled = bool(item.get("enabled", False))
+        backup_urls.append(BackupUrl(name=name, url=url, enabled=enabled))
+    return backup_urls
+
+
 def load_config() -> tuple[SiteConfig, list[DocumentConfig], DeployConfig]:
     raw = load_raw_config()
     site_raw = raw.get("site", {})
@@ -195,9 +261,13 @@ def load_config() -> tuple[SiteConfig, list[DocumentConfig], DeployConfig]:
     )
 
     deploy_raw = raw.get("deploy", {})
+    public_url = str(deploy_raw.get("public_url", "")).strip()
+    primary_url = str(deploy_raw.get("primary_url", "")).strip() or public_url
     deploy = DeployConfig(
         provider=str(deploy_raw.get("provider", "cloudflare_pages")).strip() or "cloudflare_pages",
-        public_url=str(deploy_raw.get("public_url", "")).strip(),
+        primary_url=primary_url,
+        public_url=public_url,
+        backup_urls=load_backup_urls(deploy_raw.get("backup_urls", [])),
         root_directory=str(deploy_raw.get("root_directory", "study_tools/study-dashboard")).strip(),
         output_directory=str(deploy_raw.get("output_directory", output_dir_name)).strip() or output_dir_name,
         git_enabled=bool(deploy_raw.get("git_enabled", False)),
@@ -1194,6 +1264,16 @@ def check_deploy_files(site: SiteConfig, documents: list[PublishedDocument], dep
 
     errors.extend(direct_markdown_link_errors(output))
 
+    primary = primary_public_url(deploy)
+    if primary and not is_http_url(primary):
+        errors.append(f"Primary URL should start with http:// or https://: {primary}")
+
+    for backup in deploy.backup_urls:
+        if backup.url and not is_http_url(backup.url):
+            errors.append(f"Backup URL should start with http:// or https://: {backup.name}: {backup.url}")
+        if backup.enabled and not backup.url:
+            warnings.append(f"Backup entry is enabled but has no URL: {backup.name}")
+
     files = [path for path in output.rglob("*") if path.is_file()]
     total_size = sum(path.stat().st_size for path in files)
 
@@ -1204,6 +1284,7 @@ def check_deploy_files(site: SiteConfig, documents: list[PublishedDocument], dep
     print(f"Root directory: {deploy.root_directory or '(repository root)'}")
     print(f"Files: {len(files)}")
     print(f"Total size: {format_size(total_size)}")
+    print_access_entries(deploy)
     print("")
     print("Privacy reminder: cloud_site contains your study notes, plan, screenshots, and copied media.")
     print("If the repository or hosted site is public, these materials may become public.")
@@ -1300,14 +1381,41 @@ def doctor() -> int:
             else:
                 errors.append(f"Missing docsify asset: {path.relative_to(PROJECT_DIR).as_posix()}")
 
-    print("[6/6] Public URL and routes")
+    print("[6/6] Public URLs and routes")
     if deploy is None:
-        errors.append("Cannot check deploy.public_url because config failed.")
+        errors.append("Cannot check deploy URLs because config failed.")
     else:
-        if deploy.public_url:
-            print(f"      Public URL: {deploy.public_url}")
+        primary = primary_public_url(deploy)
+        if primary:
+            print(f"      Primary URL: {primary}")
+            if not is_http_url(primary):
+                errors.append(f"deploy.primary_url should start with http:// or https://: {primary}")
         else:
-            warnings.append("deploy.public_url is empty. Fill it after Cloudflare Pages deployment.")
+            warnings.append("deploy.primary_url is empty. Fill it after Cloudflare Pages deployment.")
+
+        if deploy.public_url:
+            print("      Legacy public_url: configured")
+        else:
+            print("      Legacy public_url: empty")
+
+        if deploy.backup_urls:
+            enabled_count = 0
+            for backup in deploy.backup_urls:
+                state = "enabled" if backup.enabled else "disabled"
+                value = backup.url or "not configured"
+                print(f"      Backup {backup.name}: {state}, {value}")
+                if backup.url and not is_http_url(backup.url):
+                    errors.append(f"deploy.backup_urls {backup.name} should start with http:// or https://.")
+                if backup.enabled and backup.url:
+                    enabled_count += 1
+            if enabled_count == 0:
+                warnings.append("No backup public entry is enabled. Add GitHub Pages or Vercel if pages.dev is unstable.")
+        else:
+            warnings.append("deploy.backup_urls is empty. Add GitHub Pages or Vercel if pages.dev is unstable.")
+
+        if primary and not enabled_backup_urls(deploy):
+            warnings.append("当前只有一个公网入口。如果 pages.dev 在某些网络下不稳定，建议增加 GitHub Pages 或 Vercel 备用入口。")
+
         if site is not None:
             route_errors = direct_markdown_link_errors(site.output_dir)
             errors.extend(route_errors)
@@ -1349,6 +1457,7 @@ def print_next_steps(site: SiteConfig, deploy: DeployConfig) -> None:
     output = site.output_dir.relative_to(PROJECT_DIR).as_posix()
     print("")
     print("Next steps:")
+    print_access_entries(deploy)
     print("  Local preview:")
     print("    D:\\Python3_13\\python.exe publish.py --preview")
     print("  Cloud-ready check:")
@@ -1363,9 +1472,12 @@ def print_next_steps(site: SiteConfig, deploy: DeployConfig) -> None:
     print(f"    Build output directory: {deploy.output_directory}")
     print("  Privacy:")
     print("    Public repositories or public Pages sites are not suitable for private study notes.")
-    if not deploy.public_url:
+    if not primary_public_url(deploy):
         print("  Public URL:")
-        print("    部署完成后，把网址填入 config.json 的 deploy.public_url，就可以用 --open-public 打开。")
+        print("    部署完成后，把主站网址填入 config.json 的 deploy.primary_url，就可以用 --open-public 打开。")
+    if not enabled_backup_urls(deploy):
+        print("  Backup URLs:")
+        print("    如果 pages.dev 不稳定，可以把 GitHub Pages 或 Vercel 网址填入 deploy.backup_urls。")
 
 
 def print_cloud_instructions(deploy: DeployConfig) -> None:
@@ -1378,13 +1490,14 @@ def print_cloud_instructions(deploy: DeployConfig) -> None:
     print(f"  3. Root directory: {deploy.root_directory or '(repository root)'}")
     print("  4. Build command: leave empty")
     print(f"  5. Build output directory: {deploy.output_directory}")
-    print("  6. After deployment, copy the pages.dev URL into config.json deploy.public_url.")
+    print("  6. After deployment, copy the pages.dev URL into config.json deploy.primary_url.")
     print("")
     print("GitHub Pages:")
     print("  Use only if the content can be public, or if you have a suitable private Pages setup.")
     print("")
     print("Vercel:")
     print(f"  Connect the repository and set output directory to {deploy.output_directory}.")
+    print("  After deployment, copy the Vercel URL into config.json deploy.backup_urls.")
 
 
 def confirm_git_publish(message: str, yes: bool) -> bool:
@@ -1415,12 +1528,39 @@ def run_git_publish(output_dir: Path, message: str, yes: bool) -> None:
 
 def open_public_url() -> int:
     _, _, deploy = load_config()
-    if not deploy.public_url:
-        print("deploy.public_url is empty.")
-        print("部署完成后，把网址填入 config.json 的 deploy.public_url，就可以用 --open-public 打开。")
+    url = primary_public_url(deploy)
+    if not url:
+        print("deploy.primary_url is empty.")
+        print("部署完成后，把主站网址填入 config.json 的 deploy.primary_url，就可以用 --open-public 打开。")
         return 1
-    print(f"Opening public URL: {deploy.public_url}")
-    webbrowser.open(deploy.public_url)
+    print(f"Opening primary URL: {url}")
+    webbrowser.open(url)
+    return 0
+
+
+def open_backup_url() -> int:
+    _, _, deploy = load_config()
+    backups = enabled_backup_urls(deploy)
+    if not backups:
+        print("No enabled backup URL is configured.")
+        print("部署 GitHub Pages 或 Vercel 后，把网址填入 config.json 的 deploy.backup_urls。")
+        return 1
+    backup = backups[0]
+    print(f"Opening backup URL: {backup.name}: {backup.url}")
+    webbrowser.open(backup.url)
+    return 0
+
+
+def open_all_urls() -> int:
+    _, _, deploy = load_config()
+    urls = all_access_urls(deploy)
+    if not urls:
+        print("No public URL is configured.")
+        print("请先填写 deploy.primary_url，或启用 deploy.backup_urls 中的备用网址。")
+        return 1
+    for name, url in urls:
+        print(f"Opening {name}: {url}")
+        webbrowser.open(url)
     return 0
 
 
@@ -1456,7 +1596,9 @@ def main() -> int:
     parser.add_argument("--deploy-check", action="store_true", help="Check whether cloud_site is ready for cloud deployment.")
     parser.add_argument("--doctor", action="store_true", help="Run local diagnostics for daily publishing.")
     parser.add_argument("--cloud-ready", action="store_true", help="Generate cloud_site, run deploy-check, and print cloud deployment steps.")
-    parser.add_argument("--open-public", action="store_true", help="Open deploy.public_url from config.json.")
+    parser.add_argument("--open-public", action="store_true", help="Open deploy.primary_url from config.json.")
+    parser.add_argument("--open-backup", action="store_true", help="Open the first enabled backup URL from config.json.")
+    parser.add_argument("--open-all", action="store_true", help="Open the primary URL and all enabled backup URLs from config.json.")
     parser.add_argument("--git", action="store_true", help="Run git add/commit/push after generation.")
     parser.add_argument("--message", default="Update study dashboard", help="Commit message used with --git.")
     parser.add_argument("--yes", action="store_true", help="Skip --git confirmation.")
@@ -1466,6 +1608,12 @@ def main() -> int:
     try:
         if args.open_public:
             return open_public_url()
+
+        if args.open_backup:
+            return open_backup_url()
+
+        if args.open_all:
+            return open_all_urls()
 
         if args.doctor:
             return doctor()

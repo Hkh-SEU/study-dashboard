@@ -38,6 +38,22 @@
 
 如果手机和平板要在不同网络下访问，需要把 `cloud_site` 部署到公网静态托管平台，例如 Cloudflare Pages、GitHub Pages 或 Vercel。
 
+## 多入口访问
+
+建议把访问方式设计成“主站 + 备用站”：
+
+- Cloudflare Pages：主站，当前用于日常访问。
+- GitHub Pages：备用站，适合内容可以公开的情况。
+- Vercel：备用站，和 Cloudflare 是不同访问链路。
+
+为什么需要多入口：
+
+- `pages.dev` 在某些网络环境下可能不稳定。
+- 项目文件没坏时，打不开网址也可能是网络、DNS 或 CDN 链路问题。
+- 准备 GitHub Pages 或 Vercel 备用入口，可以在主站打不开时继续复习。
+
+部署成功后，把备用网址填到 `config.json` 的 `deploy.backup_urls` 中。不要把 token、账号或密码写进配置文件。
+
 ## 每天怎么用
 
 1. 修改桌面 Markdown 文件：
@@ -64,13 +80,15 @@ Update study notes 2026-06-13 14:20
 
 6. 点击 `Push origin`。
 
-7. 等 Cloudflare Pages 自动部署，通常 1-2 分钟。
+7. 等云平台自动部署，通常 1-2 分钟。
 
-8. 手机刷新：
+8. 手机优先刷新主站：
 
 ```text
 https://study-dashboard-pages.pages.dev
 ```
+
+如果主站打不开，再打开你配置好的 GitHub Pages 或 Vercel 备用站。
 
 如果手机看到旧内容，先强制刷新或等一分钟。  
 如果卡片打开后是 Markdown 原文，通常说明 GitHub 或 Cloudflare 还没有部署最新版本。  
@@ -128,7 +146,19 @@ D:\Python3_13\python.exe publish.py --cloud-ready
 D:\Python3_13\python.exe publish.py --open-public
 ```
 
-当前 `deploy.public_url` 已填写为 Cloudflare Pages 地址；如果以后换平台或绑定域名，再改成新的网址。
+打开第一个已启用的备用网址：
+
+```powershell
+D:\Python3_13\python.exe publish.py --open-backup
+```
+
+打开所有已配置的网址：
+
+```powershell
+D:\Python3_13\python.exe publish.py --open-all
+```
+
+当前 `deploy.primary_url` 已填写为 Cloudflare Pages 地址；如果以后换平台或绑定域名，再改成新的网址。
 
 带确认的 git 发布：
 
@@ -144,7 +174,20 @@ D:\Python3_13\python.exe publish.py --cloud-ready --git --message "Update study 
 {
   "deploy": {
     "provider": "cloudflare_pages",
+    "primary_url": "https://study-dashboard-pages.pages.dev",
     "public_url": "https://study-dashboard-pages.pages.dev",
+    "backup_urls": [
+      {
+        "name": "GitHub Pages",
+        "url": "",
+        "enabled": false
+      },
+      {
+        "name": "Vercel",
+        "url": "",
+        "enabled": false
+      }
+    ],
     "root_directory": "",
     "output_directory": "cloud_site",
     "git_enabled": false,
@@ -155,7 +198,9 @@ D:\Python3_13\python.exe publish.py --cloud-ready --git --message "Update study 
 
 说明：
 
-- `public_url`：部署成功后的真实网址，例如 `https://study-dashboard-pages.pages.dev`
+- `primary_url`：主站网址，例如 `https://study-dashboard-pages.pages.dev`
+- `public_url`：旧字段，保留兼容；如果 `primary_url` 为空，脚本会 fallback 到它
+- `backup_urls`：备用站列表。部署 GitHub Pages 或 Vercel 后，把网址填入 `url`，再把 `enabled` 改成 `true`
 - `root_directory`：项目在 GitHub 仓库中的目录；如果仓库根目录就是 `study-dashboard`，保持空字符串
 - `output_directory`：云平台要发布的目录，保持 `cloud_site`
 - 不要在配置中写 token、账号或密码
@@ -177,7 +222,7 @@ Build output directory: cloud_site
 部署完成后，Cloudflare 会给出 `pages.dev` 网址。把它填入 `config.json`：
 
 ```json
-"public_url": "https://你的项目名.pages.dev"
+"primary_url": "https://你的项目名.pages.dev"
 ```
 
 之后可以运行：
@@ -190,12 +235,32 @@ D:\Python3_13\python.exe publish.py --open-public
 
 GitHub Pages 适合公开内容。它可以托管 `cloud_site`，但如果错题本、计划书或截图包含隐私信息，不建议用公开 GitHub Pages。
 
+如果你把 GitHub Pages 作为备用站，部署成功后把网址填到：
+
+```json
+{
+  "name": "GitHub Pages",
+  "url": "https://你的用户名.github.io/study-dashboard/",
+  "enabled": true
+}
+```
+
 ## Vercel
 
 Vercel 也可以托管静态站点。连接 GitHub 仓库后，将输出目录设置为：
 
 ```text
 cloud_site
+```
+
+如果你把 Vercel 作为备用站，部署成功后把网址填到：
+
+```json
+{
+  "name": "Vercel",
+  "url": "https://你的项目名.vercel.app",
+  "enabled": true
+}
 ```
 
 ## 隐私提醒

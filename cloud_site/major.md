@@ -3,14 +3,14 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/">首页</a><a class="doc-nav-link" href="#/plan">今日计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link active" href="#/major">专业课</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-13 14:53:04</span>
+  <span>更新：2026-06-13 15:28:59</span>
 </div>
 
 <details class="publish-details">
   <summary>发布详情</summary>
   <div>来源：C:/Desktop/错题本—专业课.md</div>
   <div>源文件最后修改：2026-06-12 18:14:40</div>
-  <div>发布时间：2026-06-13 14:53:04</div>
+  <div>发布时间：2026-06-13 15:28:59</div>
 </details>
 
 ---
