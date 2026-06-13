@@ -1,0 +1,43 @@
+{
+  "site": {
+    "title": "学习文件看板",
+    "description": "数学错题、专业课错题和复习计划",
+    "output_dir": "cloud_site"
+  },
+  "documents": [
+    {
+      "id": "math",
+      "title": "数学错题本",
+      "source": "C:/Desktop/错题本—数学.md",
+      "target": "math.md"
+    },
+    {
+      "id": "major",
+      "title": "专业课错题本",
+      "source": "C:/Desktop/错题本—专业课.md",
+      "target": "major.md"
+    },
+    {
+      "id": "plan",
+      "title": "今日复习计划",
+      "source": "C:/Desktop/今日复习计划.md",
+      "target": "plan.md"
+    }
+  ],
+  "scan": {
+    "enabled": false,
+    "directory": "C:/Desktop",
+    "patterns": [
+      "*.md"
+    ],
+    "exclude": []
+  },
+  "deploy": {
+    "provider": "cloudflare_pages",
+    "public_url": "",
+    "root_directory": "study_tools/study-dashboard",
+    "output_directory": "cloud_site",
+    "git_enabled": false,
+    "default_branch": "main"
+  }
+}

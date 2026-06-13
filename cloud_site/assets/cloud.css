@@ -1,0 +1,202 @@
+:root {
+  --theme-color: #1d7a68;
+  --content-max-width: 920px;
+}
+
+body {
+  color: #20241f;
+  background: #f7f8f5;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.app-name-link {
+  color: #1d7a68;
+  font-weight: 800;
+}
+
+.sidebar {
+  border-right: 1px solid #dfe4da;
+  background: #fff;
+}
+
+.sidebar ul li a {
+  color: #39413b;
+  line-height: 1.65;
+}
+
+.sidebar ul li.active > a {
+  color: #1d7a68;
+  border-right-color: #1d7a68;
+  font-weight: 700;
+}
+
+.content {
+  padding-top: 12px;
+}
+
+.markdown-section {
+  max-width: var(--content-max-width);
+  padding: 28px 28px 56px;
+  line-height: 1.72;
+}
+
+.markdown-section h1,
+.markdown-section h2,
+.markdown-section h3,
+.markdown-section h4 {
+  color: #17211d;
+  letter-spacing: 0;
+}
+
+.markdown-section h1 {
+  font-size: 1.86rem;
+}
+
+.markdown-section h2 {
+  border-bottom: 1px solid #dfe4da;
+  padding-bottom: 0.32rem;
+  font-size: 1.45rem;
+}
+
+.markdown-section a {
+  color: #1d7a68;
+}
+
+.markdown-section blockquote {
+  border-left: 4px solid #1d7a68;
+  color: #39413b;
+  background: #e8f4f1;
+}
+
+.markdown-section code {
+  border-radius: 4px;
+  color: #20362f;
+  background: #eef2ec;
+}
+
+.markdown-section pre {
+  border-radius: 8px;
+  background: #eef2ec;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.markdown-section table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.markdown-section img {
+  max-width: 100%;
+  border: 1px solid #dfe4da;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.publish-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0 18px;
+  color: #4e5b55;
+  font-size: 0.9rem;
+}
+
+.publish-meta span {
+  border: 1px solid #dfe4da;
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: #f2f6f3;
+}
+
+.markdown-section th {
+  background: #f2f5ef;
+}
+
+.markdown-section tr {
+  border-top: 1px solid #dfe4da;
+}
+
+.markdown-section td,
+.markdown-section th {
+  border: 1px solid #dfe4da;
+  padding: 8px 10px;
+}
+
+.search {
+  border-bottom: 1px solid #dfe4da;
+}
+
+.search input {
+  border: 1px solid #dfe4da;
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+.study-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 20px 0 24px;
+}
+
+.study-card {
+  display: block;
+  border: 1px solid #dfe4da;
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #20241f;
+  background: #fff;
+  text-decoration: none;
+}
+
+.study-card strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #1d7a68;
+  font-size: 1rem;
+}
+
+.study-card span {
+  display: block;
+  color: #6b7268;
+  font-size: 0.88rem;
+}
+
+@media (max-width: 768px) {
+  .markdown-section {
+    padding: 18px 14px 40px;
+  }
+
+  .markdown-section h1 {
+    font-size: 1.58rem;
+  }
+
+  .markdown-section h2 {
+    font-size: 1.28rem;
+  }
+
+  .study-card-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .study-card {
+    padding: 12px;
+  }
+
+  .publish-meta {
+    display: block;
+  }
+
+  .publish-meta span {
+    display: block;
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+  }
+}
