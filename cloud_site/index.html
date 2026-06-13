@@ -61,13 +61,13 @@
       }
       function readOpenDates() {
         try {
-          return JSON.parse(sessionStorage.getItem("study-dashboard-open-dates") || "[]");
+          return JSON.parse(sessionStorage.getItem("study-dashboard-drawer-open-dates") || "[]");
         } catch (error) {
           return [];
         }
       }
       function writeOpenDates(dates) {
-        sessionStorage.setItem("study-dashboard-open-dates", JSON.stringify(Array.from(new Set(dates))));
+        sessionStorage.setItem("study-dashboard-drawer-open-dates", JSON.stringify(Array.from(new Set(dates))));
       }
       function rememberOpenDate(anchor) {
         if (!anchor) {

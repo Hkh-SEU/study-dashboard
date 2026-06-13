@@ -682,6 +682,10 @@ body {
     margin: 0 0 8px 34px;
   }
 
+  .study-drawer-problems[hidden] {
+    display: none !important;
+  }
+
   .study-drawer-problem-link {
     display: inline-flex;
     min-height: 30px;

@@ -687,13 +687,13 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       }}
       function readOpenDates() {{
         try {{
-          return JSON.parse(sessionStorage.getItem("study-dashboard-open-dates") || "[]");
+          return JSON.parse(sessionStorage.getItem("study-dashboard-drawer-open-dates") || "[]");
         }} catch (error) {{
           return [];
         }}
       }}
       function writeOpenDates(dates) {{
-        sessionStorage.setItem("study-dashboard-open-dates", JSON.stringify(Array.from(new Set(dates))));
+        sessionStorage.setItem("study-dashboard-drawer-open-dates", JSON.stringify(Array.from(new Set(dates))));
       }}
       function rememberOpenDate(anchor) {{
         if (!anchor) {{
@@ -1804,6 +1804,10 @@ body {
     display: grid;
     gap: 2px;
     margin: 0 0 8px 34px;
+  }
+
+  .study-drawer-problems[hidden] {
+    display: none !important;
   }
 
   .study-drawer-problem-link {
