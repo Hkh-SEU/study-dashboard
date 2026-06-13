@@ -61,7 +61,7 @@ body {
 
 .sidebar ul li.active > a {
   color: #1d7a68;
-  border-right-color: #1d7a68;
+  border-right: 0 !important;
   font-weight: 700;
 }
 
@@ -302,11 +302,16 @@ body {
 
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 6px;
+  margin-top: 4px !important;
 }
 
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-  margin-top: 6px;
+  margin-top: 4px !important;
+}
+
+.markdown-section .publish-meta + .section-anchor {
+  margin: 0;
+  padding: 0;
 }
 
 .doc-nav {
@@ -463,7 +468,12 @@ body {
   .markdown-section .publish-meta + h2,
   .markdown-section .publish-meta + .section-anchor + h2,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-    margin-top: 0.42rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .markdown-section .publish-meta + .section-anchor {
+    margin: 0;
+    padding: 0;
   }
 
   .markdown-section h3 {

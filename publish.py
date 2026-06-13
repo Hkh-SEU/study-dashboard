@@ -638,6 +638,31 @@ def build_index(site: SiteConfig) -> str:
         var match = (anchor || "").match(/^(math|major)-(\\d{{1,2}}[-/.]\\d{{1,2}})/);
         return match ? match[1] + "-" + match[2].replace(/[/.]/g, "-") : "";
       }}
+      function readOpenDates() {{
+        try {{
+          return JSON.parse(sessionStorage.getItem("study-dashboard-open-dates") || "[]");
+        }} catch (error) {{
+          return [];
+        }}
+      }}
+      function writeOpenDates(dates) {{
+        sessionStorage.setItem("study-dashboard-open-dates", JSON.stringify(Array.from(new Set(dates))));
+      }}
+      function rememberOpenDate(anchor) {{
+        if (!anchor) {{
+          return;
+        }}
+        var dates = readOpenDates();
+        if (dates.indexOf(anchor) === -1) {{
+          dates.push(anchor);
+          writeOpenDates(dates);
+        }}
+      }}
+      function forgetOpenDate(anchor) {{
+        writeOpenDates(readOpenDates().filter(function (item) {{
+          return item !== anchor;
+        }}));
+      }}
       function setPendingAnchor(anchor) {{
         if (!anchor) {{
           return;
@@ -647,7 +672,7 @@ def build_index(site: SiteConfig) -> str:
         sessionStorage.setItem("study-dashboard-current-anchor", anchor);
         var dateAnchor = dateAnchorFromAnchor(anchor);
         if (dateAnchor) {{
-          sessionStorage.setItem("study-dashboard-open-date", dateAnchor);
+          rememberOpenDate(dateAnchor);
         }}
       }}
       function readPendingAnchor() {{
@@ -748,8 +773,12 @@ def build_index(site: SiteConfig) -> str:
         var targetId = readPendingAnchor() ||
           sessionStorage.getItem("study-dashboard-current-anchor") ||
           targetIdFromHash();
-        var openDate = sessionStorage.getItem("study-dashboard-open-date") ||
-          dateAnchorFromAnchor(targetId);
+        var openDates = readOpenDates();
+        var currentDate = dateAnchorFromAnchor(targetId);
+        if (currentDate && openDates.indexOf(currentDate) === -1) {{
+          openDates.push(currentDate);
+          writeOpenDates(openDates);
+        }}
         sidebar.querySelectorAll("li").forEach(function (item) {{
           var childUl = getDirectChildUl(item);
           var link = getDirectChildLink(item);
@@ -767,7 +796,7 @@ def build_index(site: SiteConfig) -> str:
                 toggle.setAttribute("aria-expanded", "false");
               }}
               if (
-                link.dataset.anchor === openDate ||
+                openDates.indexOf(link.dataset.anchor) !== -1 ||
                 targetId === link.dataset.anchor ||
                 targetId.indexOf(link.dataset.anchor + "-") === 0
               ) {{
@@ -799,6 +828,8 @@ def build_index(site: SiteConfig) -> str:
         }}
         event.preventDefault();
         event.stopPropagation();
+        event.stopImmediatePropagation();
+        keepMobileSidebarOpen();
         var item = toggle.closest("li");
         if (!item) {{
           return;
@@ -806,20 +837,21 @@ def build_index(site: SiteConfig) -> str:
         item.classList.toggle("nav-open");
         var anchor = toggle.dataset.toggleAnchor || "";
         if (item.classList.contains("nav-open")) {{
-          sessionStorage.setItem("study-dashboard-open-date", anchor);
+          rememberOpenDate(anchor);
           toggle.setAttribute("aria-expanded", "true");
         }} else {{
-          if (sessionStorage.getItem("study-dashboard-open-date") === anchor) {{
-            sessionStorage.removeItem("study-dashboard-open-date");
-          }}
+          forgetOpenDate(anchor);
           toggle.setAttribute("aria-expanded", "false");
         }}
-      }});
+      }}, true);
       document.addEventListener("click", function (event) {{
         var link = event.target.closest(".sidebar a[data-anchor]");
         if (!link) {{
           return;
         }}
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
         var anchor = link.dataset.anchor || "";
         setPendingAnchor(anchor);
         keepMobileSidebarOpen();
@@ -827,27 +859,41 @@ def build_index(site: SiteConfig) -> str:
         if (item && link.classList.contains("toc-date-link")) {{
           item.classList.add("nav-open");
         }}
-        if (routeFromHref(link.getAttribute("href")) === currentRoute()) {{
-          event.preventDefault();
+        var route = routeFromHref(link.getAttribute("href"));
+        if (route === currentRoute()) {{
           window.setTimeout(scrollPendingAnchor, 0);
+        }} else {{
+          window.location.hash = route.replace(/^#/, "");
         }}
-      }});
+      }}, true);
       document.addEventListener("click", function (event) {{
-        var navLink = event.target.closest(".mobile-bottom-nav-link, .sidebar .toc-subject-link");
+        var navLink = event.target.closest(".sidebar .toc-subject-link");
+        if (!navLink) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        sessionStorage.removeItem("study-dashboard-anchor");
+        window.studyPendingAnchor = "";
+        keepMobileSidebarOpen();
+        var route = routeFromHref(navLink.getAttribute("href"));
+        if (route === currentRoute()) {{
+          window.setTimeout(function () {{
+            window.scrollTo({{ top: 0, behavior: "auto" }});
+          }}, 0);
+        }} else {{
+          window.location.hash = route.replace(/^#/, "");
+        }}
+      }}, true);
+      document.addEventListener("click", function (event) {{
+        var navLink = event.target.closest(".mobile-bottom-nav-link");
         if (!navLink) {{
           return;
         }}
         sessionStorage.removeItem("study-dashboard-anchor");
         window.studyPendingAnchor = "";
-        if (navLink.classList.contains("toc-subject-link")) {{
-          keepMobileSidebarOpen();
-        }}
-        window.setTimeout(function () {{
-          updateBottomNav();
-          if (routeFromHref(navLink.getAttribute("href")) === currentRoute()) {{
-            window.scrollTo({{ top: 0, behavior: "auto" }});
-          }}
-        }}, 0);
+        window.setTimeout(updateBottomNav, 0);
       }});
       function refreshStudyNavigation() {{
         updateBottomNav();
@@ -934,7 +980,7 @@ body {
 
 .sidebar ul li.active > a {
   color: #1d7a68;
-  border-right-color: #1d7a68;
+  border-right: 0 !important;
   font-weight: 700;
 }
 
@@ -1175,11 +1221,16 @@ body {
 
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 6px;
+  margin-top: 4px !important;
 }
 
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-  margin-top: 6px;
+  margin-top: 4px !important;
+}
+
+.markdown-section .publish-meta + .section-anchor {
+  margin: 0;
+  padding: 0;
 }
 
 .doc-nav {
@@ -1336,7 +1387,12 @@ body {
   .markdown-section .publish-meta + h2,
   .markdown-section .publish-meta + .section-anchor + h2,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-    margin-top: 0.42rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .markdown-section .publish-meta + .section-anchor {
+    margin: 0;
+    padding: 0;
   }
 
   .markdown-section h3 {
