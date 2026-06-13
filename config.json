@@ -33,16 +33,8 @@
     "exclude": []
   },
   "deploy": {
-    "provider": "cloudflare_pages",
-    "primary_url": "https://study-dashboard-pages.pages.dev",
-    "public_url": "https://study-dashboard-pages.pages.dev",
-    "backup_urls": [
-      {
-        "name": "GitHub Pages",
-        "url": "",
-        "enabled": false
-      }
-    ],
+    "provider": "github_pages",
+    "public_url": "https://hkh-seu.github.io/study-dashboard/",
     "root_directory": "",
     "output_directory": "cloud_site",
     "git_enabled": false,

@@ -1,20 +1,12 @@
 # 学习文件看板
 
-这是一个 Markdown 静态站点发布器。它把本地桌面上的错题本和复习计划生成到 `cloud_site`，再发布到公网静态托管平台，方便手机和平板访问。
+这是一个 GitHub Pages 单站点模式的学习看板。它把本地桌面上的 Markdown 错题本和复习计划生成到 `cloud_site`，再通过 GitHub Pages 发布成手机可以访问的网页。
 
-当前访问结构很简单：
+唯一访问网址：
 
-- 主站：Cloudflare Pages
-- 备用站：GitHub Pages
-
-备用站不会自动跳转。主站打不开时，手动打开 GitHub Pages 备用网址。
-
-## 为什么只保留一个备用站
-
-- 项目很小，只是个人学习复习看板。
-- 一个 GitHub Pages 备用入口已经够用。
-- 平台越多，维护越麻烦。
-- GitHub Pages 和 GitHub 仓库天然配合，适合作为备用入口。
+```text
+https://hkh-seu.github.io/study-dashboard/
+```
 
 ## 每天怎么用
 
@@ -37,24 +29,40 @@ C:/Desktop/今日复习计划.md
 4. Summary 填脚本给出的建议提交信息，例如：
 
 ```text
-Update study notes 2026-06-13 14:20
+Update study notes 2026-06-13 16:30
 ```
 
 5. 点击 `Commit to main`。
 
 6. 点击 `Push origin`。
 
-7. 等云平台自动部署。
+7. 等 GitHub Actions 自动部署。
 
-8. 手机优先打开 Cloudflare Pages 主站；如果主站打不开，再打开 GitHub Pages 备用站。
+8. 手机刷新：
 
-## 命令速查
+```text
+https://hkh-seu.github.io/study-dashboard/
+```
 
-本地预览：
+如果手机看到旧内容，先等一分钟或强制刷新。
+
+## 本地预览
+
+可以直接运行：
+
+```text
+一键运行学习看板.py
+```
+
+也可以运行：
 
 ```powershell
 D:\Python3_13\python.exe run.py
 ```
+
+本地预览只用于电脑上检查排版，公网访问以 GitHub Pages 为准。
+
+## 命令速查
 
 完整自检：
 
@@ -74,41 +82,21 @@ D:\Python3_13\python.exe publish.py --clean
 D:\Python3_13\python.exe publish.py --deploy-check
 ```
 
-打开主站：
+打开公网网址：
 
 ```powershell
 D:\Python3_13\python.exe publish.py --open-public
 ```
 
-打开 GitHub Pages 备用站：
-
-```powershell
-D:\Python3_13\python.exe publish.py --open-backup
-```
-
-打开主站和备用站：
-
-```powershell
-D:\Python3_13\python.exe publish.py --open-all
-```
-
 ## 配置说明
 
-`config.json` 中的 `deploy` 只保留一个备用站：
+`config.json` 中的 `deploy` 只保留 GitHub Pages：
 
 ```json
 {
   "deploy": {
-    "provider": "cloudflare_pages",
-    "primary_url": "https://study-dashboard-pages.pages.dev",
-    "public_url": "https://study-dashboard-pages.pages.dev",
-    "backup_urls": [
-      {
-        "name": "GitHub Pages",
-        "url": "",
-        "enabled": false
-      }
-    ],
+    "provider": "github_pages",
+    "public_url": "https://hkh-seu.github.io/study-dashboard/",
     "root_directory": "",
     "output_directory": "cloud_site",
     "git_enabled": false,
@@ -119,48 +107,25 @@ D:\Python3_13\python.exe publish.py --open-all
 
 说明：
 
-- `primary_url`：Cloudflare Pages 主站。
-- `public_url`：旧字段，保留兼容；如果 `primary_url` 为空，脚本会 fallback 到它。
-- `backup_urls[0]`：GitHub Pages 备用站。
-- `output_directory`：云平台发布目录，保持 `cloud_site`。
+- `provider`：固定为 `github_pages`。
+- `public_url`：唯一公网访问地址。
+- `output_directory`：发布目录，保持 `cloud_site`。
 - 不要在配置中写 token、账号或密码。
 
-## GitHub Pages 备用站配置
+## GitHub Pages 部署
 
-因为静态站点生成在 `cloud_site`，GitHub Pages 的普通 branch 方式通常不能直接选择这个目录。更稳的方式是使用 GitHub Actions 发布 `cloud_site`。
+项目通过 `.github/workflows/pages.yml` 把 `cloud_site` 发布到 GitHub Pages。
 
-推荐步骤：
+需要确认：
 
-1. 打开 GitHub 仓库 `study-dashboard`。
-2. 进入 `Settings`。
-3. 找到 `Pages`。
-4. Source 选择 `GitHub Actions`。
-5. 确认项目里已经有 `.github/workflows/pages.yml`。
-6. 用 GitHub Desktop 提交并 Push。
-7. GitHub Actions 跑完后，会生成类似下面的网址：
-
-```text
-https://Hkh-SEU.github.io/study-dashboard/
-```
-
-8. 把这个网址填入 `config.json`：
-
-```json
-{
-  "name": "GitHub Pages",
-  "url": "https://Hkh-SEU.github.io/study-dashboard/",
-  "enabled": true
-}
-```
-
-之后主站打不开时，就手动打开 GitHub Pages 备用站。
+1. GitHub 仓库是 Public。
+2. `Settings -> Pages` 使用 GitHub Actions。
+3. `Actions` 里的 `Deploy study dashboard to GitHub Pages` 是绿色成功状态。
 
 ## 隐私提醒
 
 - `cloud_site` 会包含错题本、计划书和截图。
-- GitHub Pages 通常适合公开内容。
-- 如果仓库公开，错题本和截图也会公开。
-- 如果资料私密，不建议公开 GitHub Pages。
+- 仓库公开后，这些内容也会公开。
 - 不要把 token、账号、密码写进项目文件。
 
 ## 生成内容
@@ -178,5 +143,3 @@ assets/cloud.css
 assets/vendor/docsify/
 assets/media/
 ```
-
-其中 `assets/media/` 是从 Markdown 图片引用中复制出来的错题截图资源。
