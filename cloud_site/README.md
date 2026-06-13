@@ -4,7 +4,7 @@
   <p class="study-hero-desc">数学错题、专业课错题和复习计划</p>
   <div class="study-status">
     <span>最近发布</span>
-    <strong>2026-06-13 12:11:37</strong>
+    <strong>2026-06-13 12:26:10</strong>
   </div>
   <p class="study-advice">今日建议：先看“今日复习计划”，确定范围；再看错题本，优先处理最近更新和仍然不熟的题型。</p>
 </section>

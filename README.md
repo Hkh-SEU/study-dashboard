@@ -29,9 +29,9 @@
 
 如果手机和平板要在不同网络下访问，需要把 `cloud_site` 部署到公网静态托管平台，例如 Cloudflare Pages、GitHub Pages 或 Vercel。
 
-## 日常流程
+## 每天怎么用
 
-1. 更新桌面 Markdown：
+1. 修改桌面 Markdown 文件：
 
 ```text
 C:/Desktop/错题本—数学.md
@@ -39,30 +39,40 @@ C:/Desktop/错题本—专业课.md
 C:/Desktop/今日复习计划.md
 ```
 
-2. 本地预览：
+2. 运行 `一键准备云端发布.py`。
+
+它会自动检查源文件、生成 `cloud_site`、执行部署检查，并告诉你下一步怎么提交。
+
+3. 打开 GitHub Desktop。
+
+4. 左下角 `Summary` 填：
 
 ```text
-打开 一键运行学习看板.py，然后点击 VS Code 右上角运行按钮
+Update study notes
 ```
 
-3. 准备云端发布：
+5. 点击 `Commit to main`。
 
-```text
-打开 一键准备云端发布.py，然后点击 VS Code 右上角运行按钮
-```
+6. 点击 `Push origin`。
 
-4. 手动提交并推送到 GitHub，或使用带确认的命令：
+7. 等 Cloudflare Pages 自动部署，通常 1-2 分钟。
 
-```powershell
-D:\Python3_13\python.exe publish.py --cloud-ready --git
-```
-
-5. 等云平台自动部署。
-
-6. 手机打开部署平台给出的独立网址，例如：
+8. 手机刷新：
 
 ```text
 https://study-dashboard-pages.pages.dev
+```
+
+如果手机看到旧内容，先强制刷新或等一分钟。  
+如果卡片打开后是 Markdown 原文，通常说明 GitHub 或 Cloudflare 还没有部署最新版本。  
+如果 `pages.dev` 打不开，可能是当前网络环境问题，不一定是项目失败。
+
+## 本地预览
+
+如果你想先在电脑上看效果：
+
+```text
+打开 一键运行学习看板.py，然后点击 VS Code 右上角运行按钮
 ```
 
 ## 命令速查
@@ -77,6 +87,12 @@ D:\Python3_13\python.exe run.py
 
 ```powershell
 D:\Python3_13\python.exe publish.py --check
+```
+
+完整自检：
+
+```powershell
+D:\Python3_13\python.exe publish.py --doctor
 ```
 
 生成静态站点：

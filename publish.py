@@ -9,6 +9,7 @@ import re
 import shutil
 import socketserver
 import subprocess
+import sys
 import threading
 import time
 import webbrowser
@@ -522,10 +523,19 @@ body {
   color: #1d564c;
 }
 
+.markdown-section h2 {
+  scroll-margin-top: 18px;
+}
+
+.markdown-section h3 {
+  scroll-margin-top: 18px;
+}
+
 .markdown-section h3[id*="错题"],
 .markdown-section h3:has(a[href*="错题"]) {
   border-left: 4px solid #1d7a68;
   padding-left: 10px;
+  color: #1d342f;
 }
 
 .markdown-section a {
@@ -565,7 +575,7 @@ body {
   max-width: 100%;
   height: auto;
   display: block;
-  margin: 10px 0 14px;
+  margin: 12px auto 18px;
   border: 1px solid var(--line-soft);
   border-radius: 8px;
   background: #fff;
@@ -590,7 +600,8 @@ body {
 
 .markdown-section li:has(input[type="checkbox"]) {
   list-style: none;
-  margin-left: 0.1rem;
+  margin: 0.2rem 0 0.2rem 0.15rem;
+  padding: 0.08rem 0;
 }
 
 .publish-meta {
@@ -634,10 +645,22 @@ body {
   padding: 8px 10px;
 }
 
+.search .matching-post {
+  padding: 8px 2px;
+}
+
+.search .matching-post h2 {
+  line-height: 1.35;
+}
+
+.search .matching-post p {
+  line-height: 1.5;
+}
+
 .study-hero {
   border-left: 4px solid #1d7a68;
   margin: 0 0 18px;
-  padding: 14px 16px;
+  padding: 12px 14px;
   background: var(--surface-soft);
 }
 
@@ -652,7 +675,7 @@ body {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--muted);
   font-size: 0.92rem;
 }
@@ -706,7 +729,7 @@ body {
   }
 
   .markdown-section {
-    padding: 18px 14px 44px;
+    padding: 16px 14px 44px;
     font-size: 16px;
     line-height: 1.76;
   }
@@ -729,6 +752,7 @@ body {
   .markdown-section img {
     width: 100%;
     border-radius: 6px;
+    margin: 10px auto 16px;
   }
 
   .markdown-section table {
@@ -753,8 +777,12 @@ body {
   }
 
   .study-hero {
-    margin-bottom: 12px;
-    padding: 12px;
+    margin-bottom: 10px;
+    padding: 10px 11px;
+  }
+
+  .study-hero-desc {
+    margin-bottom: 6px;
   }
 
   .study-status {
@@ -775,7 +803,7 @@ body {
   }
 
   .study-card {
-    padding: 10px 12px;
+    padding: 9px 11px;
   }
 
   .study-card strong {
@@ -884,6 +912,30 @@ def markdown_image_refs(text: str) -> list[str]:
     return refs
 
 
+def direct_markdown_link_errors(output: Path) -> list[str]:
+    errors: list[str] = []
+    checked_files = [output / "README.md", output / "_sidebar.md"]
+    direct_patterns = [
+        "(math.md)",
+        "(major.md)",
+        "(plan.md)",
+        'href="math.md"',
+        'href="major.md"',
+        'href="plan.md"',
+        "href='math.md'",
+        "href='major.md'",
+        "href='plan.md'",
+    ]
+    for path in checked_files:
+        if not path.exists():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for pattern in direct_patterns:
+            if pattern in text:
+                errors.append(f"{path.relative_to(PROJECT_DIR).as_posix()} contains direct Markdown link: {pattern}")
+    return errors
+
+
 def check_deploy_files(site: SiteConfig, documents: list[PublishedDocument], deploy: DeployConfig) -> bool:
     errors: list[str] = []
     warnings: list[str] = []
@@ -906,6 +958,8 @@ def check_deploy_files(site: SiteConfig, documents: list[PublishedDocument], dep
             asset_path = output / unquote(ref)
             if not asset_path.exists():
                 errors.append(f"Missing image asset referenced by {document.target}: {ref}")
+
+    errors.extend(direct_markdown_link_errors(output))
 
     files = [path for path in output.rglob("*") if path.is_file()]
     total_size = sum(path.stat().st_size for path in files)
@@ -937,6 +991,115 @@ def check_deploy_files(site: SiteConfig, documents: list[PublishedDocument], dep
     print("")
     print("Deploy check passed. cloud_site is ready for static hosting.")
     return True
+
+
+def doctor() -> int:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    print("")
+    print("Study Dashboard Doctor")
+    print("")
+
+    print(f"[1/6] Python: {sys.version.split()[0]}")
+    if sys.version_info < (3, 10):
+        errors.append("Python 3.10 or newer is recommended.")
+
+    print(f"[2/6] Config: {CONFIG_PATH.relative_to(PROJECT_DIR).as_posix()}")
+    try:
+        raw = load_raw_config()
+        site, configured, deploy = load_config()
+    except Exception as exc:  # noqa: BLE001
+        print(f"      FAILED: {exc}")
+        errors.append(f"config.json error: {exc}")
+        raw = {}
+        site = None
+        configured = []
+        deploy = None
+    else:
+        print(f"      Site: {site.title}")
+        if not isinstance(raw.get("site"), dict):
+            warnings.append("config.site is missing or not an object.")
+        if not isinstance(raw.get("documents"), list):
+            errors.append("config.documents must be a list.")
+        if not isinstance(raw.get("deploy"), dict):
+            warnings.append("config.deploy is missing or not an object.")
+
+    print("[3/6] Source Markdown files")
+    documents: list[PublishedDocument] = []
+    for document in configured:
+        try:
+            published = validate_source(document)
+        except Exception as exc:  # noqa: BLE001
+            errors.append(f"{document.title}: {exc}")
+            print(f"      FAILED {document.title}: {exc}")
+            continue
+        documents.append(published)
+        print(f"      OK {document.title}: {document.source.as_posix()}")
+
+    print("[4/6] cloud_site files")
+    if site is None:
+        errors.append("Cannot check cloud_site because config failed.")
+    else:
+        missing = []
+        for path in required_deploy_files(site, documents):
+            if not path.exists():
+                missing.append(path.relative_to(PROJECT_DIR).as_posix())
+            elif path.is_file() and path.stat().st_size == 0:
+                errors.append(f"Empty generated file: {path.relative_to(PROJECT_DIR).as_posix()}")
+        if missing:
+            warnings.append("cloud_site is incomplete. Run publish.py --clean to generate it.")
+            for item in missing[:8]:
+                print(f"      Missing: {item}")
+        else:
+            print("      OK key files exist.")
+
+    print("[5/6] Docsify local assets")
+    if site is not None:
+        vendor_files = [
+            site.output_dir / "assets" / "vendor" / "docsify" / "vue.css",
+            site.output_dir / "assets" / "vendor" / "docsify" / "docsify.min.js",
+            site.output_dir / "assets" / "vendor" / "docsify" / "search.min.js",
+        ]
+        for path in vendor_files:
+            if path.exists() and path.stat().st_size > 0:
+                print(f"      OK {path.relative_to(PROJECT_DIR).as_posix()}")
+            else:
+                errors.append(f"Missing docsify asset: {path.relative_to(PROJECT_DIR).as_posix()}")
+
+    print("[6/6] Public URL and routes")
+    if deploy is None:
+        errors.append("Cannot check deploy.public_url because config failed.")
+    else:
+        if deploy.public_url:
+            print(f"      Public URL: {deploy.public_url}")
+        else:
+            warnings.append("deploy.public_url is empty. Fill it after Cloudflare Pages deployment.")
+        if site is not None:
+            route_errors = direct_markdown_link_errors(site.output_dir)
+            errors.extend(route_errors)
+            if route_errors:
+                for item in route_errors:
+                    print(f"      FAILED {item}")
+            else:
+                print("      OK docsify routes use #/ links.")
+
+    if warnings:
+        print("")
+        print("Warnings:")
+        for warning in warnings:
+            print(f"  - {warning}")
+
+    if errors:
+        print("")
+        print("Doctor result: needs attention")
+        for error in errors:
+            print(f"  - {error}")
+        return 1
+
+    print("")
+    print("Doctor result: OK, 可以发布。")
+    return 0
 
 
 def format_size(size: int) -> str:
@@ -1058,6 +1221,7 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="Check config and source files without generating.")
     parser.add_argument("--preview", action="store_true", help="Generate then start a local static preview server.")
     parser.add_argument("--deploy-check", action="store_true", help="Check whether cloud_site is ready for cloud deployment.")
+    parser.add_argument("--doctor", action="store_true", help="Run local diagnostics for daily publishing.")
     parser.add_argument("--cloud-ready", action="store_true", help="Generate cloud_site, run deploy-check, and print cloud deployment steps.")
     parser.add_argument("--open-public", action="store_true", help="Open deploy.public_url from config.json.")
     parser.add_argument("--git", action="store_true", help="Run git add/commit/push after generation.")
@@ -1069,6 +1233,9 @@ def main() -> int:
     try:
         if args.open_public:
             return open_public_url()
+
+        if args.doctor:
+            return doctor()
 
         if args.deploy_check:
             site, documents, deploy = collect_documents()
