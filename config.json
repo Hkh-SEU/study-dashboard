@@ -34,8 +34,8 @@
   },
   "deploy": {
     "provider": "cloudflare_pages",
-    "public_url": "",
-    "root_directory": "study_tools/study-dashboard",
+    "public_url": "https://study-dashboard-pages.pages.dev",
+    "root_directory": "",
     "output_directory": "cloud_site",
     "git_enabled": false,
     "default_branch": "main"

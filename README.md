@@ -62,7 +62,7 @@ D:\Python3_13\python.exe publish.py --cloud-ready --git
 6. 手机打开部署平台给出的独立网址，例如：
 
 ```text
-https://study-dashboard.pages.dev
+https://study-dashboard-pages.pages.dev
 ```
 
 ## 命令速查
@@ -103,7 +103,7 @@ D:\Python3_13\python.exe publish.py --cloud-ready
 D:\Python3_13\python.exe publish.py --open-public
 ```
 
-如果 `deploy.public_url` 为空，先部署成功后把真实网址填入 `config.json`。
+当前 `deploy.public_url` 已填写为 Cloudflare Pages 地址；如果以后换平台或绑定域名，再改成新的网址。
 
 带确认的 git 发布：
 
@@ -119,8 +119,8 @@ D:\Python3_13\python.exe publish.py --cloud-ready --git --message "Update study 
 {
   "deploy": {
     "provider": "cloudflare_pages",
-    "public_url": "",
-    "root_directory": "study_tools/study-dashboard",
+    "public_url": "https://study-dashboard-pages.pages.dev",
+    "root_directory": "",
     "output_directory": "cloud_site",
     "git_enabled": false,
     "default_branch": "main"
@@ -130,8 +130,8 @@ D:\Python3_13\python.exe publish.py --cloud-ready --git --message "Update study 
 
 说明：
 
-- `public_url`：部署成功后填入真实网址，例如 `https://study-dashboard.pages.dev`
-- `root_directory`：项目在 GitHub 仓库中的目录
+- `public_url`：部署成功后的真实网址，例如 `https://study-dashboard-pages.pages.dev`
+- `root_directory`：项目在 GitHub 仓库中的目录；如果仓库根目录就是 `study-dashboard`，保持空字符串
 - `output_directory`：云平台要发布的目录，保持 `cloud_site`
 - 不要在配置中写 token、账号或密码
 
@@ -142,12 +142,12 @@ D:\Python3_13\python.exe publish.py --cloud-ready --git --message "Update study 
 设置方式：
 
 ```text
-Root directory: study_tools/study-dashboard
+Root directory: 留空
 Build command: 留空
 Build output directory: cloud_site
 ```
 
-如果你的 GitHub 仓库根目录就是 `study-dashboard`，Root directory 可以留空或设为仓库根目录。
+如果以后把项目放进大仓库的子目录，再把 Root directory 改成类似 `study_tools/study-dashboard`。
 
 部署完成后，Cloudflare 会给出 `pages.dev` 网址。把它填入 `config.json`：
 

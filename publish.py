@@ -93,6 +93,17 @@ def markdown_url(path: str) -> str:
     return quote(path.replace("\\", "/"), safe="/._-()")
 
 
+def docsify_route(target: str) -> str:
+    route = Path(target).with_suffix("").as_posix().strip("/")
+    return f"#/{route}" if route else "#/"
+
+
+def document_priority(document: PublishedDocument) -> tuple[int, str]:
+    stem = Path(document.target).stem.lower()
+    priority = {"plan": 0, "math": 1, "major": 2}
+    return priority.get(stem, 10), document.title
+
+
 def sanitize_asset_name(value: str) -> str:
     stem = re.sub(r'[<>:"/\\|?*\x00-\x1f]+', "-", value).strip(" .")
     return stem or "asset"
@@ -345,31 +356,33 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
 
 
 def build_home(site: SiteConfig, documents: list[PublishedDocument], published_at: str) -> str:
+    ordered_documents = sorted(documents, key=document_priority)
     cards = "\n".join(
-        f'<a class="study-card" href="{html.escape(document.target)}">'
+        f'<a class="study-card" href="{html.escape(docsify_route(document.target))}">'
         f'<strong>{html.escape(document.title)}</strong>'
         f'<span>最后修改：{html.escape(document.modified)}</span>'
         "</a>"
-        for document in documents
+        for document in ordered_documents
     )
     rows = "\n".join(
         f"| {document.title} | `{document.source.as_posix()}` | {document.modified} |"
-        for document in documents
+        for document in ordered_documents
     )
 
     return f"""# {site.title}
 
-> {site.description}
->
-> 最近发布时间：{published_at}
+<section class="study-hero">
+  <p class="study-hero-desc">{html.escape(site.description)}</p>
+  <div class="study-status">
+    <span>最近发布</span>
+    <strong>{published_at}</strong>
+  </div>
+  <p class="study-advice">今日建议：先看“今日复习计划”，确定范围；再看错题本，优先处理最近更新和仍然不熟的题型。</p>
+</section>
 
 <div class="study-card-grid">
 {cards}
 </div>
-
-## 今日建议
-
-先看“今日复习计划”，确定今天的复习范围；再看“数学错题本”和“专业课错题本”，优先处理最近更新、高频错误和仍然不熟的题型。
 
 ## 文件状态
 
@@ -384,8 +397,9 @@ def build_home(site: SiteConfig, documents: list[PublishedDocument], published_a
 
 
 def build_sidebar(documents: list[PublishedDocument]) -> str:
-    links = "\n".join(f"- [{document.title}]({document.target})" for document in documents)
-    return f"""- [首页](README.md)
+    ordered_documents = sorted(documents, key=document_priority)
+    links = "\n".join(f"- [{document.title}]({docsify_route(document.target)})" for document in ordered_documents)
+    return f"""- [首页](#/)
 {links}
 """
 
@@ -415,7 +429,7 @@ def build_index(site: SiteConfig) -> str:
         search: {{
           maxAge: 86400000,
           paths: "auto",
-          placeholder: "搜索错题、计划...",
+          placeholder: "搜索错题、知识点、计划...",
           noData: "没有找到相关内容",
           depth: 4
         }}
@@ -432,12 +446,18 @@ def build_css() -> str:
     return """:root {
   --theme-color: #1d7a68;
   --content-max-width: 920px;
+  --line-soft: #dfe4da;
+  --surface: #ffffff;
+  --surface-soft: #eef6f3;
+  --ink: #20241f;
+  --muted: #6b7268;
 }
 
 body {
-  color: #20241f;
+  color: var(--ink);
   background: #f7f8f5;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 .app-name-link {
@@ -446,7 +466,7 @@ body {
 }
 
 .sidebar {
-  border-right: 1px solid #dfe4da;
+  border-right: 1px solid var(--line-soft);
   background: #fff;
 }
 
@@ -469,6 +489,7 @@ body {
   max-width: var(--content-max-width);
   padding: 28px 28px 56px;
   line-height: 1.72;
+  font-size: 16px;
 }
 
 .markdown-section h1,
@@ -481,12 +502,30 @@ body {
 
 .markdown-section h1 {
   font-size: 1.86rem;
+  margin-bottom: 1.1rem;
 }
 
 .markdown-section h2 {
-  border-bottom: 1px solid #dfe4da;
-  padding-bottom: 0.32rem;
+  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 0.36rem;
   font-size: 1.45rem;
+  margin-top: 2.1rem;
+}
+
+.markdown-section h3 {
+  margin-top: 1.55rem;
+  font-size: 1.18rem;
+}
+
+.markdown-section h2[id^="-"],
+.markdown-section h2[id^="_"] {
+  color: #1d564c;
+}
+
+.markdown-section h3[id*="错题"],
+.markdown-section h3:has(a[href*="错题"]) {
+  border-left: 4px solid #1d7a68;
+  padding-left: 10px;
 }
 
 .markdown-section a {
@@ -503,6 +542,7 @@ body {
   border-radius: 4px;
   color: #20362f;
   background: #eef2ec;
+  overflow-wrap: anywhere;
 }
 
 .markdown-section pre {
@@ -510,6 +550,7 @@ body {
   background: #eef2ec;
   overflow-x: auto;
   white-space: pre;
+  -webkit-overflow-scrolling: touch;
 }
 
 .markdown-section table {
@@ -517,29 +558,56 @@ body {
   width: 100%;
   overflow-x: auto;
   white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
 }
 
 .markdown-section img {
   max-width: 100%;
-  border: 1px solid #dfe4da;
+  height: auto;
+  display: block;
+  margin: 10px 0 14px;
+  border: 1px solid var(--line-soft);
   border-radius: 8px;
   background: #fff;
+}
+
+.markdown-section ul,
+.markdown-section ol {
+  padding-left: 1.35rem;
+}
+
+.markdown-section li {
+  margin: 0.28rem 0;
+}
+
+.markdown-section li input[type="checkbox"] {
+  width: 1.05em;
+  height: 1.05em;
+  margin: 0 0.38em 0.18em -1.15em;
+  vertical-align: middle;
+  accent-color: #1d7a68;
+}
+
+.markdown-section li:has(input[type="checkbox"]) {
+  list-style: none;
+  margin-left: 0.1rem;
 }
 
 .publish-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin: 12px 0 18px;
+  gap: 6px;
+  margin: 8px 0 16px;
   color: #4e5b55;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .publish-meta span {
-  border: 1px solid #dfe4da;
+  border: 1px solid var(--line-soft);
   border-radius: 999px;
-  padding: 4px 10px;
+  padding: 3px 8px;
   background: #f2f6f3;
+  line-height: 1.45;
 }
 
 .markdown-section th {
@@ -547,87 +615,185 @@ body {
 }
 
 .markdown-section tr {
-  border-top: 1px solid #dfe4da;
+  border-top: 1px solid var(--line-soft);
 }
 
 .markdown-section td,
 .markdown-section th {
-  border: 1px solid #dfe4da;
+  border: 1px solid var(--line-soft);
   padding: 8px 10px;
 }
 
 .search {
-  border-bottom: 1px solid #dfe4da;
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .search input {
-  border: 1px solid #dfe4da;
+  border: 1px solid var(--line-soft);
   border-radius: 8px;
   padding: 8px 10px;
+}
+
+.study-hero {
+  border-left: 4px solid #1d7a68;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  background: var(--surface-soft);
+}
+
+.study-hero-desc {
+  margin: 0 0 10px;
+  color: #20362f;
+  font-weight: 700;
+}
+
+.study-status {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.study-status strong {
+  color: #20362f;
+}
+
+.study-advice {
+  margin: 0;
+  color: #39413b;
 }
 
 .study-card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin: 20px 0 24px;
+  gap: 10px;
+  margin: 16px 0 24px;
 }
 
 .study-card {
   display: block;
-  border: 1px solid #dfe4da;
+  border: 1px solid var(--line-soft);
   border-radius: 8px;
-  padding: 14px 16px;
-  color: #20241f;
-  background: #fff;
+  padding: 12px 14px;
+  color: var(--ink);
+  background: var(--surface);
   text-decoration: none;
 }
 
 .study-card strong {
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: #1d7a68;
   font-size: 1rem;
 }
 
 .study-card span {
   display: block;
-  color: #6b7268;
-  font-size: 0.88rem;
+  color: var(--muted);
+  font-size: 0.84rem;
 }
 
 @media (max-width: 768px) {
+  body {
+    background: #fbfcf8;
+  }
+
+  .content {
+    padding-top: 8px;
+  }
+
   .markdown-section {
-    padding: 18px 14px 40px;
+    padding: 18px 14px 44px;
+    font-size: 16px;
+    line-height: 1.76;
   }
 
   .markdown-section h1 {
-    font-size: 1.58rem;
+    font-size: 1.48rem;
+    line-height: 1.25;
   }
 
   .markdown-section h2 {
-    font-size: 1.28rem;
+    font-size: 1.22rem;
+    margin-top: 1.9rem;
+  }
+
+  .markdown-section h3 {
+    font-size: 1.06rem;
+    margin-top: 1.25rem;
+  }
+
+  .markdown-section img {
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  .markdown-section table {
+    font-size: 0.92rem;
+  }
+
+  .markdown-section pre {
+    font-size: 0.88rem;
+  }
+
+  .markdown-section ul,
+  .markdown-section ol {
+    padding-left: 1.18rem;
+  }
+
+  .sidebar {
+    padding-top: 18px;
+  }
+
+  .sidebar-toggle {
+    padding: 18px 22px 10px 12px;
+  }
+
+  .study-hero {
+    margin-bottom: 12px;
+    padding: 12px;
+  }
+
+  .study-status {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    font-size: 0.86rem;
+  }
+
+  .study-advice {
+    font-size: 0.95rem;
   }
 
   .study-card-grid {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 7px;
+    margin: 12px 0 20px;
   }
 
   .study-card {
-    padding: 12px;
+    padding: 10px 12px;
+  }
+
+  .study-card strong {
+    margin-bottom: 2px;
   }
 
   .publish-meta {
-    display: block;
+    gap: 4px;
+    margin: 6px 0 14px;
+    font-size: 0.78rem;
   }
 
   .publish-meta span {
-    display: block;
-    width: fit-content;
+    display: inline-block;
     max-width: 100%;
-    margin-bottom: 6px;
-    border-radius: 8px;
+    margin-bottom: 4px;
+    border-radius: 6px;
+    padding: 3px 6px;
     overflow-wrap: anywhere;
   }
 }
