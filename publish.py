@@ -112,6 +112,13 @@ def enabled_backup_urls(deploy: DeployConfig) -> list[BackupUrl]:
     return [item for item in deploy.backup_urls if item.enabled and item.url]
 
 
+def github_pages_backup(deploy: DeployConfig) -> BackupUrl | None:
+    for item in deploy.backup_urls:
+        if item.name.strip().lower() == "github pages":
+            return item
+    return deploy.backup_urls[0] if deploy.backup_urls else None
+
+
 def all_access_urls(deploy: DeployConfig) -> list[tuple[str, str]]:
     urls: list[tuple[str, str]] = []
     primary = primary_public_url(deploy)
@@ -126,17 +133,15 @@ def print_access_entries(deploy: DeployConfig) -> None:
     print("")
     print("Access entries:")
     if primary:
-        print(f"  Primary: {primary}")
+        print(f"  Primary (Cloudflare Pages): {primary}")
     else:
-        print("  Primary: not configured")
+        print("  Primary (Cloudflare Pages): not configured")
 
-    backups = enabled_backup_urls(deploy)
-    if backups:
-        print("  Backups:")
-        for item in backups:
-            print(f"    - {item.name}: {item.url}")
+    backup = github_pages_backup(deploy)
+    if backup is not None and backup.enabled and backup.url:
+        print(f"  Backup (GitHub Pages): {backup.url}")
     else:
-        print("  Backups: not configured")
+        print("  Backup (GitHub Pages): not configured")
 
 
 def markdown_url(path: str) -> str:
@@ -1409,12 +1414,12 @@ def doctor() -> int:
                 if backup.enabled and backup.url:
                     enabled_count += 1
             if enabled_count == 0:
-                warnings.append("No backup public entry is enabled. Add GitHub Pages or Vercel if pages.dev is unstable.")
+                warnings.append("GitHub Pages 备用站尚未配置。部署成功后，把网址填入 config.json 的 deploy.backup_urls[0].url，并将 enabled 改为 true。")
         else:
-            warnings.append("deploy.backup_urls is empty. Add GitHub Pages or Vercel if pages.dev is unstable.")
+            warnings.append("deploy.backup_urls is empty. Add GitHub Pages as the backup entry.")
 
         if primary and not enabled_backup_urls(deploy):
-            warnings.append("当前只有一个公网入口。如果 pages.dev 在某些网络下不稳定，建议增加 GitHub Pages 或 Vercel 备用入口。")
+            warnings.append("当前只有 Cloudflare Pages 主站。建议配置 GitHub Pages 作为备用入口。")
 
         if site is not None:
             route_errors = direct_markdown_link_errors(site.output_dir)
@@ -1477,7 +1482,7 @@ def print_next_steps(site: SiteConfig, deploy: DeployConfig) -> None:
         print("    部署完成后，把主站网址填入 config.json 的 deploy.primary_url，就可以用 --open-public 打开。")
     if not enabled_backup_urls(deploy):
         print("  Backup URLs:")
-        print("    如果 pages.dev 不稳定，可以把 GitHub Pages 或 Vercel 网址填入 deploy.backup_urls。")
+        print("    如果 pages.dev 不稳定，可以把 GitHub Pages 网址填入 deploy.backup_urls[0]。")
 
 
 def print_cloud_instructions(deploy: DeployConfig) -> None:
@@ -1493,11 +1498,8 @@ def print_cloud_instructions(deploy: DeployConfig) -> None:
     print("  6. After deployment, copy the pages.dev URL into config.json deploy.primary_url.")
     print("")
     print("GitHub Pages:")
-    print("  Use only if the content can be public, or if you have a suitable private Pages setup.")
-    print("")
-    print("Vercel:")
-    print(f"  Connect the repository and set output directory to {deploy.output_directory}.")
-    print("  After deployment, copy the Vercel URL into config.json deploy.backup_urls.")
+    print("  Use GitHub Actions to publish cloud_site as the backup site.")
+    print("  After deployment, copy the github.io URL into config.json deploy.backup_urls[0].url and set enabled to true.")
 
 
 def confirm_git_publish(message: str, yes: bool) -> bool:
@@ -1540,28 +1542,37 @@ def open_public_url() -> int:
 
 def open_backup_url() -> int:
     _, _, deploy = load_config()
-    backups = enabled_backup_urls(deploy)
-    if not backups:
-        print("No enabled backup URL is configured.")
-        print("部署 GitHub Pages 或 Vercel 后，把网址填入 config.json 的 deploy.backup_urls。")
+    backup = github_pages_backup(deploy)
+    if backup is None or not backup.enabled or not backup.url:
+        print("GitHub Pages 备用站尚未配置。")
+        print("部署成功后，把网址填入 config.json 的 deploy.backup_urls[0].url，并将 enabled 改为 true。")
         return 1
-    backup = backups[0]
-    print(f"Opening backup URL: {backup.name}: {backup.url}")
+    print(f"Opening GitHub Pages backup URL: {backup.url}")
     webbrowser.open(backup.url)
     return 0
 
 
 def open_all_urls() -> int:
     _, _, deploy = load_config()
-    urls = all_access_urls(deploy)
-    if not urls:
+    primary = primary_public_url(deploy)
+    backup = github_pages_backup(deploy)
+    opened = False
+    if not primary:
         print("No public URL is configured.")
-        print("请先填写 deploy.primary_url，或启用 deploy.backup_urls 中的备用网址。")
-        return 1
-    for name, url in urls:
-        print(f"Opening {name}: {url}")
-        webbrowser.open(url)
-    return 0
+        print("请先填写 deploy.primary_url。")
+    else:
+        print(f"Opening 主站: {primary}")
+        webbrowser.open(primary)
+        opened = True
+
+    if backup is not None and backup.enabled and backup.url:
+        print(f"Opening GitHub Pages 备用站: {backup.url}")
+        webbrowser.open(backup.url)
+        opened = True
+    else:
+        print("GitHub Pages 备用站尚未配置；本次只打开主站。")
+
+    return 0 if opened else 1
 
 
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -1597,8 +1608,8 @@ def main() -> int:
     parser.add_argument("--doctor", action="store_true", help="Run local diagnostics for daily publishing.")
     parser.add_argument("--cloud-ready", action="store_true", help="Generate cloud_site, run deploy-check, and print cloud deployment steps.")
     parser.add_argument("--open-public", action="store_true", help="Open deploy.primary_url from config.json.")
-    parser.add_argument("--open-backup", action="store_true", help="Open the first enabled backup URL from config.json.")
-    parser.add_argument("--open-all", action="store_true", help="Open the primary URL and all enabled backup URLs from config.json.")
+    parser.add_argument("--open-backup", action="store_true", help="Open the GitHub Pages backup URL from config.json.")
+    parser.add_argument("--open-all", action="store_true", help="Open the primary URL and GitHub Pages backup URL from config.json.")
     parser.add_argument("--git", action="store_true", help="Run git add/commit/push after generation.")
     parser.add_argument("--message", default="Update study dashboard", help="Commit message used with --git.")
     parser.add_argument("--yes", action="store_true", help="Skip --git confirmation.")

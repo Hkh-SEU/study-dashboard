@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from datetime import datetime
 
-from publish import enabled_backup_urls, load_config, main as publish_main, primary_public_url
+from publish import github_pages_backup, load_config, main as publish_main, primary_public_url
 
 
 def run_publish_command(*args: str) -> int:
@@ -28,7 +28,7 @@ def print_next_steps() -> None:
     suggested_message = f"Update study notes {datetime.now().strftime('%Y-%m-%d %H:%M')}"
     _, _, deploy = load_config()
     primary_url = primary_public_url(deploy)
-    backups = enabled_backup_urls(deploy)
+    backup = github_pages_backup(deploy)
 
     print("")
     print("访问入口：")
@@ -37,11 +37,10 @@ def print_next_steps() -> None:
     else:
         print("- 主站：未配置，请部署后填写 config.json 的 deploy.primary_url")
 
-    if backups:
-        for backup in backups:
-            print(f"- 备用站：{backup.name}：{backup.url}")
+    if backup is not None and backup.enabled and backup.url:
+        print(f"- 备用站：GitHub Pages：{backup.url}")
     else:
-        print("- 备用站：暂未配置；后续可以添加 GitHub Pages 或 Vercel。")
+        print("- 备用站：GitHub Pages 备用站尚未配置。")
 
     print("")
     print("下一步请这样做：")
@@ -51,8 +50,9 @@ def print_next_steps() -> None:
     print("4. 点击 Commit to main")
     print("5. 点击 Push origin")
     print("6. 等云平台自动部署")
-    print("7. 手机优先刷新主站；如果主站打不开，再试备用站")
+    print("7. 手机优先刷新主站；如果主站打不开，再打开 GitHub Pages 备用站")
     print("")
+    print("GitHub Pages 备用站需要先在 GitHub 仓库的 Pages 设置中启用。")
     print("如果手机看到旧内容，先等一分钟或强制刷新。")
     print("如果 pages.dev 打不开，通常是网络环境问题，不一定是项目失败。")
 

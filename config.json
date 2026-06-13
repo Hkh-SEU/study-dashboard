@@ -41,11 +41,6 @@
         "name": "GitHub Pages",
         "url": "",
         "enabled": false
-      },
-      {
-        "name": "Vercel",
-        "url": "",
-        "enabled": false
       }
     ],
     "root_directory": "",
