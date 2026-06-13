@@ -105,6 +105,33 @@ def document_priority(document: PublishedDocument) -> tuple[int, str]:
     return priority.get(stem, 10), document.title
 
 
+def document_hint(document: PublishedDocument) -> str:
+    stem = Path(document.target).stem.lower()
+    hints = {
+        "plan": "先看这里，确定今天要处理的题目",
+        "math": "按日期和错题编号复习",
+        "major": "按日期和错题编号复习",
+    }
+    return hints.get(stem, "打开文档继续复习")
+
+
+def document_nav(active_target: str | None = None) -> str:
+    items = [
+        ("首页", "#/", ""),
+        ("今日计划", "#/plan", "plan.md"),
+        ("数学", "#/math", "math.md"),
+        ("专业课", "#/major", "major.md"),
+    ]
+    links = []
+    active = (active_target or "").lower()
+    for label, href, target in items:
+        classes = "doc-nav-link"
+        if target and active == target:
+            classes += " active"
+        links.append(f'<a class="{classes}" href="{href}">{label}</a>')
+    return '<nav class="doc-nav" aria-label="文档切换">' + "".join(links) + "</nav>"
+
+
 def sanitize_asset_name(value: str) -> str:
     stem = re.sub(r'[<>:"/\\|?*\x00-\x1f]+', "-", value).strip(" .")
     return stem or "asset"
@@ -295,11 +322,18 @@ def build_document_markdown(document: PublishedDocument, published_at: str) -> s
     content = strip_duplicate_title(document.content, document.title)
     return f"""# {document.title}
 
+{document_nav(document.target)}
+
 <div class="publish-meta">
-  <span>来源：{html.escape(document.source.as_posix())}</span>
-  <span>源文件最后修改：{document.modified}</span>
-  <span>发布时间：{published_at}</span>
+  <span>更新：{published_at}</span>
 </div>
+
+<details class="publish-details">
+  <summary>发布详情</summary>
+  <div>来源：{html.escape(document.source.as_posix())}</div>
+  <div>源文件最后修改：{document.modified}</div>
+  <div>发布时间：{published_at}</div>
+</details>
 
 ---
 
@@ -346,7 +380,9 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
     def replace_markdown(match: re.Match[str]) -> str:
         alt = match.group(1)
         rewritten = copy_asset(match.group(2))
-        return f"![{alt}]({rewritten})"
+        if rewritten == match.group(2) or is_external_link(rewritten):
+            return f"![{alt}]({rewritten})"
+        return f"[![{alt}]({rewritten})]({rewritten})"
 
     def replace_html(match: re.Match[str]) -> str:
         rewritten = copy_asset(match.group(2))
@@ -361,39 +397,25 @@ def build_home(site: SiteConfig, documents: list[PublishedDocument], published_a
     cards = "\n".join(
         f'<a class="study-card" href="{html.escape(docsify_route(document.target))}">'
         f'<strong>{html.escape(document.title)}</strong>'
-        f'<span>最后修改：{html.escape(document.modified)}</span>'
+        f'<span>{html.escape(document_hint(document))}</span>'
         "</a>"
-        for document in ordered_documents
-    )
-    rows = "\n".join(
-        f"| {document.title} | `{document.source.as_posix()}` | {document.modified} |"
         for document in ordered_documents
     )
 
     return f"""# {site.title}
 
 <section class="study-hero">
-  <p class="study-hero-desc">{html.escape(site.description)}</p>
+  <p class="study-hero-desc">今天从计划开始，再回到错题。</p>
   <div class="study-status">
     <span>最近发布</span>
     <strong>{published_at}</strong>
   </div>
-  <p class="study-advice">今日建议：先看“今日复习计划”，确定范围；再看错题本，优先处理最近更新和仍然不熟的题型。</p>
+  <p class="study-advice">先确定今天的范围，再按日期和错题编号复习。</p>
 </section>
 
 <div class="study-card-grid">
 {cards}
 </div>
-
-## 文件状态
-
-| 文档 | 来源路径 | 最后修改 |
-| --- | --- | --- |
-{rows}
-
-## 使用方式
-
-这个页面由本地 Markdown 文件生成。更新桌面文件后，重新运行 `publish.py`，再推送到 GitHub，云端部署平台会发布新的网页版本。
 """
 
 
@@ -542,6 +564,12 @@ body {
   color: #1d7a68;
 }
 
+.markdown-section p a:has(img),
+.markdown-section a:has(img) {
+  display: block;
+  border-bottom: 0;
+}
+
 .markdown-section blockquote {
   border-left: 4px solid #1d7a68;
   color: #39413b;
@@ -581,6 +609,10 @@ body {
   background: #fff;
 }
 
+.markdown-section a img {
+  cursor: zoom-in;
+}
+
 .markdown-section ul,
 .markdown-section ol {
   padding-left: 1.35rem;
@@ -601,7 +633,13 @@ body {
 .markdown-section li:has(input[type="checkbox"]) {
   list-style: none;
   margin: 0.2rem 0 0.2rem 0.15rem;
-  padding: 0.08rem 0;
+  padding: 0.12rem 0.25rem;
+  border-radius: 6px;
+}
+
+.markdown-section li:has(input[type="checkbox"]:checked) {
+  color: #5f6963;
+  background: #f1f5ef;
 }
 
 .publish-meta {
@@ -619,6 +657,50 @@ body {
   padding: 3px 8px;
   background: #f2f6f3;
   line-height: 1.45;
+}
+
+.publish-details {
+  margin: -8px 0 18px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.publish-details summary {
+  cursor: pointer;
+  width: fit-content;
+  color: #5e6a63;
+}
+
+.publish-details div {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.doc-nav {
+  display: flex;
+  gap: 8px;
+  margin: -4px 0 10px;
+  padding-bottom: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.doc-nav-link {
+  flex: 0 0 auto;
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 5px 11px;
+  color: #1d564c;
+  background: #fff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.doc-nav-link.active {
+  border-color: #1d7a68;
+  color: #fff;
+  background: #1d7a68;
 }
 
 .markdown-section th {
@@ -704,6 +786,10 @@ body {
   color: var(--ink);
   background: var(--surface);
   text-decoration: none;
+}
+
+.study-card:hover {
+  border-color: #1d7a68;
 }
 
 .study-card strong {
@@ -810,9 +896,19 @@ body {
     margin-bottom: 2px;
   }
 
+  .doc-nav {
+    margin: -2px -2px 8px;
+    padding: 0 2px 6px;
+  }
+
+  .doc-nav-link {
+    padding: 5px 10px;
+    font-size: 0.82rem;
+  }
+
   .publish-meta {
     gap: 4px;
-    margin: 6px 0 14px;
+    margin: 4px 0 12px;
     font-size: 0.78rem;
   }
 
@@ -823,6 +919,11 @@ body {
     border-radius: 6px;
     padding: 3px 6px;
     overflow-wrap: anywhere;
+  }
+
+  .publish-details {
+    margin: -8px 0 14px;
+    font-size: 0.74rem;
   }
 }
 """
