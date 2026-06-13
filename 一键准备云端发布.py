@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from datetime import datetime
 
 from publish import main as publish_main
 
@@ -24,11 +25,12 @@ def print_header() -> None:
 
 
 def print_next_steps() -> None:
+    suggested_message = f"Update study notes {datetime.now().strftime('%Y-%m-%d %H:%M')}"
     print("")
     print("下一步请这样做：")
     print("1. 打开 GitHub Desktop")
     print("2. 确认仓库是 study-dashboard")
-    print("3. Summary 填：Update study notes")
+    print(f"3. Summary 填：{suggested_message}")
     print("4. 点击 Commit to main")
     print("5. 点击 Push origin")
     print("6. 等 Cloudflare Pages 自动部署")

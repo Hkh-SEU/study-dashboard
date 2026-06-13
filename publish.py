@@ -132,6 +132,32 @@ def document_nav(active_target: str | None = None) -> str:
     return '<nav class="doc-nav" aria-label="文档切换">' + "".join(links) + "</nav>"
 
 
+def mobile_bottom_nav() -> str:
+    items = [
+        ("首页", "#/", "home"),
+        ("计划", "#/plan", "plan"),
+        ("数学", "#/math", "math"),
+        ("专业课", "#/major", "major"),
+    ]
+    links = [
+        f'<a class="mobile-bottom-nav-link" href="{href}" data-route="{route}">{label}</a>'
+        for label, href, route in items
+    ]
+    return '<nav class="mobile-bottom-nav" aria-label="手机底部导航">' + "".join(links) + "</nav>"
+
+
+def docsify_anchor_id(title: str) -> str:
+    anchor = re.sub(r"\s+", "-", title.strip().lower())
+    anchor = re.sub(r"[^\w\-\u4e00-\u9fff]", "", anchor)
+    return anchor.strip("-")
+
+
+def strip_markdown_marks(text: str) -> str:
+    text = re.sub(r"[*_`#>\[\]]+", "", text)
+    text = text.replace("==", "")
+    return re.sub(r"\s+", " ", text).strip()
+
+
 def sanitize_asset_name(value: str) -> str:
     stem = re.sub(r'[<>:"/\\|?*\x00-\x1f]+', "-", value).strip(" .")
     return stem or "asset"
@@ -320,6 +346,7 @@ def strip_duplicate_title(content: str, title: str) -> str:
 
 def build_document_markdown(document: PublishedDocument, published_at: str) -> str:
     content = strip_duplicate_title(document.content, document.title)
+    toc = build_page_toc(document, content)
     return f"""# {document.title}
 
 {document_nav(document.target)}
@@ -337,7 +364,48 @@ def build_document_markdown(document: PublishedDocument, published_at: str) -> s
 
 ---
 
+{toc}
+
 {content}"""
+
+
+def build_page_toc(document: PublishedDocument, content: str) -> str:
+    if Path(document.target).stem.lower() not in {"math", "major"}:
+        return ""
+
+    sections: list[tuple[str, list[str]]] = []
+    current_date = ""
+    for line in content.splitlines():
+        date_match = re.match(r"^##\s+(.+?)\s*$", line)
+        if date_match:
+            title = strip_markdown_marks(date_match.group(1))
+            if re.search(r"\d{1,2}[-/.]\d{1,2}", title):
+                current_date = title
+                sections.append((current_date, []))
+            continue
+
+        problem_match = re.match(r"^###\s+(.+?)\s*$", line)
+        if problem_match and "错题" in problem_match.group(1):
+            title = strip_markdown_marks(problem_match.group(1))
+            if not sections:
+                current_date = "本页"
+                sections.append((current_date, []))
+            sections[-1][1].append(title)
+
+    sections = [(date, items) for date, items in sections if items]
+    if not sections:
+        return ""
+
+    route = docsify_route(document.target)
+    blocks = []
+    for date, items in sections:
+        item_links = "".join(
+            f'<a class="page-toc-item" href="{route}?id={html.escape(docsify_anchor_id(item))}">{html.escape(item)}</a>'
+            for item in items
+        )
+        blocks.append(f'<div class="page-toc-row"><strong>{html.escape(date)}</strong><div>{item_links}</div></div>')
+
+    return '<section class="page-toc"><h2>本页目录</h2>' + "".join(blocks) + "</section>\n"
 
 
 def resolve_asset_path(raw_ref: str, source: Path) -> Path | None:
@@ -382,7 +450,7 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
         rewritten = copy_asset(match.group(2))
         if rewritten == match.group(2) or is_external_link(rewritten):
             return f"![{alt}]({rewritten})"
-        return f"[![{alt}]({rewritten})]({rewritten})"
+        return f'[![{alt}]({rewritten})]({rewritten})\n\n<span class="image-hint">点击图片查看原图</span>'
 
     def replace_html(match: re.Match[str]) -> str:
         rewritten = copy_asset(match.group(2))
@@ -390,6 +458,42 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
 
     content = IMAGE_PATTERN.sub(replace_markdown, content)
     return HTML_IMG_PATTERN.sub(replace_html, content)
+
+
+def extract_plan_summary(documents: list[PublishedDocument]) -> dict[str, str]:
+    plan = next((document for document in documents if Path(document.target).stem.lower() == "plan"), None)
+    if plan is None:
+        return {"提示": "打开今日复习计划查看任务"}
+
+    text = strip_markdown_marks(plan.content)
+    summary: dict[str, str] = {}
+
+    total_match = re.search(r"今日[：:]\s*(\d+)\s*道", text)
+    if total_match:
+        summary["今日任务"] = f"{total_match.group(1)} 道"
+
+    done_match = re.search(r"(\d+\s*/\s*\d+)\s*已完成", text)
+    if done_match:
+        summary["已完成"] = done_match.group(1).replace(" ", "")
+
+    math_match = re.search(r"数学\s*(\d+\s*/\s*\d+)", text)
+    if math_match:
+        summary["数学"] = math_match.group(1).replace(" ", "")
+
+    major_match = re.search(r"专业课\s*(\d+\s*/\s*\d+)", text)
+    if major_match:
+        summary["专业课"] = major_match.group(1).replace(" ", "")
+
+    return summary or {"提示": "打开今日复习计划查看任务"}
+
+
+def build_plan_summary(documents: list[PublishedDocument]) -> str:
+    summary = extract_plan_summary(documents)
+    items = "\n".join(
+        f'<div class="summary-chip"><span>{html.escape(label)}</span><strong>{html.escape(value)}</strong></div>'
+        for label, value in summary.items()
+    )
+    return f'<div class="today-summary">{items}</div>'
 
 
 def build_home(site: SiteConfig, documents: list[PublishedDocument], published_at: str) -> str:
@@ -412,6 +516,8 @@ def build_home(site: SiteConfig, documents: list[PublishedDocument], published_a
   </div>
   <p class="study-advice">先确定今天的范围，再按日期和错题编号复习。</p>
 </section>
+
+{build_plan_summary(documents)}
 
 <div class="study-card-grid">
 {cards}
@@ -443,6 +549,7 @@ def build_index(site: SiteConfig) -> str:
   </head>
   <body>
     <div id="app">正在加载学习文件看板...</div>
+    {mobile_bottom_nav()}
     <script>
       window.$docsify = {{
         name: {js_title},
@@ -457,6 +564,17 @@ def build_index(site: SiteConfig) -> str:
           depth: 4
         }}
       }};
+      function updateBottomNav() {{
+        var hash = window.location.hash || "#/";
+        var route = hash.indexOf("#/plan") === 0 ? "plan" :
+          hash.indexOf("#/math") === 0 ? "math" :
+          hash.indexOf("#/major") === 0 ? "major" : "home";
+        document.querySelectorAll(".mobile-bottom-nav-link").forEach(function (item) {{
+          item.classList.toggle("active", item.dataset.route === route);
+        }});
+      }}
+      window.addEventListener("hashchange", updateBottomNav);
+      window.addEventListener("DOMContentLoaded", updateBottomNav);
     </script>
     <script src="assets/vendor/docsify/docsify.min.js"></script>
     <script src="assets/vendor/docsify/search.min.js"></script>
@@ -506,6 +624,10 @@ body {
 
 .content {
   padding-top: 12px;
+}
+
+.mobile-bottom-nav {
+  display: none;
 }
 
 .markdown-section {
@@ -613,6 +735,14 @@ body {
   cursor: zoom-in;
 }
 
+.image-hint {
+  display: block;
+  margin: -10px auto 18px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  text-align: center;
+}
+
 .markdown-section ul,
 .markdown-section ol {
   padding-left: 1.35rem;
@@ -632,8 +762,8 @@ body {
 
 .markdown-section li:has(input[type="checkbox"]) {
   list-style: none;
-  margin: 0.2rem 0 0.2rem 0.15rem;
-  padding: 0.12rem 0.25rem;
+  margin: 0.14rem 0 0.14rem 0.15rem;
+  padding: 0.08rem 0.24rem;
   border-radius: 6px;
 }
 
@@ -701,6 +831,50 @@ body {
   border-color: #1d7a68;
   color: #fff;
   background: #1d7a68;
+}
+
+.page-toc {
+  margin: 12px 0 22px;
+  padding: 12px 14px;
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.page-toc h2 {
+  margin: 0 0 10px;
+  border-bottom: 0;
+  padding-bottom: 0;
+  font-size: 1rem;
+}
+
+.page-toc-row {
+  display: grid;
+  grid-template-columns: 76px 1fr;
+  gap: 10px;
+  align-items: start;
+  margin-top: 8px;
+}
+
+.page-toc-row strong {
+  color: #1d564c;
+  font-size: 0.9rem;
+}
+
+.page-toc-row div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.page-toc-item {
+  border: 1px solid var(--line-soft);
+  border-radius: 999px;
+  padding: 3px 8px;
+  color: #1d564c;
+  background: #f8faf7;
+  font-size: 0.82rem;
+  text-decoration: none;
 }
 
 .markdown-section th {
@@ -805,6 +979,33 @@ body {
   font-size: 0.84rem;
 }
 
+.today-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 14px 0 18px;
+}
+
+.summary-chip {
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+.summary-chip span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.summary-chip strong {
+  display: block;
+  color: #20362f;
+  font-size: 1rem;
+}
+
 @media (max-width: 768px) {
   body {
     background: #fbfcf8;
@@ -815,7 +1016,7 @@ body {
   }
 
   .markdown-section {
-    padding: 16px 14px 44px;
+    padding: 16px 14px 96px;
     font-size: 16px;
     line-height: 1.76;
   }
@@ -839,6 +1040,12 @@ body {
     width: 100%;
     border-radius: 6px;
     margin: 10px auto 16px;
+  }
+
+  .image-hint {
+    margin-top: -8px;
+    margin-bottom: 14px;
+    font-size: 0.72rem;
   }
 
   .markdown-section table {
@@ -888,6 +1095,16 @@ body {
     margin: 12px 0 20px;
   }
 
+  .today-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin: 10px 0 14px;
+  }
+
+  .summary-chip {
+    padding: 8px 10px;
+  }
+
   .study-card {
     padding: 9px 11px;
   }
@@ -924,6 +1141,65 @@ body {
   .publish-details {
     margin: -8px 0 14px;
     font-size: 0.74rem;
+  }
+
+  .page-toc {
+    margin: 10px 0 18px;
+    padding: 10px 11px;
+  }
+
+  .page-toc h2 {
+    font-size: 0.98rem;
+  }
+
+  .page-toc-row {
+    display: block;
+  }
+
+  .page-toc-row strong {
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .page-toc-row div {
+    gap: 5px;
+  }
+
+  .page-toc-item {
+    padding: 3px 7px;
+    font-size: 0.78rem;
+  }
+
+  .mobile-bottom-nav {
+    position: fixed;
+    right: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    left: 12px;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    border: 1px solid rgba(29, 122, 104, 0.18);
+    border-radius: 14px;
+    padding: 7px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 8px 24px rgba(24, 47, 40, 0.12);
+    backdrop-filter: blur(8px);
+  }
+
+  .mobile-bottom-nav-link {
+    border-radius: 10px;
+    padding: 7px 4px;
+    color: #1d564c;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .mobile-bottom-nav-link.active {
+    color: #fff;
+    background: #1d7a68;
   }
 }
 """

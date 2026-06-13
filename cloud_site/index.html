@@ -10,6 +10,7 @@
   </head>
   <body>
     <div id="app">正在加载学习文件看板...</div>
+    <nav class="mobile-bottom-nav" aria-label="手机底部导航"><a class="mobile-bottom-nav-link" href="#/" data-route="home">首页</a><a class="mobile-bottom-nav-link" href="#/plan" data-route="plan">计划</a><a class="mobile-bottom-nav-link" href="#/math" data-route="math">数学</a><a class="mobile-bottom-nav-link" href="#/major" data-route="major">专业课</a></nav>
     <script>
       window.$docsify = {
         name: "学习文件看板",
@@ -24,6 +25,17 @@
           depth: 4
         }
       };
+      function updateBottomNav() {
+        var hash = window.location.hash || "#/";
+        var route = hash.indexOf("#/plan") === 0 ? "plan" :
+          hash.indexOf("#/math") === 0 ? "math" :
+          hash.indexOf("#/major") === 0 ? "major" : "home";
+        document.querySelectorAll(".mobile-bottom-nav-link").forEach(function (item) {
+          item.classList.toggle("active", item.dataset.route === route);
+        });
+      }
+      window.addEventListener("hashchange", updateBottomNav);
+      window.addEventListener("DOMContentLoaded", updateBottomNav);
     </script>
     <script src="assets/vendor/docsify/docsify.min.js"></script>
     <script src="assets/vendor/docsify/search.min.js"></script>
