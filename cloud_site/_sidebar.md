@@ -1,31 +1,31 @@
 - [首页](#/)
 - [今日计划](#/plan)
 - [数学](#/math)
-  - [06-04](#/math?id=math-06-04)
-    - [错题 01](#/math?id=math-06-04-01)
-    - [错题 02](#/math?id=math-06-04-02)
-    - [错题 03](#/math?id=math-06-04-03)
-    - [错题 04](#/math?id=math-06-04-04)
-    - [错题 05](#/math?id=math-06-04-05)
-    - [错题 06](#/math?id=math-06-04-06)
-    - [错题 07](#/math?id=math-06-04-07)
-    - [错题 08](#/math?id=math-06-04-08)
-    - [错题 09](#/math?id=math-06-04-09)
-    - [错题 10](#/math?id=math-06-04-10)
-    - [错题 11](#/math?id=math-06-04-11)
-  - [06-05](#/math?id=math-06-05)
-    - [错题 01](#/math?id=math-06-05-01)
-    - [错题 02](#/math?id=math-06-05-02)
+  - <a href="#/math" data-anchor="math-06-04" class="toc-date-link">06-04</a>
+    - <a href="#/math" data-anchor="math-06-04-01" class="toc-problem-link">错题 01</a>
+    - <a href="#/math" data-anchor="math-06-04-02" class="toc-problem-link">错题 02</a>
+    - <a href="#/math" data-anchor="math-06-04-03" class="toc-problem-link">错题 03</a>
+    - <a href="#/math" data-anchor="math-06-04-04" class="toc-problem-link">错题 04</a>
+    - <a href="#/math" data-anchor="math-06-04-05" class="toc-problem-link">错题 05</a>
+    - <a href="#/math" data-anchor="math-06-04-06" class="toc-problem-link">错题 06</a>
+    - <a href="#/math" data-anchor="math-06-04-07" class="toc-problem-link">错题 07</a>
+    - <a href="#/math" data-anchor="math-06-04-08" class="toc-problem-link">错题 08</a>
+    - <a href="#/math" data-anchor="math-06-04-09" class="toc-problem-link">错题 09</a>
+    - <a href="#/math" data-anchor="math-06-04-10" class="toc-problem-link">错题 10</a>
+    - <a href="#/math" data-anchor="math-06-04-11" class="toc-problem-link">错题 11</a>
+  - <a href="#/math" data-anchor="math-06-05" class="toc-date-link">06-05</a>
+    - <a href="#/math" data-anchor="math-06-05-01" class="toc-problem-link">错题 01</a>
+    - <a href="#/math" data-anchor="math-06-05-02" class="toc-problem-link">错题 02</a>
 - [专业课](#/major)
-  - [06-04](#/major?id=major-06-04)
-    - [错题 01](#/major?id=major-06-04-01)
-    - [错题 02](#/major?id=major-06-04-02)
-    - [错题 03](#/major?id=major-06-04-03)
-  - [06-05](#/major?id=major-06-05)
-    - [错题 01](#/major?id=major-06-05-01)
-    - [错题 02](#/major?id=major-06-05-02)
-    - [错题 03](#/major?id=major-06-05-03)
-    - [错题 04](#/major?id=major-06-05-04)
-  - [06-08](#/major?id=major-06-08)
-    - [错题 01](#/major?id=major-06-08-01)
-    - [错题 02](#/major?id=major-06-08-02)
+  - <a href="#/major" data-anchor="major-06-04" class="toc-date-link">06-04</a>
+    - <a href="#/major" data-anchor="major-06-04-01" class="toc-problem-link">错题 01</a>
+    - <a href="#/major" data-anchor="major-06-04-02" class="toc-problem-link">错题 02</a>
+    - <a href="#/major" data-anchor="major-06-04-03" class="toc-problem-link">错题 03</a>
+  - <a href="#/major" data-anchor="major-06-05" class="toc-date-link">06-05</a>
+    - <a href="#/major" data-anchor="major-06-05-01" class="toc-problem-link">错题 01</a>
+    - <a href="#/major" data-anchor="major-06-05-02" class="toc-problem-link">错题 02</a>
+    - <a href="#/major" data-anchor="major-06-05-03" class="toc-problem-link">错题 03</a>
+    - <a href="#/major" data-anchor="major-06-05-04" class="toc-problem-link">错题 04</a>
+  - <a href="#/major" data-anchor="major-06-08" class="toc-date-link">06-08</a>
+    - <a href="#/major" data-anchor="major-06-08-01" class="toc-problem-link">错题 01</a>
+    - <a href="#/major" data-anchor="major-06-08-02" class="toc-problem-link">错题 02</a>

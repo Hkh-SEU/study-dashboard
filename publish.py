@@ -553,9 +553,17 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
         route = docsify_route(document.target)
         lines.append(f"- [{document_route_label(document)}]({route})")
         for date, date_anchor, problems in extract_problem_sections(document):
-            lines.append(f"  - [{date}]({route}?id={date_anchor})")
+            safe_date = html.escape(date, quote=True)
+            lines.append(
+                f'  - <a href="{route}" data-anchor="{date_anchor}" '
+                f'class="toc-date-link">{safe_date}</a>'
+            )
             for problem, anchor in problems:
-                lines.append(f"    - [{problem}]({route}?id={anchor})")
+                safe_problem = html.escape(problem, quote=True)
+                lines.append(
+                    f'    - <a href="{route}" data-anchor="{anchor}" '
+                    f'class="toc-problem-link">{safe_problem}</a>'
+                )
     return "\n".join(lines) + "\n"
 
 
@@ -607,14 +615,38 @@ def build_index(site: SiteConfig) -> str:
           item.classList.toggle("active", item.dataset.route === route);
         }});
       }}
+      window.studyPendingAnchor = "";
+      function currentRoute() {{
+        return (window.location.hash || "#/").split("?")[0] || "#/";
+      }}
+      function routeFromHref(href) {{
+        return (href || "#/").split("?")[0] || "#/";
+      }}
       function targetIdFromHash() {{
         var hash = window.location.hash || "";
         var match = hash.match(/[?&]id=([^&]+)/);
         return match ? decodeURIComponent(match[1]) : "";
       }}
-      function targetIdFromHref(href) {{
-        var match = (href || "").match(/[?&]id=([^&]+)/);
-        return match ? decodeURIComponent(match[1]) : "";
+      function dateAnchorFromAnchor(anchor) {{
+        var match = (anchor || "").match(/^(math|major)-(\\d{{1,2}}[-/.]\\d{{1,2}})/);
+        return match ? match[1] + "-" + match[2].replace(/[/.]/g, "-") : "";
+      }}
+      function setPendingAnchor(anchor) {{
+        if (!anchor) {{
+          return;
+        }}
+        window.studyPendingAnchor = anchor;
+        sessionStorage.setItem("study-dashboard-anchor", anchor);
+        sessionStorage.setItem("study-dashboard-current-anchor", anchor);
+        var dateAnchor = dateAnchorFromAnchor(anchor);
+        if (dateAnchor) {{
+          sessionStorage.setItem("study-dashboard-open-date", dateAnchor);
+        }}
+      }}
+      function readPendingAnchor() {{
+        return window.studyPendingAnchor ||
+          sessionStorage.getItem("study-dashboard-anchor") ||
+          targetIdFromHash();
       }}
       function closeMobileSidebar() {{
         if (window.innerWidth <= 768) {{
@@ -648,52 +680,63 @@ def build_index(site: SiteConfig) -> str:
         }}
         return depth;
       }}
-      function scrollToAnchorWithRetry(id, attempt) {{
-        if (!id) {{
+      function scrollToAnchorWithRetry(anchor, attempt) {{
+        if (!anchor) {{
           return;
         }}
         var tries = attempt || 0;
-        var target = document.getElementById(id);
+        var target = document.getElementById(anchor);
         if (target) {{
           target.scrollIntoView({{ block: "start", behavior: "auto" }});
+          sessionStorage.removeItem("study-dashboard-anchor");
+          sessionStorage.setItem("study-dashboard-current-anchor", anchor);
+          window.studyPendingAnchor = "";
+          window.setTimeout(enhanceSidebar, 30);
           return;
         }}
-        if (tries < 25) {{
+        if (tries < 30) {{
           window.setTimeout(function () {{
-            scrollToAnchorWithRetry(id, tries + 1);
+            scrollToAnchorWithRetry(anchor, tries + 1);
           }}, 80);
         }}
       }}
-      function scrollToCurrentTarget() {{
-        scrollToAnchorWithRetry(targetIdFromHash(), 0);
+      function scrollPendingAnchor() {{
+        scrollToAnchorWithRetry(readPendingAnchor(), 0);
       }}
       function enhanceSidebar() {{
         var sidebar = document.querySelector(".sidebar");
         if (!sidebar) {{
           return;
         }}
-        var targetId = targetIdFromHash();
+        var targetId = readPendingAnchor() ||
+          sessionStorage.getItem("study-dashboard-current-anchor") ||
+          targetIdFromHash();
+        var openDate = sessionStorage.getItem("study-dashboard-open-date") ||
+          dateAnchorFromAnchor(targetId);
         sidebar.querySelectorAll("li").forEach(function (item) {{
           var childUl = getDirectChildUl(item);
           var link = getDirectChildLink(item);
           var depth = sidebarDepth(item, sidebar);
+          item.classList.remove("nav-current");
           if (childUl) {{
             item.classList.add("nav-collapsible");
             if (depth <= 1) {{
               item.classList.add("nav-open");
             }}
-            if (depth === 2) {{
+            if (link && link.dataset.anchor && link.classList.contains("toc-date-link")) {{
               item.classList.add("nav-date");
-              if (!item.dataset.boundCollapse) {{
-                item.dataset.boundCollapse = "true";
-                link && link.addEventListener("click", function () {{
-                  item.classList.toggle("nav-open");
-                  scrollToAnchorWithRetry(targetIdFromHref(link.getAttribute("href")), 0);
-                }});
+              if (
+                link.dataset.anchor === openDate ||
+                targetId === link.dataset.anchor ||
+                targetId.indexOf(link.dataset.anchor + "-") === 0
+              ) {{
+                item.classList.add("nav-open");
+              }} else {{
+                item.classList.remove("nav-open");
               }}
             }}
           }}
-          if (link && link.getAttribute("href") && targetId && link.getAttribute("href").indexOf("id=" + encodeURIComponent(targetId)) !== -1) {{
+          if (link && link.dataset.anchor && targetId === link.dataset.anchor) {{
             item.classList.add("nav-current");
             var parent = item.parentElement;
             while (parent && parent !== sidebar) {{
@@ -702,25 +745,33 @@ def build_index(site: SiteConfig) -> str:
               }}
               parent = parent.parentElement;
             }}
-          }} else {{
-            item.classList.remove("nav-current");
-          }}
-          if (link && !link.dataset.boundClose) {{
-            link.dataset.boundClose = "true";
-            link.addEventListener("click", function () {{
-              scrollToAnchorWithRetry(targetIdFromHref(link.getAttribute("href")), 0);
-              if (!(childUl && depth === 2)) {{
-                window.setTimeout(closeMobileSidebar, 120);
-              }}
-            }});
           }}
         }});
       }}
+      document.addEventListener("click", function (event) {{
+        var link = event.target.closest(".sidebar a[data-anchor]");
+        if (!link) {{
+          return;
+        }}
+        var anchor = link.dataset.anchor || "";
+        setPendingAnchor(anchor);
+        var item = link.closest("li");
+        if (item && link.classList.contains("toc-date-link")) {{
+          item.classList.add("nav-open");
+        }}
+        if (routeFromHref(link.getAttribute("href")) === currentRoute()) {{
+          event.preventDefault();
+          window.setTimeout(scrollPendingAnchor, 0);
+        }}
+        if (link.classList.contains("toc-problem-link")) {{
+          window.setTimeout(closeMobileSidebar, 160);
+        }}
+      }});
       function refreshStudyNavigation() {{
         updateBottomNav();
         window.setTimeout(function () {{
           enhanceSidebar();
-          scrollToCurrentTarget();
+          scrollPendingAnchor();
         }}, 120);
       }}
       window.addEventListener("hashchange", refreshStudyNavigation);
