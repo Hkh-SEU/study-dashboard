@@ -1,9 +1,9 @@
 # 专业课错题本
 
-<nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/">首页</a><a class="doc-nav-link" href="#/plan">今日计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link active" href="#/major">专业课</a></nav>
+<nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link active" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-14 00:58:25</span>
+  <span>更新：2026-06-14 01:36:24</span>
 </div>
 
 <a id="major-06-04" class="section-anchor"></a>

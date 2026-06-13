@@ -1,6 +1,6 @@
 # 学习文件看板
 
-这是一个极简的 GitHub Pages 学习复习看板。它把本地 Markdown 错题本和复习计划生成到 `cloud_site`，再通过 GitHub Pages 发布成手机可以访问的网页。
+把本地 Markdown 错题本和复习计划生成成一个 GitHub Pages 静态复习看板。
 
 唯一访问网址：
 
@@ -10,104 +10,50 @@ https://hkh-seu.github.io/study-dashboard/
 
 ## 每天怎么用
 
-1. 修改桌面上的 Markdown 学习文件。
-2. 运行：
-
-```text
-一键准备云端发布.py
-```
-
+1. 修改桌面上的 Markdown 文件。
+2. 运行 `一键准备云端发布.py`。
 3. 打开 GitHub Desktop。
-4. Summary 填脚本给出的提交信息，例如：
-
-```text
-Update study notes 2026-06-13 16:30
-```
-
+4. Summary 填脚本给出的提交信息，例如 `Update study notes 2026-06-14 01:30`。
 5. 点击 `Commit to main`。
 6. 点击 `Push origin`。
-7. 等 GitHub Actions 自动部署完成。
-8. 手机刷新：
-
-```text
-https://hkh-seu.github.io/study-dashboard/
-```
-
-如果手机看到旧内容，等一分钟再刷新。
+7. 等 GitHub Actions 变成绿色。
+8. 手机刷新 GitHub Pages 网址。
 
 ## 手机端体验
 
-- 底部导航只负责切换：首页、计划、数学、专业。
-- 左下角菜单打开“复习目录”抽屉。
-- 复习目录按“学科 -> 日期 -> 错题编号”组织。
-- 日期下的错题默认折叠，点击日期后展开。
-- 点击错题编号后会跳转到对应错题位置。
-- 错题图片可以点击打开原图，方便放大查看。
+- 默认进入“今日复习计划”，不再单独维护首页。
+- 底部导航只负责切换：计划、数学、专业。
+- 左下角三横线打开当前页目录。
+- 在计划页打开目录，只显示今日复习计划里的题目。
+- 在数学页打开目录，只显示数学错题。
+- 在专业页打开目录，只显示专业课错题。
+- 点击目录里的分组只展开或收起，点击错题才跳转。
+- 点击图片可以打开原图。
 
 ## 本地预览
-
-直接运行：
-
-```text
-一键运行学习看板.py
-```
-
-或者运行：
 
 ```powershell
 D:\Python3_13\python.exe run.py
 ```
 
-本地预览只用于电脑端检查排版，公网访问以 GitHub Pages 为准。
+也可以直接运行：
+
+```text
+一键运行学习看板.py
+```
 
 ## 命令速查
 
-完整自检：
-
 ```powershell
 D:\Python3_13\python.exe publish.py --doctor
-```
-
-重新生成静态站点：
-
-```powershell
 D:\Python3_13\python.exe publish.py --clean
-```
-
-部署文件检查：
-
-```powershell
 D:\Python3_13\python.exe publish.py --deploy-check
-```
-
-打开公网网址：
-
-```powershell
 D:\Python3_13\python.exe publish.py --open-public
 ```
 
-## 配置
+## 部署方式
 
-`config.json` 里的 `deploy` 保持 GitHub Pages 单站点模式：
-
-```json
-{
-  "deploy": {
-    "provider": "github_pages",
-    "public_url": "https://hkh-seu.github.io/study-dashboard/",
-    "root_directory": "",
-    "output_directory": "cloud_site",
-    "git_enabled": false,
-    "default_branch": "main"
-  }
-}
-```
-
-不要在配置中写 token、账号或密码。
-
-## GitHub Pages
-
-项目通过 `.github/workflows/pages.yml` 把 `cloud_site` 发布到 GitHub Pages。
+项目使用 GitHub Pages 单站点模式。`.github/workflows/pages.yml` 会把 `cloud_site` 发布到 GitHub Pages。
 
 需要确认：
 
@@ -117,4 +63,4 @@ D:\Python3_13\python.exe publish.py --open-public
 
 ## 隐私提醒
 
-仓库公开后，`cloud_site` 中的错题本、复习计划和截图也会公开。不要把 token、账号、密码或其他隐私内容写进学习文件或项目文件。
+仓库公开后，`cloud_site` 中的错题本、复习计划和截图都会公开。不要把 token、账号、密码或其他隐私内容写进学习文件。

@@ -121,10 +121,9 @@ def document_priority(document: PublishedDocument) -> tuple[int, str]:
 
 def document_nav(active_target: str | None = None) -> str:
     items = [
-        ("首页", "#/", ""),
-        ("今日计划", "#/plan", "plan.md"),
+        ("计划", "#/plan", "plan.md"),
         ("数学", "#/math", "math.md"),
-        ("专业课", "#/major", "major.md"),
+        ("专业", "#/major", "major.md"),
     ]
     links = []
     active = (active_target or "").lower()
@@ -138,7 +137,6 @@ def document_nav(active_target: str | None = None) -> str:
 
 def mobile_bottom_nav() -> str:
     items = [
-        ("首页", "#/", "home"),
         ("计划", "#/plan", "plan"),
         ("数学", "#/math", "math"),
         ("专业", "#/major", "major"),
@@ -369,21 +367,64 @@ def strip_duplicate_title(content: str, title: str) -> str:
     return content
 
 
-def build_document_markdown(document: PublishedDocument, published_at: str) -> str:
-    content = add_problem_heading_anchors(document, strip_duplicate_title(document.content, document.title))
-    return f"""# {document.title}
+def build_document_markdown(
+    document: PublishedDocument,
+    published_at: str,
+    documents: list[PublishedDocument] | None = None,
+) -> str:
+    content = add_document_heading_anchors(document, strip_duplicate_title(document.content, document.title)).strip()
+    parts = [
+        f"# {document.title}",
+        "",
+        document_nav(document.target),
+        "",
+        '<div class="publish-meta">',
+        f"  <span>更新：{published_at}</span>",
+        "</div>",
+    ]
 
-{document_nav(document.target)}
+    if Path(document.target).stem.lower() == "plan" and documents is not None:
+        parts.extend(["", build_plan_summary(documents)])
 
-<div class="publish-meta">
-  <span>更新：{published_at}</span>
-</div>
-
-{content}"""
+    parts.extend(["", content, ""])
+    return "\n".join(parts)
 
 
-def add_problem_heading_anchors(document: PublishedDocument, content: str) -> str:
-    if Path(document.target).stem.lower() not in {"math", "major"}:
+def plan_section_anchor(section_index: int, item_index: int | None = None) -> str:
+    if item_index is None:
+        return f"plan-section-{section_index:02d}"
+    return f"plan-section-{section_index:02d}-{item_index:02d}"
+
+
+def add_document_heading_anchors(document: PublishedDocument, content: str) -> str:
+    stem = Path(document.target).stem.lower()
+    if stem == "plan":
+        lines: list[str] = []
+        section_index = 0
+        item_index = 0
+        for line in content.splitlines():
+            section_match = re.match(r"^##\s+(.+?)\s*$", line)
+            if section_match:
+                section_index += 1
+                item_index = 0
+                lines.append(f'<a id="{plan_section_anchor(section_index)}" class="section-anchor"></a>')
+                lines.append(line)
+                continue
+
+            item_match = re.match(r"^###\s+(.+?)\s*$", line)
+            if item_match:
+                if section_index == 0:
+                    section_index = 1
+                    lines.append(f'<a id="{plan_section_anchor(section_index)}" class="section-anchor"></a>')
+                item_index += 1
+                lines.append(f'<a id="{plan_section_anchor(section_index, item_index)}" class="section-anchor"></a>')
+                lines.append(line)
+                continue
+
+            lines.append(line)
+        return "\n".join(lines) + ("\n" if content.endswith("\n") else "")
+
+    if stem not in {"math", "major"}:
         return content
 
     lines: list[str] = []
@@ -399,7 +440,7 @@ def add_problem_heading_anchors(document: PublishedDocument, content: str) -> st
             continue
 
         problem_match = re.match(r"^###\s+(.+?)\s*$", line)
-        if problem_match and current_date and "错题" in problem_match.group(1):
+        if problem_match and current_date:
             title = strip_markdown_marks(problem_match.group(1))
             lines.append(f'<a id="{problem_section_anchor(document.target, current_date, title)}" class="section-anchor"></a>')
             lines.append(line)
@@ -408,6 +449,35 @@ def add_problem_heading_anchors(document: PublishedDocument, content: str) -> st
         lines.append(line)
 
     return "\n".join(lines) + ("\n" if content.endswith("\n") else "")
+
+
+def extract_plan_sections(document: PublishedDocument) -> list[tuple[str, str, list[tuple[str, str]]]]:
+    content = strip_duplicate_title(document.content, document.title)
+    if Path(document.target).stem.lower() != "plan":
+        return []
+
+    sections: list[tuple[str, str, list[tuple[str, str]]]] = []
+    section_index = 0
+    item_index = 0
+    for line in content.splitlines():
+        section_match = re.match(r"^##\s+(.+?)\s*$", line)
+        if section_match:
+            section_index += 1
+            item_index = 0
+            title = strip_markdown_marks(section_match.group(1))
+            sections.append((title, plan_section_anchor(section_index), []))
+            continue
+
+        item_match = re.match(r"^###\s+(.+?)\s*$", line)
+        if item_match:
+            if not sections:
+                section_index = 1
+                sections.append(("今日计划", plan_section_anchor(section_index), []))
+            item_index += 1
+            title = strip_markdown_marks(item_match.group(1))
+            sections[-1][2].append((title, plan_section_anchor(section_index, item_index)))
+
+    return sections
 
 
 def extract_problem_sections(document: PublishedDocument) -> list[tuple[str, str, list[tuple[str, str]]]]:
@@ -425,7 +495,7 @@ def extract_problem_sections(document: PublishedDocument) -> list[tuple[str, str
             continue
 
         problem_match = re.match(r"^###\s+(.+?)\s*$", line)
-        if problem_match and "错题" in problem_match.group(1):
+        if problem_match:
             title = strip_markdown_marks(problem_match.group(1))
             if not sections:
                 sections.append(("本页", problem_section_anchor(document.target, "本页"), []))
@@ -526,23 +596,11 @@ def build_plan_summary(documents: list[PublishedDocument]) -> str:
 
 
 def build_home(site: SiteConfig, documents: list[PublishedDocument], published_at: str) -> str:
-    ordered_documents = sorted(documents, key=document_priority)
-    cards = "\n".join(
-        f'<a class="study-card" href="{html.escape(docsify_route(document.target))}">'
-        f'<strong>{html.escape(document.title)}</strong>'
-        "</a>"
-        for document in ordered_documents
-    )
-
     return f"""# {site.title}
 
-{build_plan_summary(documents)}
+<p class="home-updated">正在进入今日复习计划...</p>
 
-<div class="study-card-grid">
-{cards}
-</div>
-
-<p class="home-updated">更新：{published_at}</p>
+<p><a href="#/plan">进入今日复习计划</a></p>
 """
 
 
@@ -576,12 +634,17 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
 def build_mobile_drawer(documents: list[PublishedDocument]) -> str:
     sections_html: list[str] = []
     for document in sorted(documents, key=document_priority):
-        if Path(document.target).stem.lower() not in {"math", "major"}:
+        stem = Path(document.target).stem.lower()
+        if stem == "plan":
+            sections = extract_plan_sections(document)
+        elif stem in {"math", "major"}:
+            sections = extract_problem_sections(document)
+        else:
             continue
         route = docsify_route(document.target)
         label = html.escape(document_route_label(document))
         date_blocks: list[str] = []
-        for date, date_anchor, problems in extract_problem_sections(document):
+        for date, date_anchor, problems in sections:
             problem_links = "".join(
                 f'<a class="study-drawer-problem-link" href="{route}" '
                 f'data-route="{route}" data-anchor="{html.escape(anchor, quote=True)}">'
@@ -598,21 +661,21 @@ def build_mobile_drawer(documents: list[PublishedDocument]) -> str:
                 f'</div>'
             )
         sections_html.append(
-            f'<section class="study-drawer-subject" data-route="{route}">'
+            f'<section class="study-drawer-subject" data-route="{route}" hidden>'
             f'<a class="study-drawer-subject-link" href="{route}" data-route="{route}">{label}</a>'
             f'<div class="study-drawer-dates">{"".join(date_blocks)}</div>'
             f'</section>'
         )
 
     return (
-        '<button class="study-drawer-button" type="button" aria-label="打开复习目录" '
+        '<button class="study-drawer-button" type="button" aria-label="打开当前页目录" '
         'aria-controls="study-drawer" aria-expanded="false">'
         '<span></span><span></span><span></span>'
         '</button>'
         '<div class="study-drawer-backdrop" hidden></div>'
-        '<aside id="study-drawer" class="study-drawer" aria-label="复习目录" aria-hidden="true">'
-        '<div class="study-drawer-header"><strong>复习目录</strong>'
-        '<button class="study-drawer-close" type="button" aria-label="关闭复习目录">×</button>'
+        '<aside id="study-drawer" class="study-drawer" aria-label="当前页目录" aria-hidden="true">'
+        '<div class="study-drawer-header"><strong>当前页目录</strong>'
+        '<button class="study-drawer-close" type="button" aria-label="关闭目录">×</button>'
         '</div><nav class="study-drawer-nav">'
         + "".join(sections_html)
         + '</nav></aside>'
@@ -639,8 +702,12 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
     {mobile_bottom_nav()}
     {build_mobile_drawer(documents)}
     <script>
+      if (!window.location.hash || window.location.hash === "#" || window.location.hash === "#/") {{
+        window.location.replace("#/plan");
+      }}
       window.$docsify = {{
         name: {js_title},
+        homepage: "plan.md",
         loadSidebar: true,
         subMaxLevel: 0,
         auto2top: false,
@@ -663,18 +730,21 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         var hash = window.location.hash || "#/";
         var route = hash.indexOf("#/plan") === 0 ? "plan" :
           hash.indexOf("#/math") === 0 ? "math" :
-          hash.indexOf("#/major") === 0 ? "major" : "home";
+          hash.indexOf("#/major") === 0 ? "major" : "plan";
         document.querySelectorAll(".mobile-bottom-nav-link").forEach(function (item) {{
           item.classList.toggle("active", item.dataset.route === route);
         }});
       }}
       window.studyPendingAnchor = "";
+      function normalizeRoute(route) {{
+        return (!route || route === "#" || route === "#/") ? "#/plan" : route;
+      }}
       function currentRoute() {{
-        return (window.location.hash || "#/").split("?")[0] || "#/";
+        return normalizeRoute((window.location.hash || "#/plan").split("?")[0] || "#/plan");
       }}
       window.studyLastRoute = currentRoute();
       function routeFromHref(href) {{
-        return (href || "#/").split("?")[0] || "#/";
+        return normalizeRoute((href || "#/plan").split("?")[0] || "#/plan");
       }}
       function targetIdFromHash() {{
         var hash = window.location.hash || "";
@@ -682,6 +752,10 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         return match ? decodeURIComponent(match[1]) : "";
       }}
       function dateAnchorFromAnchor(anchor) {{
+        var planMatch = (anchor || "").match(/^(plan-section-\\d{{2}})/);
+        if (planMatch) {{
+          return planMatch[1];
+        }}
         var match = (anchor || "").match(/^(math|major)-(\\d{{1,2}}[-/.]\\d{{1,2}})/);
         return match ? match[1] + "-" + match[2].replace(/[/.]/g, "-") : "";
       }}
@@ -871,7 +945,9 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           writeOpenDates(openDates);
         }}
         drawer.querySelectorAll(".study-drawer-subject").forEach(function (subject) {{
-          subject.classList.toggle("is-current", subject.dataset.route === route);
+          var isCurrent = subject.dataset.route === route;
+          subject.hidden = !isCurrent;
+          subject.classList.toggle("is-current", isCurrent);
         }});
         drawer.querySelectorAll(".study-drawer-date").forEach(function (dateBlock) {{
           var anchor = dateBlock.dataset.dateAnchor || "";
@@ -975,7 +1051,6 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         var anchor = problemLink.dataset.anchor || "";
         var route = routeFromHref(problemLink.getAttribute("href"));
         setPendingAnchor(anchor);
-        closeStudyDrawer();
         if (route === currentRoute()) {{
           window.setTimeout(scrollPendingAnchor, 0);
         }} else {{
@@ -991,7 +1066,6 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         event.stopPropagation();
         sessionStorage.removeItem("study-dashboard-anchor");
         window.studyPendingAnchor = "";
-        closeStudyDrawer();
         var route = routeFromHref(subjectLink.getAttribute("href"));
         if (route === currentRoute()) {{
           window.setTimeout(function () {{
@@ -1417,7 +1491,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   color: #4e5b55;
   font-size: 0.82rem;
 }
@@ -1434,11 +1508,22 @@ body {
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h1,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 14px !important;
+  margin-top: 8px !important;
 }
 
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
+  margin-top: 8px !important;
+}
+
+.markdown-section .publish-meta + .today-summary {
+  margin-top: 8px;
+}
+
+.markdown-section .today-summary + h1,
+.markdown-section .today-summary + h2,
+.markdown-section .today-summary + .section-anchor + h1,
+.markdown-section .today-summary + .section-anchor + h2 {
   margin-top: 14px !important;
 }
 
@@ -1590,7 +1675,7 @@ body {
   .markdown-section h1 {
     font-size: 1.48rem;
     line-height: 1.25;
-    margin: 0 0 0.48rem !important;
+    margin: 0 0 0.42rem !important;
   }
 
   .markdown-section h2 {
@@ -1604,7 +1689,18 @@ body {
   .markdown-section .publish-meta + .section-anchor + h2,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-    margin-top: 0.85rem !important;
+    margin-top: 0.38rem !important;
+  }
+
+  .markdown-section .publish-meta + .today-summary {
+    margin-top: 8px;
+  }
+
+  .markdown-section .today-summary + h1,
+  .markdown-section .today-summary + h2,
+  .markdown-section .today-summary + .section-anchor + h1,
+  .markdown-section .today-summary + .section-anchor + h2 {
+    margin-top: 0.65rem !important;
   }
 
   .markdown-section .publish-meta + .section-anchor {
@@ -1886,7 +1982,7 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 0 0 10px;
+    margin: 0 0 6px;
     font-size: 0.78rem;
   }
 
@@ -1906,7 +2002,7 @@ body {
     left: 74px;
     z-index: 35;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
     border-radius: 14px;
@@ -1919,13 +2015,13 @@ body {
   .mobile-bottom-nav-link {
     position: relative;
     display: flex;
-    min-height: 36px;
+    min-height: 38px;
     align-items: center;
     justify-content: center;
     border-radius: 11px;
     padding: 3px 2px 5px;
     color: #1d564c;
-    font-size: 0.76rem;
+    font-size: 0.82rem;
     font-weight: 750;
     line-height: 1;
     text-align: center;
@@ -1972,7 +2068,10 @@ def publish(clean: bool) -> tuple[SiteConfig, list[PublishedDocument], DeployCon
             modified=document.modified,
             size=document.size,
         )
-        (site.output_dir / document.target).write_text(build_document_markdown(output_document, published_at), encoding="utf-8")
+        (site.output_dir / document.target).write_text(
+            build_document_markdown(output_document, published_at, documents),
+            encoding="utf-8",
+        )
 
     (site.output_dir / "README.md").write_text(build_home(site, documents, published_at), encoding="utf-8")
     (site.output_dir / "_sidebar.md").write_text(build_sidebar(documents), encoding="utf-8")

@@ -293,7 +293,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0 0 10px;
+  margin: 0 0 6px;
   color: #4e5b55;
   font-size: 0.82rem;
 }
@@ -310,11 +310,22 @@ body {
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h1,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 14px !important;
+  margin-top: 8px !important;
 }
 
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
+  margin-top: 8px !important;
+}
+
+.markdown-section .publish-meta + .today-summary {
+  margin-top: 8px;
+}
+
+.markdown-section .today-summary + h1,
+.markdown-section .today-summary + h2,
+.markdown-section .today-summary + .section-anchor + h1,
+.markdown-section .today-summary + .section-anchor + h2 {
   margin-top: 14px !important;
 }
 
@@ -466,7 +477,7 @@ body {
   .markdown-section h1 {
     font-size: 1.48rem;
     line-height: 1.25;
-    margin: 0 0 0.48rem !important;
+    margin: 0 0 0.42rem !important;
   }
 
   .markdown-section h2 {
@@ -480,7 +491,18 @@ body {
   .markdown-section .publish-meta + .section-anchor + h2,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-    margin-top: 0.85rem !important;
+    margin-top: 0.38rem !important;
+  }
+
+  .markdown-section .publish-meta + .today-summary {
+    margin-top: 8px;
+  }
+
+  .markdown-section .today-summary + h1,
+  .markdown-section .today-summary + h2,
+  .markdown-section .today-summary + .section-anchor + h1,
+  .markdown-section .today-summary + .section-anchor + h2 {
+    margin-top: 0.65rem !important;
   }
 
   .markdown-section .publish-meta + .section-anchor {
@@ -762,7 +784,7 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 0 0 10px;
+    margin: 0 0 6px;
     font-size: 0.78rem;
   }
 
@@ -782,7 +804,7 @@ body {
     left: 74px;
     z-index: 35;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
     border-radius: 14px;
@@ -795,13 +817,13 @@ body {
   .mobile-bottom-nav-link {
     position: relative;
     display: flex;
-    min-height: 36px;
+    min-height: 38px;
     align-items: center;
     justify-content: center;
     border-radius: 11px;
     padding: 3px 2px 5px;
     color: #1d564c;
-    font-size: 0.76rem;
+    font-size: 0.82rem;
     font-weight: 750;
     line-height: 1;
     text-align: center;
