@@ -699,9 +699,12 @@ def build_index(site: SiteConfig) -> str:
         if (window.innerWidth > 768) {{
           return;
         }}
-        [0, 60, 160, 320].forEach(function (delay) {{
+        window.studySidebarKeepOpenUntil = Date.now() + 1500;
+        [0, 60, 160, 320, 700, 1200].forEach(function (delay) {{
           window.setTimeout(function () {{
-            document.body.classList.remove("close");
+            if (Date.now() <= window.studySidebarKeepOpenUntil) {{
+              document.body.classList.remove("close");
+            }}
           }}, delay);
         }});
       }}
@@ -821,15 +824,7 @@ def build_index(site: SiteConfig) -> str:
           }}
         }});
       }}
-      document.addEventListener("click", function (event) {{
-        var toggle = event.target.closest(".sidebar .toc-toggle");
-        if (!toggle) {{
-          return;
-        }}
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-        keepMobileSidebarOpen();
+      function toggleDateItem(toggle) {{
         var item = toggle.closest("li");
         if (!item) {{
           return;
@@ -843,7 +838,37 @@ def build_index(site: SiteConfig) -> str:
           forgetOpenDate(anchor);
           toggle.setAttribute("aria-expanded", "false");
         }}
-      }}, true);
+      }}
+      function handleSidebarToggle(event) {{
+        var toggle = event.target.closest(".sidebar .toc-toggle");
+        if (!toggle) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        keepMobileSidebarOpen();
+
+        if (event.type === "pointerdown" || event.type === "touchstart") {{
+          return;
+        }}
+
+        var now = Date.now();
+        if (now - window.studyLastToggleAt < 260) {{
+          return;
+        }}
+        window.studyLastToggleAt = now;
+        toggleDateItem(toggle);
+      }}
+      ["pointerdown", "pointerup", "touchstart", "touchend", "click"].forEach(function (eventName) {{
+        document.addEventListener(eventName, handleSidebarToggle, true);
+      }});
+      var sidebarGuard = new MutationObserver(function () {{
+        if (window.innerWidth <= 768 && Date.now() <= (window.studySidebarKeepOpenUntil || 0)) {{
+          document.body.classList.remove("close");
+        }}
+      }});
+      sidebarGuard.observe(document.body, {{ attributes: true, attributeFilter: ["class"] }});
       document.addEventListener("click", function (event) {{
         var link = event.target.closest(".sidebar a[data-anchor]");
         if (!link) {{
@@ -1206,7 +1231,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0 0 4px;
+  margin: 0 0 10px;
   color: #4e5b55;
   font-size: 0.82rem;
 }
@@ -1219,13 +1244,16 @@ body {
   line-height: 1.45;
 }
 
+.markdown-section .publish-meta + h1,
 .markdown-section .publish-meta + h2,
+.markdown-section .publish-meta + .section-anchor + h1,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 4px !important;
+  margin-top: 14px !important;
 }
 
+.markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-  margin-top: 4px !important;
+  margin-top: 14px !important;
 }
 
 .markdown-section .publish-meta + .section-anchor {
@@ -1384,10 +1412,13 @@ body {
     margin-top: 1rem;
   }
 
+  .markdown-section .publish-meta + h1,
   .markdown-section .publish-meta + h2,
+  .markdown-section .publish-meta + .section-anchor + h1,
   .markdown-section .publish-meta + .section-anchor + h2,
+  .markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-    margin-top: 0.25rem !important;
+    margin-top: 0.85rem !important;
   }
 
   .markdown-section .publish-meta + .section-anchor {
@@ -1492,7 +1523,7 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 0 0 2px;
+    margin: 0 0 10px;
     font-size: 0.78rem;
   }
 

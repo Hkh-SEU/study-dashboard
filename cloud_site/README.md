@@ -11,4 +11,4 @@
 <a class="study-card" href="#/major"><strong>专业课错题本</strong></a>
 </div>
 
-<p class="home-updated">更新：2026-06-14 00:02:11</p>
+<p class="home-updated">更新：2026-06-14 00:23:15</p>

@@ -287,7 +287,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0 0 4px;
+  margin: 0 0 10px;
   color: #4e5b55;
   font-size: 0.82rem;
 }
@@ -300,13 +300,16 @@ body {
   line-height: 1.45;
 }
 
+.markdown-section .publish-meta + h1,
 .markdown-section .publish-meta + h2,
+.markdown-section .publish-meta + .section-anchor + h1,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 4px !important;
+  margin-top: 14px !important;
 }
 
+.markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-  margin-top: 4px !important;
+  margin-top: 14px !important;
 }
 
 .markdown-section .publish-meta + .section-anchor {
@@ -465,10 +468,13 @@ body {
     margin-top: 1rem;
   }
 
+  .markdown-section .publish-meta + h1,
   .markdown-section .publish-meta + h2,
+  .markdown-section .publish-meta + .section-anchor + h1,
   .markdown-section .publish-meta + .section-anchor + h2,
+  .markdown-section .publish-meta ~ .section-anchor:first-of-type + h1,
   .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-    margin-top: 0.25rem !important;
+    margin-top: 0.85rem !important;
   }
 
   .markdown-section .publish-meta + .section-anchor {
@@ -573,7 +579,7 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 0 0 2px;
+    margin: 0 0 10px;
     font-size: 0.78rem;
   }
 
