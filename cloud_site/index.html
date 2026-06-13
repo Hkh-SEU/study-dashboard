@@ -10,7 +10,7 @@
   </head>
   <body>
     <div id="app">加载中...</div>
-    <nav class="mobile-bottom-nav" aria-label="手机底部导航"><a class="mobile-bottom-nav-link" href="#/" data-route="home">首页</a><a class="mobile-bottom-nav-link" href="#/plan" data-route="plan">计划</a><a class="mobile-bottom-nav-link" href="#/math" data-route="math">数学</a><a class="mobile-bottom-nav-link" href="#/major" data-route="major">专业课</a></nav>
+    <nav class="mobile-bottom-nav" aria-label="手机底部导航"><a class="mobile-bottom-nav-link" href="#/" data-route="home">首页</a><a class="mobile-bottom-nav-link" href="#/plan" data-route="plan">计划</a><a class="mobile-bottom-nav-link" href="#/math" data-route="math">数学</a><a class="mobile-bottom-nav-link" href="#/major" data-route="major">专业</a></nav>
     <script>
       window.$docsify = {
         name: "复习目录",
@@ -46,6 +46,10 @@
         var match = hash.match(/[?&]id=([^&]+)/);
         return match ? decodeURIComponent(match[1]) : "";
       }
+      function targetIdFromHref(href) {
+        var match = (href || "").match(/[?&]id=([^&]+)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }
       function closeMobileSidebar() {
         if (window.innerWidth <= 768) {
           document.body.classList.add("close");
@@ -78,17 +82,24 @@
         }
         return depth;
       }
-      function scrollToCurrentTarget() {
-        var id = targetIdFromHash();
+      function scrollToAnchorWithRetry(id, attempt) {
         if (!id) {
           return;
         }
-        window.setTimeout(function () {
-          var target = document.getElementById(id);
-          if (target) {
-            target.scrollIntoView({ block: "start", behavior: "auto" });
-          }
-        }, 100);
+        var tries = attempt || 0;
+        var target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ block: "start", behavior: "auto" });
+          return;
+        }
+        if (tries < 25) {
+          window.setTimeout(function () {
+            scrollToAnchorWithRetry(id, tries + 1);
+          }, 80);
+        }
+      }
+      function scrollToCurrentTarget() {
+        scrollToAnchorWithRetry(targetIdFromHash(), 0);
       }
       function enhanceSidebar() {
         var sidebar = document.querySelector(".sidebar");
@@ -111,6 +122,7 @@
                 item.dataset.boundCollapse = "true";
                 link && link.addEventListener("click", function () {
                   item.classList.toggle("nav-open");
+                  scrollToAnchorWithRetry(targetIdFromHref(link.getAttribute("href")), 0);
                 });
               }
             }
@@ -130,6 +142,7 @@
           if (link && !link.dataset.boundClose) {
             link.dataset.boundClose = "true";
             link.addEventListener("click", function () {
+              scrollToAnchorWithRetry(targetIdFromHref(link.getAttribute("href")), 0);
               if (!(childUl && depth === 2)) {
                 window.setTimeout(closeMobileSidebar, 120);
               }

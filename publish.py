@@ -141,7 +141,7 @@ def mobile_bottom_nav() -> str:
         ("首页", "#/", "home"),
         ("计划", "#/plan", "plan"),
         ("数学", "#/math", "math"),
-        ("专业课", "#/major", "major"),
+        ("专业", "#/major", "major"),
     ]
     links = [
         f'<a class="mobile-bottom-nav-link" href="{href}" data-route="{route}">{label}</a>'
@@ -379,8 +379,6 @@ def build_document_markdown(document: PublishedDocument, published_at: str) -> s
   <span>更新：{published_at}</span>
 </div>
 
----
-
 {content}"""
 
 
@@ -614,6 +612,10 @@ def build_index(site: SiteConfig) -> str:
         var match = hash.match(/[?&]id=([^&]+)/);
         return match ? decodeURIComponent(match[1]) : "";
       }}
+      function targetIdFromHref(href) {{
+        var match = (href || "").match(/[?&]id=([^&]+)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }}
       function closeMobileSidebar() {{
         if (window.innerWidth <= 768) {{
           document.body.classList.add("close");
@@ -646,17 +648,24 @@ def build_index(site: SiteConfig) -> str:
         }}
         return depth;
       }}
-      function scrollToCurrentTarget() {{
-        var id = targetIdFromHash();
+      function scrollToAnchorWithRetry(id, attempt) {{
         if (!id) {{
           return;
         }}
-        window.setTimeout(function () {{
-          var target = document.getElementById(id);
-          if (target) {{
-            target.scrollIntoView({{ block: "start", behavior: "auto" }});
-          }}
-        }}, 100);
+        var tries = attempt || 0;
+        var target = document.getElementById(id);
+        if (target) {{
+          target.scrollIntoView({{ block: "start", behavior: "auto" }});
+          return;
+        }}
+        if (tries < 25) {{
+          window.setTimeout(function () {{
+            scrollToAnchorWithRetry(id, tries + 1);
+          }}, 80);
+        }}
+      }}
+      function scrollToCurrentTarget() {{
+        scrollToAnchorWithRetry(targetIdFromHash(), 0);
       }}
       function enhanceSidebar() {{
         var sidebar = document.querySelector(".sidebar");
@@ -679,6 +688,7 @@ def build_index(site: SiteConfig) -> str:
                 item.dataset.boundCollapse = "true";
                 link && link.addEventListener("click", function () {{
                   item.classList.toggle("nav-open");
+                  scrollToAnchorWithRetry(targetIdFromHref(link.getAttribute("href")), 0);
                 }});
               }}
             }}
@@ -698,6 +708,7 @@ def build_index(site: SiteConfig) -> str:
           if (link && !link.dataset.boundClose) {{
             link.dataset.boundClose = "true";
             link.addEventListener("click", function () {{
+              scrollToAnchorWithRetry(targetIdFromHref(link.getAttribute("href")), 0);
               if (!(childUl && depth === 2)) {{
                 window.setTimeout(closeMobileSidebar, 120);
               }}
@@ -969,7 +980,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 8px 0 16px;
+  margin: 0 0 8px;
   color: #4e5b55;
   font-size: 0.82rem;
 }
@@ -980,6 +991,11 @@ body {
   padding: 3px 8px;
   background: #f2f6f3;
   line-height: 1.45;
+}
+
+.markdown-section .publish-meta + h2,
+.markdown-section .publish-meta + .section-anchor + h2 {
+  margin-top: 16px;
 }
 
 .doc-nav {
@@ -1209,7 +1225,7 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 2px 0 12px;
+    margin: 0 0 8px;
     font-size: 0.78rem;
   }
 
@@ -1233,7 +1249,7 @@ body {
     gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
     border-radius: 12px;
-    padding: 3px;
+    padding: 2px;
     background: rgba(255, 255, 255, 0.96);
     box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
     backdrop-filter: blur(8px);
@@ -1241,20 +1257,24 @@ body {
 
   .mobile-bottom-nav-link {
     position: relative;
-    min-height: 34px;
+    display: flex;
+    min-height: 32px;
+    align-items: center;
+    justify-content: center;
     border-radius: 9px;
-    padding: 5px 2px 6px;
+    padding: 3px 2px 5px;
     color: #1d564c;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 750;
-    line-height: 1.15;
+    line-height: 1;
     text-align: center;
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .mobile-bottom-nav-link.active {
     color: #1d7a68;
-    background: #f1f8f5;
+    background: #f4faf7;
   }
 
   .mobile-bottom-nav-link.active::after {

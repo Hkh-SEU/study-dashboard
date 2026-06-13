@@ -3,10 +3,8 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/">首页</a><a class="doc-nav-link" href="#/plan">今日计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业课</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-13 21:01:49</span>
+  <span>更新：2026-06-13 21:30:28</span>
 </div>
-
----
 
 <a id="math-06-04" class="section-anchor"></a>
 ## 06-04
