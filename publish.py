@@ -105,16 +105,6 @@ def document_priority(document: PublishedDocument) -> tuple[int, str]:
     return priority.get(stem, 10), document.title
 
 
-def document_hint(document: PublishedDocument) -> str:
-    stem = Path(document.target).stem.lower()
-    hints = {
-        "plan": "先看这里，确定今天要处理的题目",
-        "math": "按日期和错题编号复习",
-        "major": "按日期和错题编号复习",
-    }
-    return hints.get(stem, "打开文档继续复习")
-
-
 def document_nav(active_target: str | None = None) -> str:
     items = [
         ("首页", "#/", ""),
@@ -150,6 +140,16 @@ def docsify_anchor_id(title: str) -> str:
     anchor = re.sub(r"\s+", "-", title.strip().lower())
     anchor = re.sub(r"[^\w\-\u4e00-\u9fff]", "", anchor)
     return anchor.strip("-")
+
+
+def document_route_label(document: PublishedDocument) -> str:
+    stem = Path(document.target).stem.lower()
+    labels = {
+        "plan": "今日计划",
+        "math": "数学",
+        "major": "专业课",
+    }
+    return labels.get(stem, document.title)
 
 
 def strip_markdown_marks(text: str) -> str:
@@ -346,7 +346,6 @@ def strip_duplicate_title(content: str, title: str) -> str:
 
 def build_document_markdown(document: PublishedDocument, published_at: str) -> str:
     content = strip_duplicate_title(document.content, document.title)
-    toc = build_page_toc(document, content)
     return f"""# {document.title}
 
 {document_nav(document.target)}
@@ -364,48 +363,31 @@ def build_document_markdown(document: PublishedDocument, published_at: str) -> s
 
 ---
 
-{toc}
-
 {content}"""
 
 
-def build_page_toc(document: PublishedDocument, content: str) -> str:
+def extract_problem_sections(document: PublishedDocument) -> list[tuple[str, list[str]]]:
+    content = strip_duplicate_title(document.content, document.title)
     if Path(document.target).stem.lower() not in {"math", "major"}:
-        return ""
+        return []
 
     sections: list[tuple[str, list[str]]] = []
-    current_date = ""
     for line in content.splitlines():
         date_match = re.match(r"^##\s+(.+?)\s*$", line)
         if date_match:
             title = strip_markdown_marks(date_match.group(1))
             if re.search(r"\d{1,2}[-/.]\d{1,2}", title):
-                current_date = title
-                sections.append((current_date, []))
+                sections.append((title, []))
             continue
 
         problem_match = re.match(r"^###\s+(.+?)\s*$", line)
         if problem_match and "错题" in problem_match.group(1):
             title = strip_markdown_marks(problem_match.group(1))
             if not sections:
-                current_date = "本页"
-                sections.append((current_date, []))
+                sections.append(("本页", []))
             sections[-1][1].append(title)
 
-    sections = [(date, items) for date, items in sections if items]
-    if not sections:
-        return ""
-
-    route = docsify_route(document.target)
-    blocks = []
-    for date, items in sections:
-        item_links = "".join(
-            f'<a class="page-toc-item" href="{route}?id={html.escape(docsify_anchor_id(item))}">{html.escape(item)}</a>'
-            for item in items
-        )
-        blocks.append(f'<div class="page-toc-row"><strong>{html.escape(date)}</strong><div>{item_links}</div></div>')
-
-    return '<section class="page-toc"><h2>本页目录</h2>' + "".join(blocks) + "</section>\n"
+    return [(date, items) for date, items in sections if items]
 
 
 def resolve_asset_path(raw_ref: str, source: Path) -> Path | None:
@@ -450,7 +432,9 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
         rewritten = copy_asset(match.group(2))
         if rewritten == match.group(2) or is_external_link(rewritten):
             return f"![{alt}]({rewritten})"
-        return f'[![{alt}]({rewritten})]({rewritten})\n\n<span class="image-hint">点击图片查看原图</span>'
+        escaped_alt = html.escape(alt or "题目截图", quote=True)
+        escaped_ref = html.escape(rewritten, quote=True)
+        return f'<a class="image-link" href="{escaped_ref}" target="_blank" rel="noopener"><img src="{escaped_ref}" alt="{escaped_alt}"></a>'
 
     def replace_html(match: re.Match[str]) -> str:
         rewritten = copy_asset(match.group(2))
@@ -501,36 +485,34 @@ def build_home(site: SiteConfig, documents: list[PublishedDocument], published_a
     cards = "\n".join(
         f'<a class="study-card" href="{html.escape(docsify_route(document.target))}">'
         f'<strong>{html.escape(document.title)}</strong>'
-        f'<span>{html.escape(document_hint(document))}</span>'
         "</a>"
         for document in ordered_documents
     )
 
     return f"""# {site.title}
 
-<section class="study-hero">
-  <p class="study-hero-desc">今天从计划开始，再回到错题。</p>
-  <div class="study-status">
-    <span>最近发布</span>
-    <strong>{published_at}</strong>
-  </div>
-  <p class="study-advice">先确定今天的范围，再按日期和错题编号复习。</p>
-</section>
-
 {build_plan_summary(documents)}
 
 <div class="study-card-grid">
 {cards}
 </div>
+
+<p class="home-updated">更新：{published_at}</p>
 """
 
 
 def build_sidebar(documents: list[PublishedDocument]) -> str:
     ordered_documents = sorted(documents, key=document_priority)
-    links = "\n".join(f"- [{document.title}]({docsify_route(document.target)})" for document in ordered_documents)
-    return f"""- [首页](#/)
-{links}
-"""
+    lines = ["- [首页](#/)"]
+    for document in ordered_documents:
+        route = docsify_route(document.target)
+        lines.append(f"- [{document_route_label(document)}]({route})")
+        for date, problems in extract_problem_sections(document):
+            lines.append(f"  - {date}")
+            for problem in problems:
+                anchor = docsify_anchor_id(problem)
+                lines.append(f"    - [{problem}]({route}?id={anchor})")
+    return "\n".join(lines) + "\n"
 
 
 def build_index(site: SiteConfig) -> str:
@@ -548,7 +530,7 @@ def build_index(site: SiteConfig) -> str:
     <link rel="stylesheet" href="assets/cloud.css" />
   </head>
   <body>
-    <div id="app">正在加载学习文件看板...</div>
+    <div id="app">加载中...</div>
     {mobile_bottom_nav()}
     <script>
       window.$docsify = {{
@@ -687,7 +669,8 @@ body {
 }
 
 .markdown-section p a:has(img),
-.markdown-section a:has(img) {
+.markdown-section a:has(img),
+.image-link {
   display: block;
   border-bottom: 0;
 }
@@ -721,7 +704,8 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-.markdown-section img {
+.markdown-section img,
+.image-link img {
   max-width: 100%;
   height: auto;
   display: block;
@@ -731,16 +715,9 @@ body {
   background: #fff;
 }
 
-.markdown-section a img {
+.markdown-section a img,
+.image-link img {
   cursor: zoom-in;
-}
-
-.image-hint {
-  display: block;
-  margin: -10px auto 18px;
-  color: var(--muted);
-  font-size: 0.76rem;
-  text-align: center;
 }
 
 .markdown-section ul,
@@ -833,50 +810,6 @@ body {
   background: #1d7a68;
 }
 
-.page-toc {
-  margin: 12px 0 22px;
-  padding: 12px 14px;
-  border: 1px solid var(--line-soft);
-  border-radius: 8px;
-  background: #fff;
-}
-
-.page-toc h2 {
-  margin: 0 0 10px;
-  border-bottom: 0;
-  padding-bottom: 0;
-  font-size: 1rem;
-}
-
-.page-toc-row {
-  display: grid;
-  grid-template-columns: 76px 1fr;
-  gap: 10px;
-  align-items: start;
-  margin-top: 8px;
-}
-
-.page-toc-row strong {
-  color: #1d564c;
-  font-size: 0.9rem;
-}
-
-.page-toc-row div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.page-toc-item {
-  border: 1px solid var(--line-soft);
-  border-radius: 999px;
-  padding: 3px 8px;
-  color: #1d564c;
-  background: #f8faf7;
-  font-size: 0.82rem;
-  text-decoration: none;
-}
-
 .markdown-section th {
   background: #f2f5ef;
 }
@@ -913,38 +846,6 @@ body {
   line-height: 1.5;
 }
 
-.study-hero {
-  border-left: 4px solid #1d7a68;
-  margin: 0 0 18px;
-  padding: 12px 14px;
-  background: var(--surface-soft);
-}
-
-.study-hero-desc {
-  margin: 0 0 10px;
-  color: #20362f;
-  font-weight: 700;
-}
-
-.study-status {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  margin: 0 0 8px;
-  color: var(--muted);
-  font-size: 0.92rem;
-}
-
-.study-status strong {
-  color: #20362f;
-}
-
-.study-advice {
-  margin: 0;
-  color: #39413b;
-}
-
 .study-card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -956,7 +857,7 @@ body {
   display: block;
   border: 1px solid var(--line-soft);
   border-radius: 8px;
-  padding: 12px 14px;
+  padding: 10px 14px;
   color: var(--ink);
   background: var(--surface);
   text-decoration: none;
@@ -968,15 +869,16 @@ body {
 
 .study-card strong {
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 0;
   color: #1d7a68;
   font-size: 1rem;
 }
 
-.study-card span {
-  display: block;
+.home-updated {
+  margin-top: -8px;
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
+  text-align: right;
 }
 
 .today-summary {
@@ -1036,16 +938,11 @@ body {
     margin-top: 1.25rem;
   }
 
-  .markdown-section img {
+  .markdown-section img,
+  .image-link img {
     width: 100%;
     border-radius: 6px;
     margin: 10px auto 16px;
-  }
-
-  .image-hint {
-    margin-top: -8px;
-    margin-bottom: 14px;
-    font-size: 0.72rem;
   }
 
   .markdown-section table {
@@ -1067,26 +964,6 @@ body {
 
   .sidebar-toggle {
     padding: 18px 22px 10px 12px;
-  }
-
-  .study-hero {
-    margin-bottom: 10px;
-    padding: 10px 11px;
-  }
-
-  .study-hero-desc {
-    margin-bottom: 6px;
-  }
-
-  .study-status {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 8px;
-    font-size: 0.86rem;
-  }
-
-  .study-advice {
-    font-size: 0.95rem;
   }
 
   .study-card-grid {
@@ -1114,13 +991,7 @@ body {
   }
 
   .doc-nav {
-    margin: -2px -2px 8px;
-    padding: 0 2px 6px;
-  }
-
-  .doc-nav-link {
-    padding: 5px 10px;
-    font-size: 0.82rem;
+    display: none;
   }
 
   .publish-meta {
@@ -1143,33 +1014,6 @@ body {
     font-size: 0.74rem;
   }
 
-  .page-toc {
-    margin: 10px 0 18px;
-    padding: 10px 11px;
-  }
-
-  .page-toc h2 {
-    font-size: 0.98rem;
-  }
-
-  .page-toc-row {
-    display: block;
-  }
-
-  .page-toc-row strong {
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  .page-toc-row div {
-    gap: 5px;
-  }
-
-  .page-toc-item {
-    padding: 3px 7px;
-    font-size: 0.78rem;
-  }
-
   .mobile-bottom-nav {
     position: fixed;
     right: 12px;
@@ -1178,18 +1022,19 @@ body {
     z-index: 40;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    border: 1px solid rgba(29, 122, 104, 0.18);
+    gap: 2px;
+    border: 1px solid rgba(29, 122, 104, 0.16);
     border-radius: 14px;
-    padding: 7px;
+    padding: 5px;
     background: rgba(255, 255, 255, 0.94);
     box-shadow: 0 8px 24px rgba(24, 47, 40, 0.12);
     backdrop-filter: blur(8px);
   }
 
   .mobile-bottom-nav-link {
+    position: relative;
     border-radius: 10px;
-    padding: 7px 4px;
+    padding: 7px 4px 8px;
     color: #1d564c;
     font-size: 0.78rem;
     font-weight: 800;
@@ -1198,8 +1043,19 @@ body {
   }
 
   .mobile-bottom-nav-link.active {
-    color: #fff;
+    color: #1d7a68;
+    background: #edf7f4;
+  }
+
+  .mobile-bottom-nav-link.active::after {
+    position: absolute;
+    right: 28%;
+    bottom: 3px;
+    left: 28%;
+    height: 2px;
+    border-radius: 999px;
     background: #1d7a68;
+    content: "";
   }
 }
 """
