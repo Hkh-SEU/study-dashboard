@@ -23,7 +23,14 @@
           placeholder: "搜索错题、知识点、计划...",
           noData: "没有找到相关内容",
           depth: 4
-        }
+        },
+        plugins: [
+          function (hook) {
+            hook.doneEach(function () {
+              refreshStudyNavigation();
+            });
+          }
+        ]
       };
       function updateBottomNav() {
         var hash = window.location.hash || "#/";
@@ -34,8 +41,111 @@
           item.classList.toggle("active", item.dataset.route === route);
         });
       }
-      window.addEventListener("hashchange", updateBottomNav);
-      window.addEventListener("DOMContentLoaded", updateBottomNav);
+      function targetIdFromHash() {
+        var hash = window.location.hash || "";
+        var match = hash.match(/[?&]id=([^&]+)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }
+      function closeMobileSidebar() {
+        if (window.innerWidth <= 768) {
+          document.body.classList.add("close");
+        }
+      }
+      function getDirectChildUl(item) {
+        for (var i = 0; i < item.children.length; i += 1) {
+          if (item.children[i].tagName === "UL") {
+            return item.children[i];
+          }
+        }
+        return null;
+      }
+      function getDirectChildLink(item) {
+        for (var i = 0; i < item.children.length; i += 1) {
+          if (item.children[i].tagName === "A") {
+            return item.children[i];
+          }
+        }
+        return null;
+      }
+      function sidebarDepth(item, root) {
+        var depth = 0;
+        var node = item;
+        while (node && node !== root) {
+          if (node.tagName === "LI") {
+            depth += 1;
+          }
+          node = node.parentElement;
+        }
+        return depth;
+      }
+      function scrollToCurrentTarget() {
+        var id = targetIdFromHash();
+        if (!id) {
+          return;
+        }
+        window.setTimeout(function () {
+          var target = document.getElementById(id);
+          if (target) {
+            target.scrollIntoView({ block: "start", behavior: "auto" });
+          }
+        }, 100);
+      }
+      function enhanceSidebar() {
+        var sidebar = document.querySelector(".sidebar");
+        if (!sidebar) {
+          return;
+        }
+        var targetId = targetIdFromHash();
+        sidebar.querySelectorAll("li").forEach(function (item) {
+          var childUl = getDirectChildUl(item);
+          var link = getDirectChildLink(item);
+          var depth = sidebarDepth(item, sidebar);
+          if (childUl) {
+            item.classList.add("nav-collapsible");
+            if (depth <= 1) {
+              item.classList.add("nav-open");
+            }
+            if (depth === 2) {
+              item.classList.add("nav-date");
+              if (!item.dataset.boundCollapse) {
+                item.dataset.boundCollapse = "true";
+                link && link.addEventListener("click", function () {
+                  item.classList.toggle("nav-open");
+                });
+              }
+            }
+          }
+          if (link && link.getAttribute("href") && targetId && link.getAttribute("href").indexOf("id=" + encodeURIComponent(targetId)) !== -1) {
+            item.classList.add("nav-current");
+            var parent = item.parentElement;
+            while (parent && parent !== sidebar) {
+              if (parent.tagName === "LI") {
+                parent.classList.add("nav-open");
+              }
+              parent = parent.parentElement;
+            }
+          } else {
+            item.classList.remove("nav-current");
+          }
+          if (link && !link.dataset.boundClose) {
+            link.dataset.boundClose = "true";
+            link.addEventListener("click", function () {
+              if (!(childUl && depth === 2)) {
+                window.setTimeout(closeMobileSidebar, 120);
+              }
+            });
+          }
+        });
+      }
+      function refreshStudyNavigation() {
+        updateBottomNav();
+        window.setTimeout(function () {
+          enhanceSidebar();
+          scrollToCurrentTarget();
+        }, 120);
+      }
+      window.addEventListener("hashchange", refreshStudyNavigation);
+      window.addEventListener("DOMContentLoaded", refreshStudyNavigation);
     </script>
     <script src="assets/vendor/docsify/docsify.min.js"></script>
     <script src="assets/vendor/docsify/search.min.js"></script>

@@ -396,14 +396,14 @@ def add_problem_heading_anchors(document: PublishedDocument, content: str) -> st
             title = strip_markdown_marks(date_match.group(1))
             if re.search(r"\d{1,2}[-/.]\d{1,2}", title):
                 current_date = title
-                lines.append(f'<span id="{problem_section_anchor(document.target, title)}"></span>')
+                lines.append(f'<a id="{problem_section_anchor(document.target, title)}" class="section-anchor"></a>')
             lines.append(line)
             continue
 
         problem_match = re.match(r"^###\s+(.+?)\s*$", line)
         if problem_match and current_date and "错题" in problem_match.group(1):
             title = strip_markdown_marks(problem_match.group(1))
-            lines.append(f'<span id="{problem_section_anchor(document.target, current_date, title)}"></span>')
+            lines.append(f'<a id="{problem_section_anchor(document.target, current_date, title)}" class="section-anchor"></a>')
             lines.append(line)
             continue
 
@@ -591,7 +591,14 @@ def build_index(site: SiteConfig) -> str:
           placeholder: "搜索错题、知识点、计划...",
           noData: "没有找到相关内容",
           depth: 4
-        }}
+        }},
+        plugins: [
+          function (hook) {{
+            hook.doneEach(function () {{
+              refreshStudyNavigation();
+            }});
+          }}
+        ]
       }};
       function updateBottomNav() {{
         var hash = window.location.hash || "#/";
@@ -602,8 +609,111 @@ def build_index(site: SiteConfig) -> str:
           item.classList.toggle("active", item.dataset.route === route);
         }});
       }}
-      window.addEventListener("hashchange", updateBottomNav);
-      window.addEventListener("DOMContentLoaded", updateBottomNav);
+      function targetIdFromHash() {{
+        var hash = window.location.hash || "";
+        var match = hash.match(/[?&]id=([^&]+)/);
+        return match ? decodeURIComponent(match[1]) : "";
+      }}
+      function closeMobileSidebar() {{
+        if (window.innerWidth <= 768) {{
+          document.body.classList.add("close");
+        }}
+      }}
+      function getDirectChildUl(item) {{
+        for (var i = 0; i < item.children.length; i += 1) {{
+          if (item.children[i].tagName === "UL") {{
+            return item.children[i];
+          }}
+        }}
+        return null;
+      }}
+      function getDirectChildLink(item) {{
+        for (var i = 0; i < item.children.length; i += 1) {{
+          if (item.children[i].tagName === "A") {{
+            return item.children[i];
+          }}
+        }}
+        return null;
+      }}
+      function sidebarDepth(item, root) {{
+        var depth = 0;
+        var node = item;
+        while (node && node !== root) {{
+          if (node.tagName === "LI") {{
+            depth += 1;
+          }}
+          node = node.parentElement;
+        }}
+        return depth;
+      }}
+      function scrollToCurrentTarget() {{
+        var id = targetIdFromHash();
+        if (!id) {{
+          return;
+        }}
+        window.setTimeout(function () {{
+          var target = document.getElementById(id);
+          if (target) {{
+            target.scrollIntoView({{ block: "start", behavior: "auto" }});
+          }}
+        }}, 100);
+      }}
+      function enhanceSidebar() {{
+        var sidebar = document.querySelector(".sidebar");
+        if (!sidebar) {{
+          return;
+        }}
+        var targetId = targetIdFromHash();
+        sidebar.querySelectorAll("li").forEach(function (item) {{
+          var childUl = getDirectChildUl(item);
+          var link = getDirectChildLink(item);
+          var depth = sidebarDepth(item, sidebar);
+          if (childUl) {{
+            item.classList.add("nav-collapsible");
+            if (depth <= 1) {{
+              item.classList.add("nav-open");
+            }}
+            if (depth === 2) {{
+              item.classList.add("nav-date");
+              if (!item.dataset.boundCollapse) {{
+                item.dataset.boundCollapse = "true";
+                link && link.addEventListener("click", function () {{
+                  item.classList.toggle("nav-open");
+                }});
+              }}
+            }}
+          }}
+          if (link && link.getAttribute("href") && targetId && link.getAttribute("href").indexOf("id=" + encodeURIComponent(targetId)) !== -1) {{
+            item.classList.add("nav-current");
+            var parent = item.parentElement;
+            while (parent && parent !== sidebar) {{
+              if (parent.tagName === "LI") {{
+                parent.classList.add("nav-open");
+              }}
+              parent = parent.parentElement;
+            }}
+          }} else {{
+            item.classList.remove("nav-current");
+          }}
+          if (link && !link.dataset.boundClose) {{
+            link.dataset.boundClose = "true";
+            link.addEventListener("click", function () {{
+              if (!(childUl && depth === 2)) {{
+                window.setTimeout(closeMobileSidebar, 120);
+              }}
+            }});
+          }}
+        }});
+      }}
+      function refreshStudyNavigation() {{
+        updateBottomNav();
+        window.setTimeout(function () {{
+          enhanceSidebar();
+          scrollToCurrentTarget();
+        }}, 120);
+      }}
+      window.addEventListener("hashchange", refreshStudyNavigation);
+      window.addEventListener("DOMContentLoaded", refreshStudyNavigation);
     </script>
     <script src="assets/vendor/docsify/docsify.min.js"></script>
     <script src="assets/vendor/docsify/search.min.js"></script>
@@ -674,6 +784,40 @@ body {
   color: #1d7a68;
   border-right-color: #1d7a68;
   font-weight: 700;
+}
+
+.sidebar li.nav-date > a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.sidebar li.nav-date > a::before {
+  color: #86928b;
+  font-size: 0.68rem;
+  content: "›";
+}
+
+.sidebar li.nav-date.nav-open > a::before {
+  content: "⌄";
+}
+
+.sidebar li.nav-date:not(.nav-open) > ul {
+  display: none;
+}
+
+.sidebar li.nav-current > a {
+  color: #1d7a68;
+  font-weight: 700;
+}
+
+.section-anchor {
+  display: block;
+  position: relative;
+  top: -18px;
+  height: 0;
+  overflow: hidden;
 }
 
 .content {
@@ -1015,10 +1159,24 @@ body {
 
   .sidebar {
     padding-top: 18px;
+    padding-bottom: 74px;
   }
 
   .sidebar-toggle {
+    z-index: 60;
     padding: 18px 22px 10px 12px;
+  }
+
+  .sidebar ul {
+    padding-left: 14px;
+  }
+
+  .sidebar ul li {
+    margin: 1px 0;
+  }
+
+  .sidebar ul li a {
+    line-height: 1.45;
   }
 
   .study-card-grid {
