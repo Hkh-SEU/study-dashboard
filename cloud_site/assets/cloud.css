@@ -146,6 +146,12 @@ body {
   display: none;
 }
 
+.study-drawer-button,
+.study-drawer,
+.study-drawer-backdrop {
+  display: none;
+}
+
 .markdown-section {
   max-width: var(--content-max-width);
   padding: 28px 28px 56px;
@@ -507,22 +513,187 @@ body {
     padding-left: 1.18rem;
   }
 
-  .sidebar {
-    padding-top: 18px;
-    padding-bottom: 74px;
-  }
-
-  body.study-sidebar-locked .sidebar {
-    transform: translateX(0) !important;
-  }
-
-  body.study-sidebar-locked.close .sidebar {
-    transform: translateX(0) !important;
-  }
-
+  .sidebar,
   .sidebar-toggle {
-    z-index: 60;
-    padding: 18px 22px 10px 12px;
+    display: none !important;
+  }
+
+  .content,
+  body.close .content {
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  .study-drawer-button {
+    position: fixed;
+    left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 80;
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    border: 1px solid rgba(29, 122, 104, 0.16);
+    border-radius: 14px;
+    color: #1d7a68;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
+    backdrop-filter: blur(8px);
+  }
+
+  .study-drawer-button span {
+    width: 17px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .study-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 68;
+    display: block;
+    background: rgba(20, 28, 24, 0.26);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.16s ease;
+  }
+
+  .study-drawer-backdrop[hidden] {
+    display: none;
+  }
+
+  .study-drawer {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 75;
+    display: flex;
+    width: min(82vw, 320px);
+    max-width: 320px;
+    flex-direction: column;
+    border-right: 1px solid var(--line-soft);
+    background: #fff;
+    box-shadow: 10px 0 28px rgba(24, 47, 40, 0.12);
+    transform: translateX(-102%);
+    transition: transform 0.18s ease;
+  }
+
+  body.study-drawer-open .study-drawer {
+    transform: translateX(0);
+  }
+
+  body.study-drawer-open .study-drawer-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .study-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 18px 12px;
+    color: #20362f;
+  }
+
+  .study-drawer-header strong {
+    font-size: 1.12rem;
+    font-weight: 800;
+  }
+
+  .study-drawer-close {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    color: #52605a;
+    background: #f2f6f3;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .study-drawer-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 18px 86px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .study-drawer-subject {
+    margin: 10px 0 14px;
+  }
+
+  .study-drawer-subject-link {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    color: #1d342f;
+    font-weight: 760;
+    text-decoration: none;
+  }
+
+  .study-drawer-subject.is-current > .study-drawer-subject-link {
+    color: #1d7a68;
+  }
+
+  .study-drawer-date {
+    margin: 2px 0 4px;
+  }
+
+  .study-drawer-date-toggle {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 8px;
+    padding: 2px 8px 2px 0;
+    color: #1d564c;
+    background: transparent;
+    font: inherit;
+    font-weight: 760;
+  }
+
+  .study-drawer-chevron {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #7d8982;
+    transition: transform 0.12s ease, background-color 0.12s ease;
+  }
+
+  .study-drawer-date-toggle:active .study-drawer-chevron {
+    background: #eef6f3;
+  }
+
+  .study-drawer-date.is-open .study-drawer-chevron {
+    color: #1d7a68;
+    transform: rotate(90deg);
+  }
+
+  .study-drawer-problems {
+    display: grid;
+    gap: 2px;
+    margin: 0 0 8px 34px;
+  }
+
+  .study-drawer-problem-link {
+    display: inline-flex;
+    min-height: 30px;
+    align-items: center;
+    color: #39413b;
+    font-weight: 520;
+    text-decoration: none;
+  }
+
+  .study-drawer-problem-link.is-current {
+    color: #1d7a68;
+    font-weight: 760;
   }
 
   .sidebar ul {

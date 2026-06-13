@@ -573,7 +573,53 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_index(site: SiteConfig) -> str:
+def build_mobile_drawer(documents: list[PublishedDocument]) -> str:
+    sections_html: list[str] = []
+    for document in sorted(documents, key=document_priority):
+        if Path(document.target).stem.lower() not in {"math", "major"}:
+            continue
+        route = docsify_route(document.target)
+        label = html.escape(document_route_label(document))
+        date_blocks: list[str] = []
+        for date, date_anchor, problems in extract_problem_sections(document):
+            problem_links = "".join(
+                f'<a class="study-drawer-problem-link" href="{route}" '
+                f'data-route="{route}" data-anchor="{html.escape(anchor, quote=True)}">'
+                f'{html.escape(problem)}</a>'
+                for problem, anchor in problems
+            )
+            date_blocks.append(
+                f'<div class="study-drawer-date" data-date-anchor="{html.escape(date_anchor, quote=True)}">'
+                f'<button class="study-drawer-date-toggle" type="button" '
+                f'data-toggle-anchor="{html.escape(date_anchor, quote=True)}" aria-expanded="false">'
+                f'<span class="study-drawer-chevron">›</span><span>{html.escape(date)}</span>'
+                f'</button>'
+                f'<div class="study-drawer-problems" hidden>{problem_links}</div>'
+                f'</div>'
+            )
+        sections_html.append(
+            f'<section class="study-drawer-subject" data-route="{route}">'
+            f'<a class="study-drawer-subject-link" href="{route}" data-route="{route}">{label}</a>'
+            f'<div class="study-drawer-dates">{"".join(date_blocks)}</div>'
+            f'</section>'
+        )
+
+    return (
+        '<button class="study-drawer-button" type="button" aria-label="打开复习目录" '
+        'aria-controls="study-drawer" aria-expanded="false">'
+        '<span></span><span></span><span></span>'
+        '</button>'
+        '<div class="study-drawer-backdrop" hidden></div>'
+        '<aside id="study-drawer" class="study-drawer" aria-label="复习目录" aria-hidden="true">'
+        '<div class="study-drawer-header"><strong>复习目录</strong>'
+        '<button class="study-drawer-close" type="button" aria-label="关闭复习目录">×</button>'
+        '</div><nav class="study-drawer-nav">'
+        + "".join(sections_html)
+        + '</nav></aside>'
+    )
+
+
+def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
     title = html.escape(site.title)
     description = html.escape(site.description)
     sidebar_title = "复习目录"
@@ -591,6 +637,7 @@ def build_index(site: SiteConfig) -> str:
   <body>
     <div id="app">加载中...</div>
     {mobile_bottom_nav()}
+    {build_mobile_drawer(documents)}
     <script>
       window.$docsify = {{
         name: {js_title},
@@ -757,6 +804,84 @@ def build_index(site: SiteConfig) -> str:
       function scrollPendingAnchor() {{
         scrollToAnchorWithRetry(readPendingAnchor(), 0);
       }}
+      function drawerElements() {{
+        return {{
+          drawer: document.getElementById("study-drawer"),
+          backdrop: document.querySelector(".study-drawer-backdrop"),
+          button: document.querySelector(".study-drawer-button")
+        }};
+      }}
+      function openStudyDrawer() {{
+        var parts = drawerElements();
+        if (!parts.drawer || !parts.backdrop || !parts.button) {{
+          return;
+        }}
+        document.body.classList.add("study-drawer-open");
+        parts.drawer.setAttribute("aria-hidden", "false");
+        parts.button.setAttribute("aria-expanded", "true");
+        parts.backdrop.hidden = false;
+        syncStudyDrawer();
+      }}
+      function closeStudyDrawer() {{
+        var parts = drawerElements();
+        document.body.classList.remove("study-drawer-open");
+        if (parts.drawer) {{
+          parts.drawer.setAttribute("aria-hidden", "true");
+        }}
+        if (parts.button) {{
+          parts.button.setAttribute("aria-expanded", "false");
+        }}
+        if (parts.backdrop) {{
+          parts.backdrop.hidden = true;
+        }}
+      }}
+      function setDrawerDateOpen(dateBlock, open) {{
+        if (!dateBlock) {{
+          return;
+        }}
+        var panel = dateBlock.querySelector(".study-drawer-problems");
+        var button = dateBlock.querySelector(".study-drawer-date-toggle");
+        dateBlock.classList.toggle("is-open", open);
+        if (panel) {{
+          panel.hidden = !open;
+        }}
+        if (button) {{
+          button.setAttribute("aria-expanded", open ? "true" : "false");
+        }}
+        var anchor = dateBlock.dataset.dateAnchor || "";
+        if (open) {{
+          rememberOpenDate(anchor);
+        }} else {{
+          forgetOpenDate(anchor);
+        }}
+      }}
+      function syncStudyDrawer() {{
+        var drawer = document.getElementById("study-drawer");
+        if (!drawer) {{
+          return;
+        }}
+        var route = currentRoute();
+        var targetId = readPendingAnchor() ||
+          sessionStorage.getItem("study-dashboard-current-anchor") ||
+          targetIdFromHash();
+        var openDates = readOpenDates();
+        var currentDate = dateAnchorFromAnchor(targetId);
+        if (currentDate && openDates.indexOf(currentDate) === -1) {{
+          openDates.push(currentDate);
+          writeOpenDates(openDates);
+        }}
+        drawer.querySelectorAll(".study-drawer-subject").forEach(function (subject) {{
+          subject.classList.toggle("is-current", subject.dataset.route === route);
+        }});
+        drawer.querySelectorAll(".study-drawer-date").forEach(function (dateBlock) {{
+          var anchor = dateBlock.dataset.dateAnchor || "";
+          setDrawerDateOpen(dateBlock, openDates.indexOf(anchor) !== -1);
+          dateBlock.classList.toggle("is-current", targetId === anchor || targetId.indexOf(anchor + "-") === 0);
+        }});
+        drawer.querySelectorAll(".study-drawer-problem-link").forEach(function (link) {{
+          link.classList.toggle("is-current", targetId === link.dataset.anchor);
+        }});
+      }}
       function enhanceSidebar() {{
         var sidebar = document.querySelector(".sidebar");
         if (!sidebar) {{
@@ -813,6 +938,69 @@ def build_index(site: SiteConfig) -> str:
           }}
         }});
       }}
+      document.addEventListener("click", function (event) {{
+        var openButton = event.target.closest(".study-drawer-button");
+        if (!openButton) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        openStudyDrawer();
+      }}, true);
+      document.addEventListener("click", function (event) {{
+        if (!event.target.closest(".study-drawer-close") && !event.target.closest(".study-drawer-backdrop")) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        closeStudyDrawer();
+      }}, true);
+      document.addEventListener("click", function (event) {{
+        var dateButton = event.target.closest(".study-drawer-date-toggle");
+        if (!dateButton) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        var dateBlock = dateButton.closest(".study-drawer-date");
+        setDrawerDateOpen(dateBlock, !(dateBlock && dateBlock.classList.contains("is-open")));
+      }}, true);
+      document.addEventListener("click", function (event) {{
+        var problemLink = event.target.closest(".study-drawer-problem-link");
+        if (!problemLink) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        var anchor = problemLink.dataset.anchor || "";
+        var route = routeFromHref(problemLink.getAttribute("href"));
+        setPendingAnchor(anchor);
+        closeStudyDrawer();
+        if (route === currentRoute()) {{
+          window.setTimeout(scrollPendingAnchor, 0);
+        }} else {{
+          window.location.hash = route.replace(/^#/, "");
+        }}
+      }}, true);
+      document.addEventListener("click", function (event) {{
+        var subjectLink = event.target.closest(".study-drawer-subject-link");
+        if (!subjectLink) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        sessionStorage.removeItem("study-dashboard-anchor");
+        window.studyPendingAnchor = "";
+        closeStudyDrawer();
+        var route = routeFromHref(subjectLink.getAttribute("href"));
+        if (route === currentRoute()) {{
+          window.setTimeout(function () {{
+            window.scrollTo({{ top: 0, behavior: "auto" }});
+          }}, 0);
+        }} else {{
+          window.location.hash = route.replace(/^#/, "");
+        }}
+      }}, true);
       function toggleDateItem(toggle) {{
         var item = toggle.closest("li");
         if (!item) {{
@@ -908,12 +1096,14 @@ def build_index(site: SiteConfig) -> str:
         sessionStorage.removeItem("study-dashboard-anchor");
         window.studyPendingAnchor = "";
         document.body.classList.remove("study-sidebar-locked");
+        closeStudyDrawer();
         window.setTimeout(updateBottomNav, 0);
       }});
       function refreshStudyNavigation() {{
         updateBottomNav();
         window.setTimeout(function () {{
           enhanceSidebar();
+          syncStudyDrawer();
           if (readPendingAnchor()) {{
             scrollPendingAnchor();
           }} else {{
@@ -1077,6 +1267,12 @@ body {
 }
 
 .mobile-bottom-nav {
+  display: none;
+}
+
+.study-drawer-button,
+.study-drawer,
+.study-drawer-backdrop {
   display: none;
 }
 
@@ -1441,22 +1637,187 @@ body {
     padding-left: 1.18rem;
   }
 
-  .sidebar {
-    padding-top: 18px;
-    padding-bottom: 74px;
-  }
-
-  body.study-sidebar-locked .sidebar {
-    transform: translateX(0) !important;
-  }
-
-  body.study-sidebar-locked.close .sidebar {
-    transform: translateX(0) !important;
-  }
-
+  .sidebar,
   .sidebar-toggle {
-    z-index: 60;
-    padding: 18px 22px 10px 12px;
+    display: none !important;
+  }
+
+  .content,
+  body.close .content {
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  .study-drawer-button {
+    position: fixed;
+    left: 12px;
+    bottom: max(12px, env(safe-area-inset-bottom));
+    z-index: 80;
+    display: inline-flex;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    border: 1px solid rgba(29, 122, 104, 0.16);
+    border-radius: 14px;
+    color: #1d7a68;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
+    backdrop-filter: blur(8px);
+  }
+
+  .study-drawer-button span {
+    width: 17px;
+    height: 2px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+
+  .study-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 68;
+    display: block;
+    background: rgba(20, 28, 24, 0.26);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.16s ease;
+  }
+
+  .study-drawer-backdrop[hidden] {
+    display: none;
+  }
+
+  .study-drawer {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 75;
+    display: flex;
+    width: min(82vw, 320px);
+    max-width: 320px;
+    flex-direction: column;
+    border-right: 1px solid var(--line-soft);
+    background: #fff;
+    box-shadow: 10px 0 28px rgba(24, 47, 40, 0.12);
+    transform: translateX(-102%);
+    transition: transform 0.18s ease;
+  }
+
+  body.study-drawer-open .study-drawer {
+    transform: translateX(0);
+  }
+
+  body.study-drawer-open .study-drawer-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .study-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 18px 12px;
+    color: #20362f;
+  }
+
+  .study-drawer-header strong {
+    font-size: 1.12rem;
+    font-weight: 800;
+  }
+
+  .study-drawer-close {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 999px;
+    color: #52605a;
+    background: #f2f6f3;
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .study-drawer-nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 18px 86px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .study-drawer-subject {
+    margin: 10px 0 14px;
+  }
+
+  .study-drawer-subject-link {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    color: #1d342f;
+    font-weight: 760;
+    text-decoration: none;
+  }
+
+  .study-drawer-subject.is-current > .study-drawer-subject-link {
+    color: #1d7a68;
+  }
+
+  .study-drawer-date {
+    margin: 2px 0 4px;
+  }
+
+  .study-drawer-date-toggle {
+    display: inline-flex;
+    min-height: 34px;
+    align-items: center;
+    gap: 7px;
+    border: 0;
+    border-radius: 8px;
+    padding: 2px 8px 2px 0;
+    color: #1d564c;
+    background: transparent;
+    font: inherit;
+    font-weight: 760;
+  }
+
+  .study-drawer-chevron {
+    display: inline-flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #7d8982;
+    transition: transform 0.12s ease, background-color 0.12s ease;
+  }
+
+  .study-drawer-date-toggle:active .study-drawer-chevron {
+    background: #eef6f3;
+  }
+
+  .study-drawer-date.is-open .study-drawer-chevron {
+    color: #1d7a68;
+    transform: rotate(90deg);
+  }
+
+  .study-drawer-problems {
+    display: grid;
+    gap: 2px;
+    margin: 0 0 8px 34px;
+  }
+
+  .study-drawer-problem-link {
+    display: inline-flex;
+    min-height: 30px;
+    align-items: center;
+    color: #39413b;
+    font-weight: 520;
+    text-decoration: none;
+  }
+
+  .study-drawer-problem-link.is-current {
+    color: #1d7a68;
+    font-weight: 760;
   }
 
   .sidebar ul {
@@ -1611,7 +1972,7 @@ def publish(clean: bool) -> tuple[SiteConfig, list[PublishedDocument], DeployCon
 
     (site.output_dir / "README.md").write_text(build_home(site, documents, published_at), encoding="utf-8")
     (site.output_dir / "_sidebar.md").write_text(build_sidebar(documents), encoding="utf-8")
-    (site.output_dir / "index.html").write_text(build_index(site), encoding="utf-8")
+    (site.output_dir / "index.html").write_text(build_index(site, documents), encoding="utf-8")
     (site.output_dir / ".nojekyll").write_text("", encoding="utf-8")
     (site.output_dir / "assets" / "cloud.css").write_text(build_css(), encoding="utf-8")
 

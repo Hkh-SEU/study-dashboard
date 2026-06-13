@@ -11,6 +11,7 @@
   <body>
     <div id="app">加载中...</div>
     <nav class="mobile-bottom-nav" aria-label="手机底部导航"><a class="mobile-bottom-nav-link" href="#/" data-route="home">首页</a><a class="mobile-bottom-nav-link" href="#/plan" data-route="plan">计划</a><a class="mobile-bottom-nav-link" href="#/math" data-route="math">数学</a><a class="mobile-bottom-nav-link" href="#/major" data-route="major">专业</a></nav>
+    <button class="study-drawer-button" type="button" aria-label="打开复习目录" aria-controls="study-drawer" aria-expanded="false"><span></span><span></span><span></span></button><div class="study-drawer-backdrop" hidden></div><aside id="study-drawer" class="study-drawer" aria-label="复习目录" aria-hidden="true"><div class="study-drawer-header"><strong>复习目录</strong><button class="study-drawer-close" type="button" aria-label="关闭复习目录">×</button></div><nav class="study-drawer-nav"><section class="study-drawer-subject" data-route="#/math"><a class="study-drawer-subject-link" href="#/math" data-route="#/math">数学</a><div class="study-drawer-dates"><div class="study-drawer-date" data-date-anchor="math-06-04"><button class="study-drawer-date-toggle" type="button" data-toggle-anchor="math-06-04" aria-expanded="false"><span class="study-drawer-chevron">›</span><span>06-04</span></button><div class="study-drawer-problems" hidden><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-01">错题 01</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-02">错题 02</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-03">错题 03</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-04">错题 04</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-05">错题 05</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-06">错题 06</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-07">错题 07</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-08">错题 08</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-09">错题 09</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-10">错题 10</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-04-11">错题 11</a></div></div><div class="study-drawer-date" data-date-anchor="math-06-05"><button class="study-drawer-date-toggle" type="button" data-toggle-anchor="math-06-05" aria-expanded="false"><span class="study-drawer-chevron">›</span><span>06-05</span></button><div class="study-drawer-problems" hidden><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-05-01">错题 01</a><a class="study-drawer-problem-link" href="#/math" data-route="#/math" data-anchor="math-06-05-02">错题 02</a></div></div></div></section><section class="study-drawer-subject" data-route="#/major"><a class="study-drawer-subject-link" href="#/major" data-route="#/major">专业课</a><div class="study-drawer-dates"><div class="study-drawer-date" data-date-anchor="major-06-04"><button class="study-drawer-date-toggle" type="button" data-toggle-anchor="major-06-04" aria-expanded="false"><span class="study-drawer-chevron">›</span><span>06-04</span></button><div class="study-drawer-problems" hidden><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-04-01">错题 01</a><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-04-02">错题 02</a><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-04-03">错题 03</a></div></div><div class="study-drawer-date" data-date-anchor="major-06-05"><button class="study-drawer-date-toggle" type="button" data-toggle-anchor="major-06-05" aria-expanded="false"><span class="study-drawer-chevron">›</span><span>06-05</span></button><div class="study-drawer-problems" hidden><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-05-01">错题 01</a><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-05-02">错题 02</a><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-05-03">错题 03</a><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-05-04">错题 04</a></div></div><div class="study-drawer-date" data-date-anchor="major-06-08"><button class="study-drawer-date-toggle" type="button" data-toggle-anchor="major-06-08" aria-expanded="false"><span class="study-drawer-chevron">›</span><span>06-08</span></button><div class="study-drawer-problems" hidden><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-08-01">错题 01</a><a class="study-drawer-problem-link" href="#/major" data-route="#/major" data-anchor="major-06-08-02">错题 02</a></div></div></div></section></nav></aside>
     <script>
       window.$docsify = {
         name: "复习目录",
@@ -177,6 +178,84 @@
       function scrollPendingAnchor() {
         scrollToAnchorWithRetry(readPendingAnchor(), 0);
       }
+      function drawerElements() {
+        return {
+          drawer: document.getElementById("study-drawer"),
+          backdrop: document.querySelector(".study-drawer-backdrop"),
+          button: document.querySelector(".study-drawer-button")
+        };
+      }
+      function openStudyDrawer() {
+        var parts = drawerElements();
+        if (!parts.drawer || !parts.backdrop || !parts.button) {
+          return;
+        }
+        document.body.classList.add("study-drawer-open");
+        parts.drawer.setAttribute("aria-hidden", "false");
+        parts.button.setAttribute("aria-expanded", "true");
+        parts.backdrop.hidden = false;
+        syncStudyDrawer();
+      }
+      function closeStudyDrawer() {
+        var parts = drawerElements();
+        document.body.classList.remove("study-drawer-open");
+        if (parts.drawer) {
+          parts.drawer.setAttribute("aria-hidden", "true");
+        }
+        if (parts.button) {
+          parts.button.setAttribute("aria-expanded", "false");
+        }
+        if (parts.backdrop) {
+          parts.backdrop.hidden = true;
+        }
+      }
+      function setDrawerDateOpen(dateBlock, open) {
+        if (!dateBlock) {
+          return;
+        }
+        var panel = dateBlock.querySelector(".study-drawer-problems");
+        var button = dateBlock.querySelector(".study-drawer-date-toggle");
+        dateBlock.classList.toggle("is-open", open);
+        if (panel) {
+          panel.hidden = !open;
+        }
+        if (button) {
+          button.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+        var anchor = dateBlock.dataset.dateAnchor || "";
+        if (open) {
+          rememberOpenDate(anchor);
+        } else {
+          forgetOpenDate(anchor);
+        }
+      }
+      function syncStudyDrawer() {
+        var drawer = document.getElementById("study-drawer");
+        if (!drawer) {
+          return;
+        }
+        var route = currentRoute();
+        var targetId = readPendingAnchor() ||
+          sessionStorage.getItem("study-dashboard-current-anchor") ||
+          targetIdFromHash();
+        var openDates = readOpenDates();
+        var currentDate = dateAnchorFromAnchor(targetId);
+        if (currentDate && openDates.indexOf(currentDate) === -1) {
+          openDates.push(currentDate);
+          writeOpenDates(openDates);
+        }
+        drawer.querySelectorAll(".study-drawer-subject").forEach(function (subject) {
+          subject.classList.toggle("is-current", subject.dataset.route === route);
+        });
+        drawer.querySelectorAll(".study-drawer-date").forEach(function (dateBlock) {
+          var anchor = dateBlock.dataset.dateAnchor || "";
+          setDrawerDateOpen(dateBlock, openDates.indexOf(anchor) !== -1);
+          dateBlock.classList.toggle("is-current", targetId === anchor || targetId.indexOf(anchor + "-") === 0);
+        });
+        drawer.querySelectorAll(".study-drawer-problem-link").forEach(function (link) {
+          link.classList.toggle("is-current", targetId === link.dataset.anchor);
+        });
+      }
       function enhanceSidebar() {
         var sidebar = document.querySelector(".sidebar");
         if (!sidebar) {
@@ -233,6 +312,69 @@
           }
         });
       }
+      document.addEventListener("click", function (event) {
+        var openButton = event.target.closest(".study-drawer-button");
+        if (!openButton) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        openStudyDrawer();
+      }, true);
+      document.addEventListener("click", function (event) {
+        if (!event.target.closest(".study-drawer-close") && !event.target.closest(".study-drawer-backdrop")) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        closeStudyDrawer();
+      }, true);
+      document.addEventListener("click", function (event) {
+        var dateButton = event.target.closest(".study-drawer-date-toggle");
+        if (!dateButton) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        var dateBlock = dateButton.closest(".study-drawer-date");
+        setDrawerDateOpen(dateBlock, !(dateBlock && dateBlock.classList.contains("is-open")));
+      }, true);
+      document.addEventListener("click", function (event) {
+        var problemLink = event.target.closest(".study-drawer-problem-link");
+        if (!problemLink) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        var anchor = problemLink.dataset.anchor || "";
+        var route = routeFromHref(problemLink.getAttribute("href"));
+        setPendingAnchor(anchor);
+        closeStudyDrawer();
+        if (route === currentRoute()) {
+          window.setTimeout(scrollPendingAnchor, 0);
+        } else {
+          window.location.hash = route.replace(/^#/, "");
+        }
+      }, true);
+      document.addEventListener("click", function (event) {
+        var subjectLink = event.target.closest(".study-drawer-subject-link");
+        if (!subjectLink) {
+          return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        sessionStorage.removeItem("study-dashboard-anchor");
+        window.studyPendingAnchor = "";
+        closeStudyDrawer();
+        var route = routeFromHref(subjectLink.getAttribute("href"));
+        if (route === currentRoute()) {
+          window.setTimeout(function () {
+            window.scrollTo({ top: 0, behavior: "auto" });
+          }, 0);
+        } else {
+          window.location.hash = route.replace(/^#/, "");
+        }
+      }, true);
       function toggleDateItem(toggle) {
         var item = toggle.closest("li");
         if (!item) {
@@ -328,12 +470,14 @@
         sessionStorage.removeItem("study-dashboard-anchor");
         window.studyPendingAnchor = "";
         document.body.classList.remove("study-sidebar-locked");
+        closeStudyDrawer();
         window.setTimeout(updateBottomNav, 0);
       });
       function refreshStudyNavigation() {
         updateBottomNav();
         window.setTimeout(function () {
           enhanceSidebar();
+          syncStudyDrawer();
           if (readPendingAnchor()) {
             scrollPendingAnchor();
           } else {
