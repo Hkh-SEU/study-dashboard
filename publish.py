@@ -548,10 +548,13 @@ def build_home(site: SiteConfig, documents: list[PublishedDocument], published_a
 
 def build_sidebar(documents: list[PublishedDocument]) -> str:
     ordered_documents = sorted(documents, key=document_priority)
-    lines = ["- [首页](#/)"]
+    lines: list[str] = []
     for document in ordered_documents:
+        if Path(document.target).stem.lower() == "plan":
+            continue
         route = docsify_route(document.target)
-        lines.append(f"- [{document_route_label(document)}]({route})")
+        safe_label = html.escape(document_route_label(document), quote=True)
+        lines.append(f'- <a href="{route}" class="toc-subject-link">{safe_label}</a>')
         for date, date_anchor, problems in extract_problem_sections(document):
             safe_date = html.escape(date, quote=True)
             lines.append(
@@ -590,7 +593,7 @@ def build_index(site: SiteConfig) -> str:
         name: {js_title},
         loadSidebar: true,
         subMaxLevel: 0,
-        auto2top: true,
+        auto2top: false,
         search: {{
           maxAge: 86400000,
           paths: "auto",
@@ -619,6 +622,7 @@ def build_index(site: SiteConfig) -> str:
       function currentRoute() {{
         return (window.location.hash || "#/").split("?")[0] || "#/";
       }}
+      window.studyLastRoute = currentRoute();
       function routeFromHref(href) {{
         return (href || "#/").split("?")[0] || "#/";
       }}
@@ -647,6 +651,16 @@ def build_index(site: SiteConfig) -> str:
         return window.studyPendingAnchor ||
           sessionStorage.getItem("study-dashboard-anchor") ||
           targetIdFromHash();
+      }}
+      function smoothScrollTopIfNeeded() {{
+        if (readPendingAnchor()) {{
+          return;
+        }}
+        var route = currentRoute();
+        if (route !== window.studyLastRoute) {{
+          window.studyLastRoute = route;
+          window.scrollTo({{ top: 0, behavior: "auto" }});
+        }}
       }}
       function closeMobileSidebar() {{
         if (window.innerWidth <= 768) {{
@@ -691,10 +705,18 @@ def build_index(site: SiteConfig) -> str:
           sessionStorage.removeItem("study-dashboard-anchor");
           sessionStorage.setItem("study-dashboard-current-anchor", anchor);
           window.studyPendingAnchor = "";
+          [90, 220, 420].forEach(function (delay) {{
+            window.setTimeout(function () {{
+              var stableTarget = document.getElementById(anchor);
+              if (stableTarget) {{
+                stableTarget.scrollIntoView({{ block: "start", behavior: "auto" }});
+              }}
+            }}, delay);
+          }});
           window.setTimeout(enhanceSidebar, 30);
           return;
         }}
-        if (tries < 30) {{
+        if (tries < 40) {{
           window.setTimeout(function () {{
             scrollToAnchorWithRetry(anchor, tries + 1);
           }}, 80);
@@ -767,11 +789,32 @@ def build_index(site: SiteConfig) -> str:
           window.setTimeout(closeMobileSidebar, 160);
         }}
       }});
+      document.addEventListener("click", function (event) {{
+        var navLink = event.target.closest(".mobile-bottom-nav-link, .sidebar .toc-subject-link");
+        if (!navLink) {{
+          return;
+        }}
+        sessionStorage.removeItem("study-dashboard-anchor");
+        window.studyPendingAnchor = "";
+        window.setTimeout(function () {{
+          updateBottomNav();
+          if (routeFromHref(navLink.getAttribute("href")) === currentRoute()) {{
+            window.scrollTo({{ top: 0, behavior: "auto" }});
+          }}
+        }}, 0);
+        if (navLink.classList.contains("toc-subject-link")) {{
+          window.setTimeout(closeMobileSidebar, 120);
+        }}
+      }});
       function refreshStudyNavigation() {{
         updateBottomNav();
         window.setTimeout(function () {{
           enhanceSidebar();
-          scrollPendingAnchor();
+          if (readPendingAnchor()) {{
+            scrollPendingAnchor();
+          }} else {{
+            smoothScrollTopIfNeeded();
+          }}
         }}, 120);
       }}
       window.addEventListener("hashchange", refreshStudyNavigation);
@@ -907,14 +950,14 @@ body {
 
 .markdown-section h1 {
   font-size: 1.86rem;
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.72rem;
 }
 
 .markdown-section h2 {
   border-bottom: 1px solid var(--line-soft);
   padding-bottom: 0.36rem;
   font-size: 1.45rem;
-  margin-top: 2.1rem;
+  margin-top: 1.45rem;
 }
 
 .markdown-section h3 {
@@ -1031,7 +1074,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 0 0 8px;
+  margin: 0 0 4px;
   color: #4e5b55;
   font-size: 0.82rem;
 }
@@ -1046,7 +1089,11 @@ body {
 
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 16px;
+  margin-top: 10px;
+}
+
+.markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
+  margin-top: 10px;
 }
 
 .doc-nav {
@@ -1192,11 +1239,12 @@ body {
   .markdown-section h1 {
     font-size: 1.48rem;
     line-height: 1.25;
+    margin-bottom: 0.58rem;
   }
 
   .markdown-section h2 {
     font-size: 1.22rem;
-    margin-top: 1.9rem;
+    margin-top: 1.1rem;
   }
 
   .markdown-section h3 {
@@ -1276,14 +1324,14 @@ body {
 
   .publish-meta {
     gap: 4px;
-    margin: 0 0 8px;
+    margin: 0 0 2px;
     font-size: 0.78rem;
   }
 
   .publish-meta span {
     display: inline-block;
     max-width: 100%;
-    margin-bottom: 4px;
+    margin-bottom: 0;
     border-radius: 6px;
     padding: 3px 6px;
     overflow-wrap: anywhere;
@@ -1291,31 +1339,31 @@ body {
 
   .mobile-bottom-nav {
     position: fixed;
-    right: 10px;
-    bottom: max(10px, env(safe-area-inset-bottom));
-    left: 72px;
+    right: 16px;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    left: 82px;
     z-index: 35;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
-    border-radius: 12px;
-    padding: 2px;
-    background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
-    backdrop-filter: blur(8px);
+    border-radius: 10px;
+    padding: 1px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 3px 12px rgba(24, 47, 40, 0.08);
+    backdrop-filter: blur(6px);
   }
 
   .mobile-bottom-nav-link {
     position: relative;
     display: flex;
-    min-height: 32px;
+    min-height: 28px;
     align-items: center;
     justify-content: center;
-    border-radius: 9px;
-    padding: 3px 2px 5px;
+    border-radius: 8px;
+    padding: 2px 2px 4px;
     color: #1d564c;
-    font-size: 0.7rem;
+    font-size: 0.66rem;
     font-weight: 750;
     line-height: 1;
     text-align: center;
@@ -1325,7 +1373,7 @@ body {
 
   .mobile-bottom-nav-link.active {
     color: #1d7a68;
-    background: #f4faf7;
+    background: #f6fbf8;
   }
 
   .mobile-bottom-nav-link.active::after {

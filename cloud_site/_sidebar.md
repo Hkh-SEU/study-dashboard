@@ -1,6 +1,4 @@
-- [首页](#/)
-- [今日计划](#/plan)
-- [数学](#/math)
+- <a href="#/math" class="toc-subject-link">数学</a>
   - <a href="#/math" data-anchor="math-06-04" class="toc-date-link">06-04</a>
     - <a href="#/math" data-anchor="math-06-04-01" class="toc-problem-link">错题 01</a>
     - <a href="#/math" data-anchor="math-06-04-02" class="toc-problem-link">错题 02</a>
@@ -16,7 +14,7 @@
   - <a href="#/math" data-anchor="math-06-05" class="toc-date-link">06-05</a>
     - <a href="#/math" data-anchor="math-06-05-01" class="toc-problem-link">错题 01</a>
     - <a href="#/math" data-anchor="math-06-05-02" class="toc-problem-link">错题 02</a>
-- [专业课](#/major)
+- <a href="#/major" class="toc-subject-link">专业课</a>
   - <a href="#/major" data-anchor="major-06-04" class="toc-date-link">06-04</a>
     - <a href="#/major" data-anchor="major-06-04-01" class="toc-problem-link">错题 01</a>
     - <a href="#/major" data-anchor="major-06-04-02" class="toc-problem-link">错题 02</a>

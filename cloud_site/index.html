@@ -16,7 +16,7 @@
         name: "复习目录",
         loadSidebar: true,
         subMaxLevel: 0,
-        auto2top: true,
+        auto2top: false,
         search: {
           maxAge: 86400000,
           paths: "auto",
@@ -45,6 +45,7 @@
       function currentRoute() {
         return (window.location.hash || "#/").split("?")[0] || "#/";
       }
+      window.studyLastRoute = currentRoute();
       function routeFromHref(href) {
         return (href || "#/").split("?")[0] || "#/";
       }
@@ -73,6 +74,16 @@
         return window.studyPendingAnchor ||
           sessionStorage.getItem("study-dashboard-anchor") ||
           targetIdFromHash();
+      }
+      function smoothScrollTopIfNeeded() {
+        if (readPendingAnchor()) {
+          return;
+        }
+        var route = currentRoute();
+        if (route !== window.studyLastRoute) {
+          window.studyLastRoute = route;
+          window.scrollTo({ top: 0, behavior: "auto" });
+        }
       }
       function closeMobileSidebar() {
         if (window.innerWidth <= 768) {
@@ -117,10 +128,18 @@
           sessionStorage.removeItem("study-dashboard-anchor");
           sessionStorage.setItem("study-dashboard-current-anchor", anchor);
           window.studyPendingAnchor = "";
+          [90, 220, 420].forEach(function (delay) {
+            window.setTimeout(function () {
+              var stableTarget = document.getElementById(anchor);
+              if (stableTarget) {
+                stableTarget.scrollIntoView({ block: "start", behavior: "auto" });
+              }
+            }, delay);
+          });
           window.setTimeout(enhanceSidebar, 30);
           return;
         }
-        if (tries < 30) {
+        if (tries < 40) {
           window.setTimeout(function () {
             scrollToAnchorWithRetry(anchor, tries + 1);
           }, 80);
@@ -193,11 +212,32 @@
           window.setTimeout(closeMobileSidebar, 160);
         }
       });
+      document.addEventListener("click", function (event) {
+        var navLink = event.target.closest(".mobile-bottom-nav-link, .sidebar .toc-subject-link");
+        if (!navLink) {
+          return;
+        }
+        sessionStorage.removeItem("study-dashboard-anchor");
+        window.studyPendingAnchor = "";
+        window.setTimeout(function () {
+          updateBottomNav();
+          if (routeFromHref(navLink.getAttribute("href")) === currentRoute()) {
+            window.scrollTo({ top: 0, behavior: "auto" });
+          }
+        }, 0);
+        if (navLink.classList.contains("toc-subject-link")) {
+          window.setTimeout(closeMobileSidebar, 120);
+        }
+      });
       function refreshStudyNavigation() {
         updateBottomNav();
         window.setTimeout(function () {
           enhanceSidebar();
-          scrollPendingAnchor();
+          if (readPendingAnchor()) {
+            scrollPendingAnchor();
+          } else {
+            smoothScrollTopIfNeeded();
+          }
         }, 120);
       }
       window.addEventListener("hashchange", refreshStudyNavigation);
