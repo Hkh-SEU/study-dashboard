@@ -512,6 +512,14 @@ body {
     padding-bottom: 74px;
   }
 
+  body.study-sidebar-locked .sidebar {
+    transform: translateX(0) !important;
+  }
+
+  body.study-sidebar-locked.close .sidebar {
+    transform: translateX(0) !important;
+  }
+
   .sidebar-toggle {
     z-index: 60;
     padding: 18px 22px 10px 12px;

@@ -690,23 +690,12 @@ def build_index(site: SiteConfig) -> str:
           window.scrollTo({{ top: 0, behavior: "auto" }});
         }}
       }}
-      function closeMobileSidebar() {{
-        if (window.innerWidth <= 768) {{
-          document.body.classList.add("close");
-        }}
-      }}
       function keepMobileSidebarOpen() {{
         if (window.innerWidth > 768) {{
           return;
         }}
-        window.studySidebarKeepOpenUntil = Date.now() + 1500;
-        [0, 60, 160, 320, 700, 1200].forEach(function (delay) {{
-          window.setTimeout(function () {{
-            if (Date.now() <= window.studySidebarKeepOpenUntil) {{
-              document.body.classList.remove("close");
-            }}
-          }}, delay);
-        }});
+        document.body.classList.add("study-sidebar-locked");
+        document.body.classList.remove("close");
       }}
       function getDirectChildUl(item) {{
         for (var i = 0; i < item.children.length; i += 1) {{
@@ -863,12 +852,12 @@ def build_index(site: SiteConfig) -> str:
       ["pointerdown", "pointerup", "touchstart", "touchend", "click"].forEach(function (eventName) {{
         document.addEventListener(eventName, handleSidebarToggle, true);
       }});
-      var sidebarGuard = new MutationObserver(function () {{
-        if (window.innerWidth <= 768 && Date.now() <= (window.studySidebarKeepOpenUntil || 0)) {{
-          document.body.classList.remove("close");
+      document.addEventListener("click", function (event) {{
+        if (!event.target.closest(".sidebar-toggle")) {{
+          return;
         }}
-      }});
-      sidebarGuard.observe(document.body, {{ attributes: true, attributeFilter: ["class"] }});
+        document.body.classList.remove("study-sidebar-locked");
+      }}, true);
       document.addEventListener("click", function (event) {{
         var link = event.target.closest(".sidebar a[data-anchor]");
         if (!link) {{
@@ -918,6 +907,7 @@ def build_index(site: SiteConfig) -> str:
         }}
         sessionStorage.removeItem("study-dashboard-anchor");
         window.studyPendingAnchor = "";
+        document.body.classList.remove("study-sidebar-locked");
         window.setTimeout(updateBottomNav, 0);
       }});
       function refreshStudyNavigation() {{
@@ -1454,6 +1444,14 @@ body {
   .sidebar {
     padding-top: 18px;
     padding-bottom: 74px;
+  }
+
+  body.study-sidebar-locked .sidebar {
+    transform: translateX(0) !important;
+  }
+
+  body.study-sidebar-locked.close .sidebar {
+    transform: translateX(0) !important;
   }
 
   .sidebar-toggle {
