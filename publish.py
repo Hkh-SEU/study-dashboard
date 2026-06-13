@@ -558,8 +558,11 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
         for date, date_anchor, problems in extract_problem_sections(document):
             safe_date = html.escape(date, quote=True)
             lines.append(
-                f'  - <a href="{route}" data-anchor="{date_anchor}" '
-                f'class="toc-date-link">{safe_date}</a>'
+                f'  - <span class="toc-date-row">'
+                f'<button type="button" class="toc-toggle" data-toggle-anchor="{date_anchor}" '
+                f'aria-label="展开或收起 {safe_date}">›</button>'
+                f'<a href="{route}" data-anchor="{date_anchor}" '
+                f'class="toc-date-link">{safe_date}</a></span>'
             )
             for problem, anchor in problems:
                 safe_problem = html.escape(problem, quote=True)
@@ -667,6 +670,16 @@ def build_index(site: SiteConfig) -> str:
           document.body.classList.add("close");
         }}
       }}
+      function keepMobileSidebarOpen() {{
+        if (window.innerWidth > 768) {{
+          return;
+        }}
+        [0, 60, 160, 320].forEach(function (delay) {{
+          window.setTimeout(function () {{
+            document.body.classList.remove("close");
+          }}, delay);
+        }});
+      }}
       function getDirectChildUl(item) {{
         for (var i = 0; i < item.children.length; i += 1) {{
           if (item.children[i].tagName === "UL") {{
@@ -676,12 +689,14 @@ def build_index(site: SiteConfig) -> str:
         return null;
       }}
       function getDirectChildLink(item) {{
-        for (var i = 0; i < item.children.length; i += 1) {{
-          if (item.children[i].tagName === "A") {{
-            return item.children[i];
-          }}
-        }}
-        return null;
+        return item.querySelector(
+          ":scope > a, :scope > .toc-date-row > a, :scope > p > a, :scope > p > .toc-date-row > a"
+        );
+      }}
+      function getDirectToggle(item) {{
+        return item.querySelector(
+          ":scope > .toc-date-row > .toc-toggle, :scope > p > .toc-date-row > .toc-toggle"
+        );
       }}
       function sidebarDepth(item, root) {{
         var depth = 0;
@@ -738,6 +753,7 @@ def build_index(site: SiteConfig) -> str:
         sidebar.querySelectorAll("li").forEach(function (item) {{
           var childUl = getDirectChildUl(item);
           var link = getDirectChildLink(item);
+          var toggle = getDirectToggle(item);
           var depth = sidebarDepth(item, sidebar);
           item.classList.remove("nav-current");
           if (childUl) {{
@@ -747,12 +763,18 @@ def build_index(site: SiteConfig) -> str:
             }}
             if (link && link.dataset.anchor && link.classList.contains("toc-date-link")) {{
               item.classList.add("nav-date");
+              if (toggle) {{
+                toggle.setAttribute("aria-expanded", "false");
+              }}
               if (
                 link.dataset.anchor === openDate ||
                 targetId === link.dataset.anchor ||
                 targetId.indexOf(link.dataset.anchor + "-") === 0
               ) {{
                 item.classList.add("nav-open");
+                if (toggle) {{
+                  toggle.setAttribute("aria-expanded", "true");
+                }}
               }} else {{
                 item.classList.remove("nav-open");
               }}
@@ -771,12 +793,36 @@ def build_index(site: SiteConfig) -> str:
         }});
       }}
       document.addEventListener("click", function (event) {{
+        var toggle = event.target.closest(".sidebar .toc-toggle");
+        if (!toggle) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        var item = toggle.closest("li");
+        if (!item) {{
+          return;
+        }}
+        item.classList.toggle("nav-open");
+        var anchor = toggle.dataset.toggleAnchor || "";
+        if (item.classList.contains("nav-open")) {{
+          sessionStorage.setItem("study-dashboard-open-date", anchor);
+          toggle.setAttribute("aria-expanded", "true");
+        }} else {{
+          if (sessionStorage.getItem("study-dashboard-open-date") === anchor) {{
+            sessionStorage.removeItem("study-dashboard-open-date");
+          }}
+          toggle.setAttribute("aria-expanded", "false");
+        }}
+      }});
+      document.addEventListener("click", function (event) {{
         var link = event.target.closest(".sidebar a[data-anchor]");
         if (!link) {{
           return;
         }}
         var anchor = link.dataset.anchor || "";
         setPendingAnchor(anchor);
+        keepMobileSidebarOpen();
         var item = link.closest("li");
         if (item && link.classList.contains("toc-date-link")) {{
           item.classList.add("nav-open");
@@ -784,9 +830,6 @@ def build_index(site: SiteConfig) -> str:
         if (routeFromHref(link.getAttribute("href")) === currentRoute()) {{
           event.preventDefault();
           window.setTimeout(scrollPendingAnchor, 0);
-        }}
-        if (link.classList.contains("toc-problem-link")) {{
-          window.setTimeout(closeMobileSidebar, 160);
         }}
       }});
       document.addEventListener("click", function (event) {{
@@ -796,15 +839,15 @@ def build_index(site: SiteConfig) -> str:
         }}
         sessionStorage.removeItem("study-dashboard-anchor");
         window.studyPendingAnchor = "";
+        if (navLink.classList.contains("toc-subject-link")) {{
+          keepMobileSidebarOpen();
+        }}
         window.setTimeout(function () {{
           updateBottomNav();
           if (routeFromHref(navLink.getAttribute("href")) === currentRoute()) {{
             window.scrollTo({{ top: 0, behavior: "auto" }});
           }}
         }}, 0);
-        if (navLink.classList.contains("toc-subject-link")) {{
-          window.setTimeout(closeMobileSidebar, 120);
-        }}
       }});
       function refreshStudyNavigation() {{
         updateBottomNav();
@@ -864,6 +907,10 @@ body {
   margin: 2px 0;
 }
 
+.sidebar ul li p {
+  margin: 0;
+}
+
 .sidebar ul li a {
   color: #39413b;
   line-height: 1.55;
@@ -892,20 +939,59 @@ body {
 }
 
 .sidebar li.nav-date > a {
+  display: none;
+}
+
+.sidebar .toc-date-row {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  min-height: 30px;
 }
 
-.sidebar li.nav-date > a::before {
-  color: #86928b;
-  font-size: 0.68rem;
-  content: "›";
+.sidebar .toc-toggle {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  color: #7d8982;
+  background: transparent;
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease;
 }
 
-.sidebar li.nav-date.nav-open > a::before {
-  content: "⌄";
+.sidebar .toc-toggle:hover,
+.sidebar .toc-toggle:focus-visible {
+  color: #1d7a68;
+  background: #eef6f3;
+  outline: none;
+}
+
+.sidebar li.nav-date.nav-open > .toc-date-row .toc-toggle,
+.sidebar li.nav-date.nav-open > p > .toc-date-row .toc-toggle {
+  transform: rotate(90deg);
+}
+
+.sidebar .toc-date-link {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding-right: 6px;
+}
+
+.sidebar .toc-problem-link,
+.sidebar .toc-subject-link {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
 }
 
 .sidebar li.nav-date:not(.nav-open) > ul {
@@ -1089,11 +1175,11 @@ body {
 
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .doc-nav {
@@ -1231,7 +1317,7 @@ body {
   }
 
   .markdown-section {
-    padding: 16px 14px 82px;
+    padding: 16px 14px 92px;
     font-size: 16px;
     line-height: 1.76;
   }
@@ -1239,12 +1325,18 @@ body {
   .markdown-section h1 {
     font-size: 1.48rem;
     line-height: 1.25;
-    margin-bottom: 0.58rem;
+    margin: 0 0 0.48rem !important;
   }
 
   .markdown-section h2 {
     font-size: 1.22rem;
-    margin-top: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  .markdown-section .publish-meta + h2,
+  .markdown-section .publish-meta + .section-anchor + h2,
+  .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
+    margin-top: 0.42rem !important;
   }
 
   .markdown-section h3 {
@@ -1294,6 +1386,26 @@ body {
     line-height: 1.45;
   }
 
+  .sidebar .toc-date-row {
+    min-height: 32px;
+  }
+
+  .sidebar .toc-toggle {
+    width: 34px;
+    height: 32px;
+    flex-basis: 34px;
+    border-radius: 9px;
+  }
+
+  .sidebar .toc-date-link {
+    min-height: 32px;
+  }
+
+  .sidebar .toc-problem-link,
+  .sidebar .toc-subject-link {
+    min-height: 30px;
+  }
+
   .study-card-grid {
     grid-template-columns: 1fr;
     gap: 7px;
@@ -1339,31 +1451,31 @@ body {
 
   .mobile-bottom-nav {
     position: fixed;
-    right: 16px;
-    bottom: max(8px, env(safe-area-inset-bottom));
-    left: 82px;
+    right: 12px;
+    bottom: max(9px, env(safe-area-inset-bottom));
+    left: 74px;
     z-index: 35;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
-    border-radius: 10px;
-    padding: 1px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 3px 12px rgba(24, 47, 40, 0.08);
-    backdrop-filter: blur(6px);
+    border-radius: 14px;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
+    backdrop-filter: blur(8px);
   }
 
   .mobile-bottom-nav-link {
     position: relative;
     display: flex;
-    min-height: 28px;
+    min-height: 36px;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    padding: 2px 2px 4px;
+    border-radius: 11px;
+    padding: 3px 2px 5px;
     color: #1d564c;
-    font-size: 0.66rem;
+    font-size: 0.76rem;
     font-weight: 750;
     line-height: 1;
     text-align: center;

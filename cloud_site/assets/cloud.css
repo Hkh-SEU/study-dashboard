@@ -34,6 +34,10 @@ body {
   margin: 2px 0;
 }
 
+.sidebar ul li p {
+  margin: 0;
+}
+
 .sidebar ul li a {
   color: #39413b;
   line-height: 1.55;
@@ -62,20 +66,59 @@ body {
 }
 
 .sidebar li.nav-date > a {
+  display: none;
+}
+
+.sidebar .toc-date-row {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  min-height: 30px;
 }
 
-.sidebar li.nav-date > a::before {
-  color: #86928b;
-  font-size: 0.68rem;
-  content: "›";
+.sidebar .toc-toggle {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 8px;
+  color: #7d8982;
+  background: transparent;
+  font: inherit;
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease, transform 0.12s ease;
 }
 
-.sidebar li.nav-date.nav-open > a::before {
-  content: "⌄";
+.sidebar .toc-toggle:hover,
+.sidebar .toc-toggle:focus-visible {
+  color: #1d7a68;
+  background: #eef6f3;
+  outline: none;
+}
+
+.sidebar li.nav-date.nav-open > .toc-date-row .toc-toggle,
+.sidebar li.nav-date.nav-open > p > .toc-date-row .toc-toggle {
+  transform: rotate(90deg);
+}
+
+.sidebar .toc-date-link {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding-right: 6px;
+}
+
+.sidebar .toc-problem-link,
+.sidebar .toc-subject-link {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
 }
 
 .sidebar li.nav-date:not(.nav-open) > ul {
@@ -259,11 +302,11 @@ body {
 
 .markdown-section .publish-meta + h2,
 .markdown-section .publish-meta + .section-anchor + h2 {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
-  margin-top: 10px;
+  margin-top: 6px;
 }
 
 .doc-nav {
@@ -401,7 +444,7 @@ body {
   }
 
   .markdown-section {
-    padding: 16px 14px 82px;
+    padding: 16px 14px 92px;
     font-size: 16px;
     line-height: 1.76;
   }
@@ -409,12 +452,18 @@ body {
   .markdown-section h1 {
     font-size: 1.48rem;
     line-height: 1.25;
-    margin-bottom: 0.58rem;
+    margin: 0 0 0.48rem !important;
   }
 
   .markdown-section h2 {
     font-size: 1.22rem;
-    margin-top: 1.1rem;
+    margin-top: 1rem;
+  }
+
+  .markdown-section .publish-meta + h2,
+  .markdown-section .publish-meta + .section-anchor + h2,
+  .markdown-section .publish-meta ~ .section-anchor:first-of-type + h2 {
+    margin-top: 0.42rem !important;
   }
 
   .markdown-section h3 {
@@ -464,6 +513,26 @@ body {
     line-height: 1.45;
   }
 
+  .sidebar .toc-date-row {
+    min-height: 32px;
+  }
+
+  .sidebar .toc-toggle {
+    width: 34px;
+    height: 32px;
+    flex-basis: 34px;
+    border-radius: 9px;
+  }
+
+  .sidebar .toc-date-link {
+    min-height: 32px;
+  }
+
+  .sidebar .toc-problem-link,
+  .sidebar .toc-subject-link {
+    min-height: 30px;
+  }
+
   .study-card-grid {
     grid-template-columns: 1fr;
     gap: 7px;
@@ -509,31 +578,31 @@ body {
 
   .mobile-bottom-nav {
     position: fixed;
-    right: 16px;
-    bottom: max(8px, env(safe-area-inset-bottom));
-    left: 82px;
+    right: 12px;
+    bottom: max(9px, env(safe-area-inset-bottom));
+    left: 74px;
     z-index: 35;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1px;
     border: 1px solid rgba(29, 122, 104, 0.16);
-    border-radius: 10px;
-    padding: 1px;
-    background: rgba(255, 255, 255, 0.94);
-    box-shadow: 0 3px 12px rgba(24, 47, 40, 0.08);
-    backdrop-filter: blur(6px);
+    border-radius: 14px;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 5px 16px rgba(24, 47, 40, 0.1);
+    backdrop-filter: blur(8px);
   }
 
   .mobile-bottom-nav-link {
     position: relative;
     display: flex;
-    min-height: 28px;
+    min-height: 36px;
     align-items: center;
     justify-content: center;
-    border-radius: 8px;
-    padding: 2px 2px 4px;
+    border-radius: 11px;
+    padding: 3px 2px 5px;
     color: #1d564c;
-    font-size: 0.66rem;
+    font-size: 0.76rem;
     font-weight: 750;
     line-height: 1;
     text-align: center;
