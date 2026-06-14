@@ -441,14 +441,17 @@ body {
 
 .markdown-section li:has(input[type="checkbox"]) {
   list-style: none;
-  margin: 0.12rem 0 0.12rem 0.12rem;
-  padding: 0.04rem 0.16rem;
-  border-radius: 6px;
+  margin: 0.14rem 0 0.14rem 0.12rem;
+  padding: 0.08rem 0.4rem 0.08rem 0.22rem;
+  border-left: 3px solid transparent;
+  border-radius: 7px;
 }
 
 .markdown-section li:has(input[type="checkbox"]:checked) {
-  color: #5f6963;
-  background: transparent;
+  color: #203a34;
+  background: #e7f4ef;
+  border-left-color: #1d7a68;
+  font-weight: 600;
 }
 
 .publish-meta {
