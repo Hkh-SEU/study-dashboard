@@ -1823,7 +1823,7 @@ body {
   flex: 0 0 auto;
   width: 1.05em;
   height: 1.05em;
-  margin: 0.08em 0.45em 0 0;
+  margin: 0 0.5em 0 0;
   appearance: none;
   -webkit-appearance: none;
   position: relative;
@@ -1853,14 +1853,15 @@ body {
 
 .markdown-section li:has(input[type="checkbox"]) {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   width: fit-content;
   max-width: calc(100% - 0.4rem);
   box-sizing: border-box;
   list-style: none;
-  margin: 0.14rem 0 0.14rem -0.1rem;
-  padding: 0.08rem 0.64rem 0.08rem 0.34rem;
+  margin: 0.12rem 0 0.12rem -0.1rem;
+  padding: 0.1rem 0.64rem 0.1rem 0.34rem;
   border-radius: 7px;
+  line-height: 1.45;
 }
 
 .markdown-section li:has(input[type="checkbox"]:checked) {
