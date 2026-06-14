@@ -813,8 +813,19 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           scheduleSiteReload();
         }}
       }}
+      window.studyVersionCheckStartedAt = Date.now();
+      function nextVersionCheckDelay() {{
+        var elapsed = Date.now() - window.studyVersionCheckStartedAt;
+        return elapsed < 3 * 60 * 1000 ? 15000 : 60000;
+      }}
+      function scheduleVersionCheck() {{
+        window.setTimeout(async function () {{
+          await checkSiteVersion();
+          scheduleVersionCheck();
+        }}, nextVersionCheckDelay());
+      }}
       checkSiteVersion();
-      window.setInterval(checkSiteVersion, 60000);
+      scheduleVersionCheck();
       window.studyPendingAnchor = "";
       function normalizeRoute(route) {{
         return (!route || route === "#" || route === "#/") ? "#/plan" : route;
