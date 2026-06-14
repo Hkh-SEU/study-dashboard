@@ -8,7 +8,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import quote
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -90,16 +89,23 @@ def print_command_output(result: subprocess.CompletedProcess[str]) -> None:
 
 
 def open_github_desktop() -> bool:
-    repo_path = quote(str(PROJECT_DIR).replace("\\", "/"), safe="/:")
-    desktop_uris = [
-        f"github-windows://openRepo/{repo_path}",
-        f"x-github-client://openRepo/{repo_path}",
-    ]
-    for uri in desktop_uris:
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    commands: list[list[str]] = []
+    if local_app_data:
+        desktop_dir = Path(local_app_data) / "GitHubDesktop"
+        direct_exe = desktop_dir / "GitHubDesktop.exe"
+        update_exe = desktop_dir / "Update.exe"
+        if direct_exe.exists():
+            commands.append([str(direct_exe)])
+        for app_exe in sorted(desktop_dir.glob("app-*/GitHubDesktop.exe"), reverse=True):
+            commands.append([str(app_exe)])
+        if update_exe.exists():
+            commands.append([str(update_exe), "--processStart", "GitHubDesktop.exe"])
+
+    for command in commands:
         try:
-            if hasattr(os, "startfile"):
-                os.startfile(uri)  # type: ignore[attr-defined]
-                return True
+            subprocess.Popen(command)
+            return True
         except OSError:
             continue
 
