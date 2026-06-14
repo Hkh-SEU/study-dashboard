@@ -10,13 +10,17 @@ https://hkh-seu.github.io/study-dashboard/
 
 ## 半自动发布
 
-现在三个 controller 已经接入半自动发布流程：
+现在网页更新已经独立成单独入口：
+
+- `一键更新网页.py`
+
+三个 controller 只负责更新桌面 Markdown 文件：
 
 - `Notebook/run_controller_数学.py`
 - `Notebook/run_controller_专业课.py`
 - `Notebook/run_controller_复习.py`
 
-日常使用时，在 VS Code 中运行任意一个 controller。它完成 Markdown 更新后，会自动执行：
+当你想更新网页时，运行 `一键更新网页.py`。它会自动执行：
 
 1. 生成最新 `cloud_site`
 2. 检查 GitHub Pages 部署文件
