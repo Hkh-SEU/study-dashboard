@@ -691,13 +691,13 @@ def build_mobile_drawer(documents: list[PublishedDocument]) -> str:
         )
 
     return (
-        '<button class="study-drawer-button" type="button" aria-label="打开当前页目录" '
+        '<button class="study-drawer-button" type="button" aria-label="打开目录" '
         'aria-controls="study-drawer" aria-expanded="false">'
         '<span></span><span></span><span></span>'
         '</button>'
         '<div class="study-drawer-backdrop" hidden></div>'
-        '<aside id="study-drawer" class="study-drawer" aria-label="当前页目录" aria-hidden="true">'
-        '<div class="study-drawer-header"><strong>当前页目录</strong>'
+        '<aside id="study-drawer" class="study-drawer" aria-label="目录" aria-hidden="true">'
+        '<div class="study-drawer-header"><strong>目录</strong>'
         '<button class="study-drawer-close" type="button" aria-label="关闭目录">×</button>'
         '</div><nav class="study-drawer-nav">'
         + "".join(sections_html)
@@ -932,6 +932,17 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           parts.backdrop.hidden = true;
         }}
       }}
+      function toggleStudyDrawer() {{
+        var parts = drawerElements();
+        if (!parts.drawer) {{
+          return;
+        }}
+        if (document.body.classList.contains("study-drawer-open")) {{
+          closeStudyDrawer();
+        }} else {{
+          openStudyDrawer();
+        }}
+      }}
       function setDrawerDateOpen(dateBlock, open) {{
         if (!dateBlock) {{
           return;
@@ -1059,7 +1070,7 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         }}
         event.preventDefault();
         event.stopPropagation();
-        openStudyDrawer();
+        toggleStudyDrawer();
       }}, true);
       document.addEventListener("click", function (event) {{
         if (!event.target.closest(".study-drawer-close") && !event.target.closest(".study-drawer-backdrop")) {{
