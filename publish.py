@@ -367,12 +367,27 @@ def strip_duplicate_title(content: str, title: str) -> str:
     return content
 
 
+def strip_plan_overview(content: str) -> str:
+    lines = content.lstrip().splitlines()
+    if not lines:
+        return content
+    if not re.match(r"^#\s+.*今日复习计划", lines[0].strip()):
+        return content
+    for index, line in enumerate(lines[1:], start=1):
+        if re.match(r"^##\s+", line):
+            return "\n".join(lines[index:]).lstrip() + ("\n" if content.endswith("\n") else "")
+    return "\n".join(lines[1:]).lstrip() + ("\n" if content.endswith("\n") else "")
+
+
 def build_document_markdown(
     document: PublishedDocument,
     published_at: str,
     documents: list[PublishedDocument] | None = None,
 ) -> str:
-    content = add_document_heading_anchors(document, strip_duplicate_title(document.content, document.title)).strip()
+    content = strip_duplicate_title(document.content, document.title)
+    if Path(document.target).stem.lower() == "plan":
+        content = strip_plan_overview(content)
+    content = add_document_heading_anchors(document, content).strip()
     parts = [
         f"# {document.title}",
         "",
@@ -452,7 +467,7 @@ def add_document_heading_anchors(document: PublishedDocument, content: str) -> s
 
 
 def extract_plan_sections(document: PublishedDocument) -> list[tuple[str, str, list[tuple[str, str]]]]:
-    content = strip_duplicate_title(document.content, document.title)
+    content = strip_plan_overview(strip_duplicate_title(document.content, document.title))
     if Path(document.target).stem.lower() != "plan":
         return []
 
@@ -1051,6 +1066,7 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         var anchor = problemLink.dataset.anchor || "";
         var route = routeFromHref(problemLink.getAttribute("href"));
         setPendingAnchor(anchor);
+        syncStudyDrawer();
         if (route === currentRoute()) {{
           window.setTimeout(scrollPendingAnchor, 0);
         }} else {{
@@ -1896,6 +1912,11 @@ body {
     transform: rotate(90deg);
   }
 
+  .study-drawer-date.is-current .study-drawer-date-toggle {
+    color: #0f5f52;
+    background: #eef7f3;
+  }
+
   .study-drawer-problems {
     display: grid;
     gap: 2px;
@@ -1907,17 +1928,30 @@ body {
   }
 
   .study-drawer-problem-link {
+    position: relative;
     display: inline-flex;
     min-height: 30px;
     align-items: center;
+    border-radius: 8px;
+    padding: 2px 8px;
     color: #39413b;
     font-weight: 520;
     text-decoration: none;
   }
 
   .study-drawer-problem-link.is-current {
-    color: #1d7a68;
+    color: #0f5f52;
+    background: #eef7f3;
     font-weight: 760;
+  }
+
+  .study-drawer-problem-link.is-current::before {
+    width: 3px;
+    align-self: stretch;
+    border-radius: 999px;
+    margin: 3px 8px 3px 0;
+    background: #1d7a68;
+    content: "";
   }
 
   .sidebar ul {

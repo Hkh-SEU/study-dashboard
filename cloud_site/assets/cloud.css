@@ -698,6 +698,11 @@ body {
     transform: rotate(90deg);
   }
 
+  .study-drawer-date.is-current .study-drawer-date-toggle {
+    color: #0f5f52;
+    background: #eef7f3;
+  }
+
   .study-drawer-problems {
     display: grid;
     gap: 2px;
@@ -709,17 +714,30 @@ body {
   }
 
   .study-drawer-problem-link {
+    position: relative;
     display: inline-flex;
     min-height: 30px;
     align-items: center;
+    border-radius: 8px;
+    padding: 2px 8px;
     color: #39413b;
     font-weight: 520;
     text-decoration: none;
   }
 
   .study-drawer-problem-link.is-current {
-    color: #1d7a68;
+    color: #0f5f52;
+    background: #eef7f3;
     font-weight: 760;
+  }
+
+  .study-drawer-problem-link.is-current::before {
+    width: 3px;
+    align-self: stretch;
+    border-radius: 999px;
+    margin: 3px 8px 3px 0;
+    background: #1d7a68;
+    content: "";
   }
 
   .sidebar ul {
