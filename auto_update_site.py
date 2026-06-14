@@ -51,8 +51,14 @@ def auto_publish_config() -> tuple[bool, bool]:
     return bool(raw.get("enabled", True)), bool(raw.get("git_push", True))
 
 
-def run_command(command: list[str], *, check: bool = True) -> subprocess.CompletedProcess[str]:
-    print(f"> {' '.join(command)}")
+def run_command(
+    command: list[str],
+    *,
+    check: bool = True,
+    verbose: bool = False,
+) -> subprocess.CompletedProcess[str]:
+    if verbose:
+        print(f"> {' '.join(command)}")
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
     return subprocess.run(
@@ -74,8 +80,8 @@ def print_command_output(result: subprocess.CompletedProcess[str]) -> None:
         print(result.stderr.rstrip())
 
 
-def ensure_git_repo() -> None:
-    result = run_command(["git", "rev-parse", "--show-toplevel"], check=False)
+def ensure_git_repo(verbose: bool) -> None:
+    result = run_command(["git", "rev-parse", "--show-toplevel"], check=False, verbose=verbose)
     if result.returncode != 0:
         print_command_output(result)
         raise RuntimeError("study-dashboard is not a Git repository.")
@@ -84,8 +90,8 @@ def ensure_git_repo() -> None:
         raise RuntimeError(f"Unexpected Git root: {root}")
 
 
-def changed_dashboard_files() -> list[str]:
-    result = run_command(["git", "status", "--porcelain", "--", *ALLOWED_ADD_PATHS], check=True)
+def changed_dashboard_files(verbose: bool) -> list[str]:
+    result = run_command(["git", "status", "--porcelain", "--", *ALLOWED_ADD_PATHS], check=True, verbose=verbose)
     files: list[str] = []
     for line in result.stdout.splitlines():
         if not line.strip():
@@ -97,8 +103,8 @@ def changed_dashboard_files() -> list[str]:
     return files
 
 
-def has_unmerged_paths() -> bool:
-    result = run_command(["git", "status", "--porcelain"], check=True)
+def has_unmerged_paths(verbose: bool) -> bool:
+    result = run_command(["git", "status", "--porcelain"], check=True, verbose=verbose)
     for line in result.stdout.splitlines():
         status = line[:2]
         if "U" in status or status in {"AA", "DD"}:
@@ -106,58 +112,78 @@ def has_unmerged_paths() -> bool:
     return False
 
 
-def git_add_allowed(dry_run: bool) -> None:
+def git_add_allowed(dry_run: bool, verbose: bool) -> None:
     command = ["git", "add", "--", *ALLOWED_ADD_PATHS]
     if dry_run:
-        print(f"[dry-run] {' '.join(command)}")
+        if verbose:
+            print(f"[dry-run] {' '.join(command)}")
         return
-    result = run_command(command, check=False)
-    print_command_output(result)
+    result = run_command(command, check=False, verbose=verbose)
+    if verbose:
+        print_command_output(result)
     if result.returncode != 0:
+        print_command_output(result)
         raise RuntimeError("git add failed. Please check file permissions or Git status.")
 
 
-def git_commit(message: str, dry_run: bool) -> bool:
+def git_commit(message: str, dry_run: bool, verbose: bool) -> bool:
     command = ["git", "commit", "-m", message]
     if dry_run:
-        print(f"[dry-run] {' '.join(command)}")
+        if verbose:
+            print(f"[dry-run] {' '.join(command)}")
         return True
-    result = run_command(command, check=False)
-    print_command_output(result)
+    result = run_command(command, check=False, verbose=verbose)
+    if verbose:
+        print_command_output(result)
     if result.returncode == 0:
+        first_line = next((line for line in result.stdout.splitlines() if line.strip()), "")
+        if first_line:
+            print(f"  Commit: {first_line}")
         return True
     if "nothing to commit" in (result.stdout + result.stderr).lower():
         print("No commit created because there is nothing to commit.")
         return False
+    print_command_output(result)
     raise RuntimeError("git commit failed. Please check Git status and try again.")
 
 
-def git_push(dry_run: bool) -> None:
+def git_push(dry_run: bool, verbose: bool) -> None:
     command = ["git", "push"]
     if dry_run:
-        print(f"[dry-run] {' '.join(command)}")
+        if verbose:
+            print(f"[dry-run] {' '.join(command)}")
         return
-    result = run_command(command, check=False)
-    print_command_output(result)
+    result = run_command(command, check=False, verbose=verbose)
+    if verbose:
+        print_command_output(result)
     if result.returncode != 0:
+        print_command_output(result)
         raise RuntimeError(
             "git push failed. Please check GitHub Desktop login, network, or whether the remote branch needs pulling."
         )
 
 
-def publish_site() -> None:
+def publish_site(verbose: bool) -> None:
     py = python_command()
-    for args in (["publish.py", "--clean"], ["publish.py", "--deploy-check"]):
-        result = run_command([py, *args], check=False)
-        print_command_output(result)
+    steps = [
+        ("生成网页", ["publish.py", "--clean"]),
+        ("检查部署文件", ["publish.py", "--deploy-check"]),
+    ]
+    for label, args in steps:
+        result = run_command([py, *args], check=False, verbose=verbose)
+        if verbose:
+            print_command_output(result)
         if result.returncode != 0:
+            print_command_output(result)
             raise RuntimeError(f"{' '.join(args)} failed.")
+        print(f"✓ {label}")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Generate, commit, and optionally push the study dashboard.")
     parser.add_argument("--dry-run", action="store_true", help="Show git actions without committing or pushing.")
     parser.add_argument("--no-push", action="store_true", help="Commit changes but skip git push.")
+    parser.add_argument("--verbose", action="store_true", help="Print detailed command output.")
     args = parser.parse_args()
 
     try:
@@ -165,43 +191,47 @@ def main() -> int:
         print("")
         print("Study Dashboard Auto Update")
         print("")
-        publish_site()
+        publish_site(args.verbose)
 
         if not enabled:
             print("")
             print("auto_publish.enabled=false, so only cloud_site was generated.")
             return 0
 
-        ensure_git_repo()
-        if has_unmerged_paths():
+        ensure_git_repo(args.verbose)
+        if has_unmerged_paths(args.verbose):
             raise RuntimeError("Git has unresolved conflicts. Resolve them before auto publishing.")
 
-        changed = changed_dashboard_files()
+        changed = changed_dashboard_files(args.verbose)
         if not changed:
             print("")
             print("网页内容没有变化，无需提交。")
             return 0
 
         print("")
-        print("Changed study-dashboard files:")
-        for path in changed:
-            print(f"  - {path}")
+        print(f"✓ 检测到网页变更：{len(changed)} 个文件")
+        if args.verbose:
+            for path in changed:
+                print(f"  - {path}")
 
         message = f"Update study notes {datetime.now().strftime('%Y-%m-%d %H:%M')}"
-        git_add_allowed(args.dry_run)
-        committed = git_commit(message, args.dry_run)
+        git_add_allowed(args.dry_run, args.verbose)
+        print("✓ 已加入 Git 暂存区" if not args.dry_run else "✓ 已模拟 Git 暂存")
+        committed = git_commit(message, args.dry_run, args.verbose)
         if not committed:
             return 0
+        print("✓ 已提交 commit" if not args.dry_run else f"✓ 已模拟 commit：{message}")
 
         should_push = git_push_enabled and not args.no_push
         if should_push:
-            git_push(args.dry_run)
+            git_push(args.dry_run, args.verbose)
+            print("✓ 已推送到 GitHub" if not args.dry_run else "✓ 已模拟 push")
             print("")
             if args.dry_run:
                 print("[dry-run] 已完成生成和检查；这里只是模拟 commit/push，没有真正提交或推送。")
             else:
-                print("已生成网页、提交 commit，并 push 到 GitHub。")
-                print("GitHub Pages 正在部署，手机稍等 30-90 秒后刷新：")
+                print("完成：网页已更新，GitHub Pages 正在部署。")
+                print("手机稍等 30-90 秒后刷新：")
             print("https://hkh-seu.github.io/study-dashboard/")
         else:
             print("")
