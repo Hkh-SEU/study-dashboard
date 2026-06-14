@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 
 PROJECT_DIR = Path(__file__).resolve().parent
@@ -30,6 +31,10 @@ ALLOWED_ADD_PATHS = [
     "run.py",
     "setup_vendor.py",
 ]
+
+
+class PushFailedError(RuntimeError):
+    """Raised when terminal git push fails after a local commit was created."""
 
 
 def python_command() -> str:
@@ -78,6 +83,27 @@ def print_command_output(result: subprocess.CompletedProcess[str]) -> None:
         print(result.stdout.rstrip())
     if result.stderr.strip():
         print(result.stderr.rstrip())
+
+
+def open_github_desktop() -> bool:
+    repo_path = quote(str(PROJECT_DIR).replace("\\", "/"), safe="/:")
+    desktop_uris = [
+        f"github-windows://openRepo/{repo_path}",
+        f"x-github-client://openRepo/{repo_path}",
+    ]
+    for uri in desktop_uris:
+        try:
+            if hasattr(os, "startfile"):
+                os.startfile(uri)  # type: ignore[attr-defined]
+                return True
+        except OSError:
+            continue
+
+    try:
+        subprocess.Popen(["explorer", str(PROJECT_DIR)])
+    except OSError:
+        return False
+    return False
 
 
 def ensure_git_repo(verbose: bool) -> None:
@@ -157,10 +183,7 @@ def git_push(dry_run: bool, verbose: bool) -> None:
     if verbose:
         print_command_output(result)
     if result.returncode != 0:
-        print_command_output(result)
-        raise RuntimeError(
-            "git push failed. Please check GitHub Desktop login, network, or whether the remote branch needs pulling."
-        )
+        raise PushFailedError("terminal git push failed")
 
 
 def publish_site(verbose: bool) -> None:
@@ -224,7 +247,19 @@ def main() -> int:
 
         should_push = git_push_enabled and not args.no_push
         if should_push:
-            git_push(args.dry_run, args.verbose)
+            try:
+                git_push(args.dry_run, args.verbose)
+            except PushFailedError:
+                print("")
+                print("终端 git push 连接 GitHub 失败。")
+                print("本地网页已经生成，commit 也已经完成，没有丢失。")
+                opened = open_github_desktop()
+                if opened:
+                    print("已尝试打开 GitHub Desktop，请点击 Push origin 完成上传。")
+                    print("如果 GitHub Desktop 没有弹出，请手动打开它并选择 study-dashboard。")
+                    return 0
+                print("请手动打开 GitHub Desktop，选择 study-dashboard，然后点击 Push origin。")
+                return 1
             print("✓ 已推送到 GitHub" if not args.dry_run else "✓ 已模拟 push")
             print("")
             if args.dry_run:
