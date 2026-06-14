@@ -1824,13 +1824,41 @@ body {
   height: 1.05em;
   margin: 0 0.42em 0.16em -1.15em;
   vertical-align: middle;
-  accent-color: #4f78d8;
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid #cfd6dc;
+  border-radius: 3px;
+  background: #fff;
+  opacity: 1;
+}
+
+.markdown-section li input[type="checkbox"]:checked {
+  border-color: #4f78d8;
+  background: #4f78d8;
+}
+
+.markdown-section li input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.31em;
+  top: 0.11em;
+  width: 0.28em;
+  height: 0.56em;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .markdown-section li:has(input[type="checkbox"]) {
+  display: block;
+  width: fit-content;
+  max-width: calc(100% - 0.4rem);
+  box-sizing: border-box;
   list-style: none;
   margin: 0.14rem 0 0.14rem 0.12rem;
-  padding: 0.08rem 0.5rem 0.08rem 0.24rem;
+  padding: 0.08rem 0.64rem 0.08rem 0.24rem;
   border-radius: 7px;
 }
 
