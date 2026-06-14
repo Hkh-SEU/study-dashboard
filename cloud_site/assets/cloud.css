@@ -436,22 +436,20 @@ body {
   height: 1.05em;
   margin: 0 0.42em 0.16em -1.15em;
   vertical-align: middle;
-  accent-color: #1d7a68;
+  accent-color: #4f78d8;
 }
 
 .markdown-section li:has(input[type="checkbox"]) {
   list-style: none;
   margin: 0.14rem 0 0.14rem 0.12rem;
-  padding: 0.08rem 0.4rem 0.08rem 0.22rem;
-  border-left: 3px solid transparent;
+  padding: 0.08rem 0.5rem 0.08rem 0.24rem;
   border-radius: 7px;
 }
 
 .markdown-section li:has(input[type="checkbox"]:checked) {
-  color: #203a34;
-  background: #e7f4ef;
-  border-left-color: #1d7a68;
-  font-weight: 600;
+  color: #44546a;
+  background: #edf3ff;
+  font-weight: 500;
 }
 
 .publish-meta {
