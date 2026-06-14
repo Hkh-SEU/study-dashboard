@@ -3,11 +3,11 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link active" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-14 17:03</span>
+  <span>更新：2026-06-14 17:04</span>
 </div>
 
 <div class="today-summary"><div class="summary-chip"><span>今日任务</span><strong>13 道</strong></div>
-<div class="summary-chip"><span>已完成</span><strong>4/13</strong></div>
+<div class="summary-chip"><span>已完成</span><strong>5/13</strong></div>
 <div class="summary-chip"><span>数学</span><strong>8/8</strong></div>
 <div class="summary-chip"><span>专业课</span><strong>5/5</strong></div></div>
 
@@ -19,12 +19,12 @@
 
 <a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2002.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2002.png" alt="题目截图"></a>
 
-- 当前状态：**Again：仍不会**
+- 当前状态：**Good：能独立订正**
 
 复习反馈：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -34,12 +34,12 @@
 
 <a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001.png" alt="题目截图"></a>
 
-- 当前状态：**Again：仍不会**
+- 当前状态：**Good：能独立订正**
 
 复习反馈：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -49,12 +49,12 @@
 
 <a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2006.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2006.png" alt="题目截图"></a>
 
-- 当前状态：**Again：仍不会**
+- 当前状态：**Good：能独立订正**
 
 复习反馈：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -64,13 +64,13 @@
 
 <a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001-2.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001-2.png" alt="题目截图"></a>
 
-- 当前状态：**Again：仍不会**
+- 当前状态：**Good：能独立订正**
 - 备注：数学
 
 复习反馈：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -80,10 +80,10 @@
 
 <a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2004.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2004.png" alt="题目截图"></a>
 
-- 当前状态：**Good：能独立订正**
+- 当前状态：**Again：仍不会**
 
 复习反馈：
-- [ ] Again：仍不会
+- [x] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
