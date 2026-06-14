@@ -966,11 +966,26 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         }});
         drawer.querySelectorAll(".study-drawer-date").forEach(function (dateBlock) {{
           var anchor = dateBlock.dataset.dateAnchor || "";
+          var button = dateBlock.querySelector(".study-drawer-date-toggle");
+          var isCurrentDate = targetId === anchor || targetId.indexOf(anchor + "-") === 0;
           setDrawerDateOpen(dateBlock, openDates.indexOf(anchor) !== -1);
-          dateBlock.classList.toggle("is-current", targetId === anchor || targetId.indexOf(anchor + "-") === 0);
+          dateBlock.classList.toggle("is-current", isCurrentDate);
+          if (button) {{
+            if (isCurrentDate) {{
+              button.setAttribute("aria-current", "location");
+            }} else {{
+              button.removeAttribute("aria-current");
+            }}
+          }}
         }});
         drawer.querySelectorAll(".study-drawer-problem-link").forEach(function (link) {{
-          link.classList.toggle("is-current", targetId === link.dataset.anchor);
+          var isCurrentProblem = targetId === link.dataset.anchor;
+          link.classList.toggle("is-current", isCurrentProblem);
+          if (isCurrentProblem) {{
+            link.setAttribute("aria-current", "location");
+          }} else {{
+            link.removeAttribute("aria-current");
+          }}
         }});
       }}
       function enhanceSidebar() {{
@@ -1830,7 +1845,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 22px 18px 12px;
+    padding: 20px 18px 12px;
     color: #20362f;
   }
 
@@ -1858,7 +1873,7 @@ body {
   }
 
   .study-drawer-subject {
-    margin: 10px 0 14px;
+    margin: 8px 0 14px;
   }
 
   .study-drawer-subject-link {
@@ -1884,8 +1899,8 @@ body {
     align-items: center;
     gap: 7px;
     border: 0;
-    border-radius: 8px;
-    padding: 2px 8px 2px 0;
+    border-radius: 10px;
+    padding: 2px 9px 2px 0;
     color: #1d564c;
     background: transparent;
     font: inherit;
@@ -1907,6 +1922,10 @@ body {
     background: #eef6f3;
   }
 
+  .study-drawer-date-toggle:active {
+    background: #f6faf7;
+  }
+
   .study-drawer-date.is-open .study-drawer-chevron {
     color: #1d7a68;
     transform: rotate(90deg);
@@ -1914,13 +1933,14 @@ body {
 
   .study-drawer-date.is-current .study-drawer-date-toggle {
     color: #0f5f52;
-    background: #eef7f3;
+    background: #f4faf7;
+    box-shadow: inset 3px 0 0 #1d7a68;
   }
 
   .study-drawer-problems {
     display: grid;
-    gap: 2px;
-    margin: 0 0 8px 34px;
+    gap: 3px;
+    margin: 2px 0 10px 35px;
   }
 
   .study-drawer-problems[hidden] {
@@ -1930,28 +1950,28 @@ body {
   .study-drawer-problem-link {
     position: relative;
     display: inline-flex;
-    min-height: 30px;
+    min-height: 32px;
     align-items: center;
-    border-radius: 8px;
-    padding: 2px 8px;
+    border-radius: 9px;
+    padding: 2px 10px;
     color: #39413b;
     font-weight: 520;
     text-decoration: none;
   }
 
+  .study-drawer-problem-link:active {
+    background: #f5faf7;
+  }
+
   .study-drawer-problem-link.is-current {
     color: #0f5f52;
-    background: #eef7f3;
-    font-weight: 760;
+    background: #f1f8f5;
+    box-shadow: inset 3px 0 0 #1d7a68, inset 0 0 0 1px rgba(29, 122, 104, 0.06);
+    font-weight: 720;
   }
 
   .study-drawer-problem-link.is-current::before {
-    width: 3px;
-    align-self: stretch;
-    border-radius: 999px;
-    margin: 3px 8px 3px 0;
-    background: #1d7a68;
-    content: "";
+    content: none;
   }
 
   .sidebar ul {

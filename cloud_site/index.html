@@ -262,11 +262,26 @@
         });
         drawer.querySelectorAll(".study-drawer-date").forEach(function (dateBlock) {
           var anchor = dateBlock.dataset.dateAnchor || "";
+          var button = dateBlock.querySelector(".study-drawer-date-toggle");
+          var isCurrentDate = targetId === anchor || targetId.indexOf(anchor + "-") === 0;
           setDrawerDateOpen(dateBlock, openDates.indexOf(anchor) !== -1);
-          dateBlock.classList.toggle("is-current", targetId === anchor || targetId.indexOf(anchor + "-") === 0);
+          dateBlock.classList.toggle("is-current", isCurrentDate);
+          if (button) {
+            if (isCurrentDate) {
+              button.setAttribute("aria-current", "location");
+            } else {
+              button.removeAttribute("aria-current");
+            }
+          }
         });
         drawer.querySelectorAll(".study-drawer-problem-link").forEach(function (link) {
-          link.classList.toggle("is-current", targetId === link.dataset.anchor);
+          var isCurrentProblem = targetId === link.dataset.anchor;
+          link.classList.toggle("is-current", isCurrentProblem);
+          if (isCurrentProblem) {
+            link.setAttribute("aria-current", "location");
+          } else {
+            link.removeAttribute("aria-current");
+          }
         });
       }
       function enhanceSidebar() {
