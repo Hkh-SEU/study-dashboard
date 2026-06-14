@@ -1356,7 +1356,7 @@ body {
   min-height: 34px;
   align-items: center;
   border-radius: 10px;
-  padding: 2px 10px;
+  padding: 2px 12px;
   color: #1d342f;
   font-weight: 760;
 }
@@ -1365,6 +1365,7 @@ body {
   color: #0f5f52;
   background: #f4faf7;
   box-shadow: inset 3px 0 0 #1d7a68;
+  padding-left: 14px;
 }
 
 .sidebar ul li ul li > a {
@@ -1431,7 +1432,7 @@ body {
   min-height: 32px;
   align-items: center;
   border-radius: 9px;
-  padding-right: 8px;
+  padding: 1px 9px 1px 8px;
   color: #1d564c;
   font-weight: 700;
 }
@@ -1446,7 +1447,7 @@ body {
 }
 
 .sidebar .toc-problem-link {
-  padding: 1px 9px;
+  padding: 1px 10px;
 }
 
 .sidebar li.nav-date:not(.nav-open) > ul {
@@ -1458,6 +1459,7 @@ body {
   background: #f1f8f5;
   box-shadow: inset 3px 0 0 #1d7a68, inset 0 0 0 1px rgba(29, 122, 104, 0.06);
   font-weight: 720;
+  padding-left: 14px;
 }
 
 .sidebar li.nav-current > .toc-date-row .toc-date-link,
@@ -1465,6 +1467,7 @@ body {
   color: #0f5f52;
   background: #f4faf7;
   box-shadow: inset 3px 0 0 #1d7a68;
+  padding-left: 14px;
 }
 
 .sidebar li.nav-open > .toc-date-row .toc-date-link,
