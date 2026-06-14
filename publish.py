@@ -741,13 +741,6 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         loadSidebar: true,
         subMaxLevel: 0,
         auto2top: false,
-        search: {{
-          maxAge: 86400000,
-          paths: "auto",
-          placeholder: "搜索错题、知识点、计划...",
-          noData: "没有找到相关内容",
-          depth: 4
-        }},
         plugins: [
           function (hook) {{
             hook.doneEach(function () {{
@@ -1259,7 +1252,6 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       window.addEventListener("DOMContentLoaded", refreshStudyNavigation);
     </script>
     <script src="assets/vendor/docsify/docsify.min.js"></script>
-    <script src="assets/vendor/docsify/search.min.js"></script>
   </body>
 </html>
 """
@@ -1318,7 +1310,20 @@ body {
 .sidebar ul li a {
   color: #39413b;
   line-height: 1.55;
-  text-decoration: none;
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+  box-shadow: none;
+}
+
+.sidebar a:hover,
+.sidebar a:focus,
+.sidebar a:active,
+.sidebar a:visited,
+.sidebar .toc-subject-link,
+.sidebar .toc-date-link,
+.sidebar .toc-problem-link {
+  border-bottom: 0 !important;
+  text-decoration: none !important;
 }
 
 .sidebar > ul > li > a {

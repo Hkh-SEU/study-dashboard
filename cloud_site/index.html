@@ -22,13 +22,6 @@
         loadSidebar: true,
         subMaxLevel: 0,
         auto2top: false,
-        search: {
-          maxAge: 86400000,
-          paths: "auto",
-          placeholder: "搜索错题、知识点、计划...",
-          noData: "没有找到相关内容",
-          depth: 4
-        },
         plugins: [
           function (hook) {
             hook.doneEach(function () {
@@ -540,6 +533,5 @@
       window.addEventListener("DOMContentLoaded", refreshStudyNavigation);
     </script>
     <script src="assets/vendor/docsify/docsify.min.js"></script>
-    <script src="assets/vendor/docsify/search.min.js"></script>
   </body>
 </html>
