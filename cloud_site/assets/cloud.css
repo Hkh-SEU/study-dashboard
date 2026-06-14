@@ -51,19 +51,39 @@ body {
   color: #39413b;
   line-height: 1.55;
   border-bottom: 0 !important;
+  border-bottom-color: transparent !important;
   text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  background-image: none !important;
   box-shadow: none;
 }
 
+.sidebar a,
 .sidebar a:hover,
 .sidebar a:focus,
 .sidebar a:active,
 .sidebar a:visited,
+.sidebar a *,
 .sidebar .toc-subject-link,
 .sidebar .toc-date-link,
 .sidebar .toc-problem-link {
   border-bottom: 0 !important;
+  border-bottom-color: transparent !important;
   text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  background-image: none !important;
+}
+
+.sidebar li.nav-current > a,
+.sidebar li.nav-current > a:hover,
+.sidebar li.nav-current > a:focus,
+.sidebar li.nav-current > a:active {
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
 }
 
 .sidebar > ul > li > a {

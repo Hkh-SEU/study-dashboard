@@ -715,7 +715,7 @@ def build_mobile_drawer(documents: list[PublishedDocument]) -> str:
 def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
     title = html.escape(site.title)
     description = html.escape(site.description)
-    sidebar_title = "复习目录"
+    sidebar_title = "目录"
     js_title = json.dumps(sidebar_title, ensure_ascii=False)
     return f"""<!doctype html>
 <html lang="zh-CN">
@@ -1311,19 +1311,39 @@ body {
   color: #39413b;
   line-height: 1.55;
   border-bottom: 0 !important;
+  border-bottom-color: transparent !important;
   text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  background-image: none !important;
   box-shadow: none;
 }
 
+.sidebar a,
 .sidebar a:hover,
 .sidebar a:focus,
 .sidebar a:active,
 .sidebar a:visited,
+.sidebar a *,
 .sidebar .toc-subject-link,
 .sidebar .toc-date-link,
 .sidebar .toc-problem-link {
   border-bottom: 0 !important;
+  border-bottom-color: transparent !important;
   text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  background-image: none !important;
+}
+
+.sidebar li.nav-current > a,
+.sidebar li.nav-current > a:hover,
+.sidebar li.nav-current > a:focus,
+.sidebar li.nav-current > a:active {
+  border-bottom: 0 !important;
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
 }
 
 .sidebar > ul > li > a {
