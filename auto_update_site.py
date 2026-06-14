@@ -30,17 +30,6 @@ ALLOWED_ADD_PATHS = [
     "setup_vendor.py",
 ]
 
-# Keep these only so the cleanup commit can stage removal of old shortcut files.
-LEGACY_REMOVE_PATHS = [
-    "一键准备云端发布.bat",
-    "一键准备云端发布.py",
-    "一键更新网页.py",
-    "一键运行学习看板.bat",
-    "一键运行学习看板.py",
-    "登录GitHub.bat",
-]
-GIT_ADD_PATHS = ALLOWED_ADD_PATHS + LEGACY_REMOVE_PATHS
-
 
 class PushFailedError(RuntimeError):
     """Raised when terminal git push fails after a local commit was created."""
@@ -137,7 +126,7 @@ def ensure_git_repo(verbose: bool) -> None:
 
 
 def changed_dashboard_files(verbose: bool) -> list[str]:
-    result = run_command(["git", "status", "--porcelain", "--", *GIT_ADD_PATHS], check=True, verbose=verbose)
+    result = run_command(["git", "status", "--porcelain", "--", *ALLOWED_ADD_PATHS], check=True, verbose=verbose)
     files: list[str] = []
     for line in result.stdout.splitlines():
         if not line.strip():
@@ -159,7 +148,7 @@ def has_unmerged_paths(verbose: bool) -> bool:
 
 
 def git_add_allowed(dry_run: bool, verbose: bool) -> None:
-    command = ["git", "add", "--", *GIT_ADD_PATHS]
+    command = ["git", "add", "--", *ALLOWED_ADD_PATHS]
     if dry_run:
         if verbose:
             print(f"[dry-run] {' '.join(command)}")
@@ -191,6 +180,15 @@ def git_commit(message: str, dry_run: bool, verbose: bool) -> bool:
         return False
     print_command_output(result)
     raise RuntimeError("git commit failed. Please check Git status and try again.")
+
+
+def ensure_dashboard_changes_committed(verbose: bool) -> None:
+    remaining = changed_dashboard_files(verbose)
+    if remaining:
+        preview = ", ".join(remaining[:4])
+        if len(remaining) > 4:
+            preview += f", ... (+{len(remaining) - 4})"
+        raise RuntimeError(f"auto commit did not finish cleanly. Remaining files: {preview}")
 
 
 def git_push(dry_run: bool, verbose: bool) -> None:
@@ -265,6 +263,8 @@ def main() -> int:
         if not committed:
             return 0
         print("✓ 已提交 commit" if not args.dry_run else f"✓ 已模拟 commit：{message}")
+        if not args.dry_run:
+            ensure_dashboard_changes_committed(args.verbose)
 
         should_push = git_push_enabled and not args.no_push
         if should_push:
