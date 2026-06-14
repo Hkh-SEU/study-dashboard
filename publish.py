@@ -631,12 +631,19 @@ def build_sidebar(documents: list[PublishedDocument]) -> str:
     ordered_documents = sorted(documents, key=document_priority)
     lines: list[str] = []
     for document in ordered_documents:
-        if Path(document.target).stem.lower() == "plan":
-            continue
+        stem = Path(document.target).stem.lower()
         route = docsify_route(document.target)
         safe_label = html.escape(document_route_label(document), quote=True)
-        lines.append(f'- <a href="{route}" class="toc-subject-link">{safe_label}</a>')
-        for date, date_anchor, problems in extract_problem_sections(document):
+        if stem == "plan":
+            sections = extract_plan_sections(document)
+        elif stem in {"math", "major"}:
+            sections = extract_problem_sections(document)
+        else:
+            sections = []
+        if not sections:
+            continue
+        lines.append(f'- <a href="{route}" data-route="{route}" class="toc-subject-link">{safe_label}</a>')
+        for date, date_anchor, problems in sections:
             safe_date = html.escape(date, quote=True)
             lines.append(
                 f'  - <span class="toc-date-row">'
@@ -1012,6 +1019,7 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         if (!sidebar) {{
           return;
         }}
+        var route = currentRoute();
         var targetId = readPendingAnchor() ||
           sessionStorage.getItem("study-dashboard-current-anchor") ||
           targetIdFromHash();
@@ -1021,7 +1029,19 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           openDates.push(currentDate);
           writeOpenDates(openDates);
         }}
+        sidebar.querySelectorAll(".toc-subject-link").forEach(function (subjectLink) {{
+          var item = subjectLink.closest("li");
+          var isCurrentSubject = routeFromHref(subjectLink.getAttribute("href")) === route;
+          subjectLink.classList.toggle("is-current", isCurrentSubject);
+          if (item) {{
+            item.hidden = !isCurrentSubject;
+            item.classList.toggle("nav-subject-current", isCurrentSubject);
+          }}
+        }});
         sidebar.querySelectorAll("li").forEach(function (item) {{
+          if (item.hidden) {{
+            return;
+          }}
           var childUl = getDirectChildUl(item);
           var link = getDirectChildLink(item);
           var toggle = getDirectToggle(item);
@@ -1265,7 +1285,7 @@ body {
 
 .app-name-link {
   color: #1d7a68;
-  font-size: 1.18rem;
+  font-size: 1.08rem;
   font-weight: 800;
 }
 
@@ -1274,8 +1294,17 @@ body {
   background: #fff;
 }
 
+.sidebar .app-name {
+  margin: 18px 0 12px;
+  padding: 0 18px;
+}
+
+.sidebar-nav {
+  padding: 0 16px 36px;
+}
+
 .sidebar ul {
-  padding-left: 18px;
+  padding-left: 12px;
 }
 
 .sidebar ul li {
@@ -1295,6 +1324,22 @@ body {
 .sidebar > ul > li > a {
   color: #1d342f;
   font-weight: 700;
+}
+
+.sidebar .toc-subject-link {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  border-radius: 10px;
+  padding: 2px 10px;
+  color: #1d342f;
+  font-weight: 760;
+}
+
+.sidebar .toc-subject-link.is-current {
+  color: #0f5f52;
+  background: #f4faf7;
+  box-shadow: inset 3px 0 0 #1d7a68;
 }
 
 .sidebar ul li ul li > a {
@@ -1322,7 +1367,8 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  min-height: 30px;
+  min-height: 32px;
+  border-radius: 10px;
 }
 
 .sidebar .toc-toggle {
@@ -1357,16 +1403,25 @@ body {
 
 .sidebar .toc-date-link {
   display: inline-flex;
-  min-height: 30px;
+  min-height: 32px;
   align-items: center;
-  padding-right: 6px;
+  border-radius: 9px;
+  padding-right: 8px;
+  color: #1d564c;
+  font-weight: 700;
 }
 
 .sidebar .toc-problem-link,
 .sidebar .toc-subject-link {
   display: inline-flex;
-  min-height: 28px;
+  width: fit-content;
+  min-height: 30px;
   align-items: center;
+  border-radius: 9px;
+}
+
+.sidebar .toc-problem-link {
+  padding: 1px 9px;
 }
 
 .sidebar li.nav-date:not(.nav-open) > ul {
@@ -1375,7 +1430,21 @@ body {
 
 .sidebar li.nav-current > a {
   color: #1d7a68;
-  font-weight: 700;
+  background: #f1f8f5;
+  box-shadow: inset 3px 0 0 #1d7a68, inset 0 0 0 1px rgba(29, 122, 104, 0.06);
+  font-weight: 720;
+}
+
+.sidebar li.nav-current > .toc-date-row .toc-date-link,
+.sidebar li.nav-current > p > .toc-date-row .toc-date-link {
+  color: #0f5f52;
+  background: #f4faf7;
+  box-shadow: inset 3px 0 0 #1d7a68;
+}
+
+.sidebar li.nav-open > .toc-date-row .toc-date-link,
+.sidebar li.nav-open > p > .toc-date-row .toc-date-link {
+  color: #0f5f52;
 }
 
 .section-anchor {

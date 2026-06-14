@@ -300,6 +300,7 @@
         if (!sidebar) {
           return;
         }
+        var route = currentRoute();
         var targetId = readPendingAnchor() ||
           sessionStorage.getItem("study-dashboard-current-anchor") ||
           targetIdFromHash();
@@ -309,7 +310,19 @@
           openDates.push(currentDate);
           writeOpenDates(openDates);
         }
+        sidebar.querySelectorAll(".toc-subject-link").forEach(function (subjectLink) {
+          var item = subjectLink.closest("li");
+          var isCurrentSubject = routeFromHref(subjectLink.getAttribute("href")) === route;
+          subjectLink.classList.toggle("is-current", isCurrentSubject);
+          if (item) {
+            item.hidden = !isCurrentSubject;
+            item.classList.toggle("nav-subject-current", isCurrentSubject);
+          }
+        });
         sidebar.querySelectorAll("li").forEach(function (item) {
+          if (item.hidden) {
+            return;
+          }
           var childUl = getDirectChildUl(item);
           var link = getDirectChildLink(item);
           var toggle = getDirectToggle(item);
