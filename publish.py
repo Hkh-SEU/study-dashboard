@@ -767,6 +767,8 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       }}
       window.studyInitialVersion = null;
       window.studyReloadScheduled = false;
+      window.studyVersionChecking = false;
+      window.studyVersionCheckStartedAt = Date.now();
       async function fetchSiteVersion() {{
         try {{
           var response = await fetch("version.json?ts=" + Date.now(), {{ cache: "no-store" }});
@@ -784,7 +786,12 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           notice.hidden = false;
         }}
       }}
-      function scheduleSiteReload() {{
+      function reloadWithVersion(latestTimestamp) {{
+        var base = window.location.href.split("#")[0].split("?")[0];
+        var hash = window.location.hash || "#/plan";
+        window.location.href = base + "?v=" + encodeURIComponent(latestTimestamp || Date.now()) + hash;
+      }}
+      function scheduleSiteReload(latestTimestamp) {{
         if (window.studyReloadScheduled) {{
           return;
         }}
@@ -794,29 +801,39 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           var lightbox = document.querySelector(".image-lightbox");
           if (lightbox && !lightbox.hidden) {{
             window.studyReloadScheduled = false;
-            scheduleSiteReload();
+            scheduleSiteReload(latestTimestamp);
             return;
           }}
-          window.location.reload();
-        }}, 1000);
+          reloadWithVersion(latestTimestamp);
+        }}, 800);
       }}
       async function checkSiteVersion() {{
+        if (window.studyVersionChecking) {{
+          return false;
+        }}
+        window.studyVersionChecking = true;
         var version = await fetchSiteVersion();
         if (!version || !version.timestamp) {{
-          return;
+          window.studyVersionChecking = false;
+          return false;
         }}
         if (!window.studyInitialVersion) {{
           window.studyInitialVersion = version;
-          return;
+          window.studyVersionChecking = false;
+          return false;
         }}
         if (Number(version.timestamp) > Number(window.studyInitialVersion.timestamp || 0)) {{
-          scheduleSiteReload();
+          scheduleSiteReload(version.timestamp);
+          window.studyVersionChecking = false;
+          return true;
         }}
+        window.studyVersionChecking = false;
+        return false;
       }}
-      window.studyVersionCheckStartedAt = Date.now();
+      window.checkStudyDashboardUpdateNow = checkSiteVersion;
       function nextVersionCheckDelay() {{
         var elapsed = Date.now() - window.studyVersionCheckStartedAt;
-        return elapsed < 3 * 60 * 1000 ? 15000 : 60000;
+        return elapsed < 5 * 60 * 1000 ? 10000 : 60000;
       }}
       function scheduleVersionCheck() {{
         window.setTimeout(async function () {{
@@ -826,6 +843,14 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       }}
       checkSiteVersion();
       scheduleVersionCheck();
+      document.addEventListener("visibilitychange", function () {{
+        if (document.visibilityState === "visible") {{
+          checkSiteVersion();
+        }}
+      }});
+      window.addEventListener("focus", function () {{
+        checkSiteVersion();
+      }});
       window.studyPendingAnchor = "";
       function normalizeRoute(route) {{
         return (!route || route === "#" || route === "#/") ? "#/plan" : route;
@@ -1796,13 +1821,14 @@ body {
   right: 18px;
   bottom: 72px;
   z-index: 9998;
-  padding: 9px 14px;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 8px 13px;
   border: 1px solid #cfe4dd;
   border-radius: 999px;
   color: #123d35;
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 10px 28px rgba(23, 76, 64, 0.18);
-  font-size: 0.86rem;
+  box-shadow: 0 8px 22px rgba(23, 76, 64, 0.15);
+  font-size: 0.82rem;
   font-weight: 700;
 }
 
