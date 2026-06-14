@@ -8,27 +8,100 @@
 https://hkh-seu.github.io/study-dashboard/
 ```
 
-## 每天怎么用
+## 一键自动发布
 
-1. 修改桌面上的 Markdown 文件。
-2. 运行 `一键准备云端发布.py`。
-3. 打开 GitHub Desktop。
-4. Summary 填脚本给出的提交信息，例如 `Update study notes 2026-06-14 01:30`。
-5. 点击 `Commit to main`。
-6. 点击 `Push origin`。
-7. 等 GitHub Actions 变成绿色。
-8. 手机刷新 GitHub Pages 网址。
+现在三个 controller 已经接入自动发布流程：
+
+- `Notebook/run_controller_数学.py`
+- `Notebook/run_controller_专业课.py`
+- `Notebook/run_controller_复习.py`
+
+日常使用时，在 VS Code 中运行任意一个 controller。它完成 Markdown 更新后，会自动执行：
+
+1. 生成最新 `cloud_site`
+2. 检查 GitHub Pages 部署文件
+3. 自动提交 `study-dashboard` 相关文件
+4. 自动 `git push`
+5. 等 GitHub Actions 部署
+6. 手机网页检测到新版本后自动刷新
+
+自动提交信息形如：
+
+```text
+Update study notes 2026-06-14 16:30
+```
+
+## 自动发布开关
+
+`config.json` 中有：
+
+```json
+"auto_publish": {
+  "enabled": true,
+  "git_push": true
+}
+```
+
+- `enabled=false`：只生成网页，不 commit，不 push。
+- `git_push=false`：自动 commit，但不 push。
+- `git_push=true`：自动 commit 并 push。
+
+自动发布只会添加 `study-dashboard` 内的白名单文件，不会 `git add` 整个仓库，不会强推，不会 reset，也不会写入 token、账号或密码。
+
+## 网页自动刷新
+
+每次发布都会生成：
+
+```text
+cloud_site/version.json
+```
+
+网页每 60 秒检查一次 `version.json`。如果发现新版本，会显示：
+
+```text
+内容已更新，正在刷新...
+```
+
+然后自动刷新页面。手机端和电脑端都生效。如果手机没自动刷新，可以手动刷新一次。
+
+## 手动发布
+
+如果自动 push 失败，仍然可以手动发布：
+
+```powershell
+D:\Python3_13\python.exe publish.py --clean
+D:\Python3_13\python.exe publish.py --deploy-check
+```
+
+然后打开 GitHub Desktop，手动 Commit + Push。
+
+## 自动 push 失败怎么办
+
+常见原因：
+
+- GitHub Desktop 没登录
+- 网络不稳定
+- 远端仓库有更新，需要先同步
+- Git 存在冲突
+
+处理建议：
+
+1. 打开 GitHub Desktop 检查登录状态。
+2. 检查网络。
+3. 手动 Commit + Push。
+4. 不要随便执行 `git reset --hard`。
+5. 不要强推。
 
 ## 手机端体验
 
-- 默认进入“今日复习计划”，不再单独维护首页。
-- 底部导航只负责切换：计划、数学、专业。
+- 默认进入“今日复习计划”。
+- 底部导航切换：计划、数学、专业。
 - 左下角三横线打开当前页目录。
-- 在计划页打开目录，只显示今日复习计划里的题目。
+- 在计划页打开目录，只显示今日计划相关题目。
 - 在数学页打开目录，只显示数学错题。
 - 在专业页打开目录，只显示专业课错题。
 - 点击目录里的分组只展开或收起，点击错题才跳转。
-- 点击图片可以打开原图。
+- 点击图片会在站内预览，点击关闭按钮或背景可关闭。
 
 ## 本地预览
 
@@ -49,6 +122,7 @@ D:\Python3_13\python.exe publish.py --doctor
 D:\Python3_13\python.exe publish.py --clean
 D:\Python3_13\python.exe publish.py --deploy-check
 D:\Python3_13\python.exe publish.py --open-public
+D:\Python3_13\python.exe auto_update_site.py --dry-run
 ```
 
 ## 部署方式
@@ -63,4 +137,4 @@ D:\Python3_13\python.exe publish.py --open-public
 
 ## 隐私提醒
 
-仓库公开后，`cloud_site` 中的错题本、复习计划和截图都会公开。不要把 token、账号、密码或其他隐私内容写进学习文件。
+自动发布会把 `cloud_site` 中的错题本、复习计划和截图推送到 GitHub。仓库公开后，这些内容也会公开。不要把 token、账号、密码或其他隐私内容写进学习文件。

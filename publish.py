@@ -731,6 +731,7 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
     <div id="app">加载中...</div>
     {mobile_bottom_nav()}
     {build_mobile_drawer(documents)}
+    <div class="site-update-notice" hidden>内容已更新，正在刷新...</div>
     <div class="image-lightbox" aria-hidden="true" hidden>
       <button class="image-lightbox-close" type="button" aria-label="关闭图片预览">×</button>
       <div class="image-lightbox-stage">
@@ -764,6 +765,56 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           item.classList.toggle("active", item.dataset.route === route);
         }});
       }}
+      window.studyInitialVersion = null;
+      window.studyReloadScheduled = false;
+      async function fetchSiteVersion() {{
+        try {{
+          var response = await fetch("version.json?ts=" + Date.now(), {{ cache: "no-store" }});
+          if (!response.ok) {{
+            return null;
+          }}
+          return await response.json();
+        }} catch (error) {{
+          return null;
+        }}
+      }}
+      function showUpdateNotice() {{
+        var notice = document.querySelector(".site-update-notice");
+        if (notice) {{
+          notice.hidden = false;
+        }}
+      }}
+      function scheduleSiteReload() {{
+        if (window.studyReloadScheduled) {{
+          return;
+        }}
+        window.studyReloadScheduled = true;
+        showUpdateNotice();
+        window.setTimeout(function () {{
+          var lightbox = document.querySelector(".image-lightbox");
+          if (lightbox && !lightbox.hidden) {{
+            window.studyReloadScheduled = false;
+            scheduleSiteReload();
+            return;
+          }}
+          window.location.reload();
+        }}, 1000);
+      }}
+      async function checkSiteVersion() {{
+        var version = await fetchSiteVersion();
+        if (!version || !version.timestamp) {{
+          return;
+        }}
+        if (!window.studyInitialVersion) {{
+          window.studyInitialVersion = version;
+          return;
+        }}
+        if (Number(version.timestamp) > Number(window.studyInitialVersion.timestamp || 0)) {{
+          scheduleSiteReload();
+        }}
+      }}
+      checkSiteVersion();
+      window.setInterval(checkSiteVersion, 60000);
       window.studyPendingAnchor = "";
       function normalizeRoute(route) {{
         return (!route || route === "#" || route === "#/") ? "#/plan" : route;
@@ -1729,6 +1780,25 @@ body {
   transform: scale(0.96);
 }
 
+.site-update-notice {
+  position: fixed;
+  right: 18px;
+  bottom: 72px;
+  z-index: 9998;
+  padding: 9px 14px;
+  border: 1px solid #cfe4dd;
+  border-radius: 999px;
+  color: #123d35;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 28px rgba(23, 76, 64, 0.18);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.site-update-notice[hidden] {
+  display: none;
+}
+
 .markdown-section ul,
 .markdown-section ol {
   padding-left: 1.35rem;
@@ -2349,6 +2419,7 @@ def publish(clean: bool) -> tuple[SiteConfig, list[PublishedDocument], DeployCon
     site, documents, deploy = collect_documents()
     ensure_output(site.output_dir, clean=clean)
     published_at = now_text()
+    published_timestamp = int(time.time())
 
     for document in documents:
         rewritten_content = copy_and_rewrite_assets(
@@ -2375,6 +2446,19 @@ def publish(clean: bool) -> tuple[SiteConfig, list[PublishedDocument], DeployCon
     (site.output_dir / "index.html").write_text(build_index(site, documents), encoding="utf-8")
     (site.output_dir / ".nojekyll").write_text("", encoding="utf-8")
     (site.output_dir / "assets" / "cloud.css").write_text(build_css(), encoding="utf-8")
+    (site.output_dir / "version.json").write_text(
+        json.dumps(
+            {
+                "published_at": published_at,
+                "timestamp": published_timestamp,
+                "site": site.title,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
 
     print_report(site, documents, generated=True, published_at=published_at)
     print_next_steps(site, deploy)
@@ -2411,6 +2495,7 @@ def required_deploy_files(site: SiteConfig, documents: list[PublishedDocument]) 
         output / "index.html",
         output / "README.md",
         output / "_sidebar.md",
+        output / "version.json",
         output / "assets" / "cloud.css",
         output / "assets" / "vendor" / "docsify" / "vue.css",
         output / "assets" / "vendor" / "docsify" / "docsify.min.js",
@@ -2578,6 +2663,11 @@ def doctor() -> int:
                 print(f"      Missing: {item}")
         else:
             print("      OK key files exist.")
+        version_file = site.output_dir / "version.json"
+        if version_file.exists() and version_file.stat().st_size > 0:
+            print("      OK version.json exists.")
+        else:
+            warnings.append("cloud_site/version.json is missing. Run publish.py --clean to generate it.")
 
     print("[5/6] Docsify local assets")
     if site is not None:

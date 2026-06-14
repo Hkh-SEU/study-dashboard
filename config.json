@@ -39,5 +39,9 @@
     "output_directory": "cloud_site",
     "git_enabled": false,
     "default_branch": "main"
+  },
+  "auto_publish": {
+    "enabled": true,
+    "git_push": true
   }
 }
