@@ -25,11 +25,21 @@ ALLOWED_ADD_PATHS = [
     "cloud_site",
     ".github/workflows/pages.yml",
     "auto_update_site.py",
-    "一键准备云端发布.py",
-    "一键运行学习看板.py",
+    "update_site.py",
     "run.py",
     "setup_vendor.py",
 ]
+
+# Keep these only so the cleanup commit can stage removal of old shortcut files.
+LEGACY_REMOVE_PATHS = [
+    "一键准备云端发布.bat",
+    "一键准备云端发布.py",
+    "一键更新网页.py",
+    "一键运行学习看板.bat",
+    "一键运行学习看板.py",
+    "登录GitHub.bat",
+]
+GIT_ADD_PATHS = ALLOWED_ADD_PATHS + LEGACY_REMOVE_PATHS
 
 
 class PushFailedError(RuntimeError):
@@ -127,7 +137,7 @@ def ensure_git_repo(verbose: bool) -> None:
 
 
 def changed_dashboard_files(verbose: bool) -> list[str]:
-    result = run_command(["git", "status", "--porcelain", "--", *ALLOWED_ADD_PATHS], check=True, verbose=verbose)
+    result = run_command(["git", "status", "--porcelain", "--", *GIT_ADD_PATHS], check=True, verbose=verbose)
     files: list[str] = []
     for line in result.stdout.splitlines():
         if not line.strip():
@@ -149,7 +159,7 @@ def has_unmerged_paths(verbose: bool) -> bool:
 
 
 def git_add_allowed(dry_run: bool, verbose: bool) -> None:
-    command = ["git", "add", "--", *ALLOWED_ADD_PATHS]
+    command = ["git", "add", "--", *GIT_ADD_PATHS]
     if dry_run:
         if verbose:
             print(f"[dry-run] {' '.join(command)}")
