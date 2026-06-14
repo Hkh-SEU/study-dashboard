@@ -1,19 +1,16 @@
 - <a href="#/plan" data-route="#/plan" class="toc-subject-link">今日计划</a>
-  - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="plan-section-01" aria-label="展开或收起 数学（共 8 道 / 上限 8）">›</button><a href="#/plan" data-anchor="plan-section-01" class="toc-date-link">数学（共 8 道 / 上限 8）</a></span>
+  - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="plan-section-01" aria-label="展开或收起 数学（共 5 道 / 上限 8）">›</button><a href="#/plan" data-anchor="plan-section-01" class="toc-date-link">数学（共 5 道 / 上限 8）</a></span>
     - <a href="#/plan" data-anchor="plan-section-01-01" class="toc-problem-link">错题 02（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-02" class="toc-problem-link">错题 01（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-03" class="toc-problem-link">错题 06（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-04" class="toc-problem-link">错题 01（06-05）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-05" class="toc-problem-link">错题 04（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-06" class="toc-problem-link">错题 07（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-07" class="toc-problem-link">错题 08（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-01-08" class="toc-problem-link">错题 10（06-04）</a>
+    - <a href="#/plan" data-anchor="plan-section-01-02" class="toc-problem-link">错题 01（06-14）</a>
+    - <a href="#/plan" data-anchor="plan-section-01-03" class="toc-problem-link">错题 11（06-04）</a>
+    - <a href="#/plan" data-anchor="plan-section-01-04" class="toc-problem-link">错题 02（06-05）</a>
+    - <a href="#/plan" data-anchor="plan-section-01-05" class="toc-problem-link">错题 05（06-04）</a>
   - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="plan-section-02" aria-label="展开或收起 专业课（共 5 道 / 上限 5）">›</button><a href="#/plan" data-anchor="plan-section-02" class="toc-date-link">专业课（共 5 道 / 上限 5）</a></span>
-    - <a href="#/plan" data-anchor="plan-section-02-01" class="toc-problem-link">错题 03（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-02-02" class="toc-problem-link">错题 01（06-04）</a>
-    - <a href="#/plan" data-anchor="plan-section-02-03" class="toc-problem-link">错题 02（06-05）</a>
-    - <a href="#/plan" data-anchor="plan-section-02-04" class="toc-problem-link">错题 03（06-05）</a>
-    - <a href="#/plan" data-anchor="plan-section-02-05" class="toc-problem-link">错题 04（06-05）</a>
+    - <a href="#/plan" data-anchor="plan-section-02-01" class="toc-problem-link">错题 02（06-05）</a>
+    - <a href="#/plan" data-anchor="plan-section-02-02" class="toc-problem-link">错题 03（06-05）</a>
+    - <a href="#/plan" data-anchor="plan-section-02-03" class="toc-problem-link">错题 04（06-05）</a>
+    - <a href="#/plan" data-anchor="plan-section-02-04" class="toc-problem-link">错题 02（06-04）</a>
+    - <a href="#/plan" data-anchor="plan-section-02-05" class="toc-problem-link">错题 01（06-08）</a>
 - <a href="#/math" data-route="#/math" class="toc-subject-link">数学</a>
   - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="math-06-04" aria-label="展开或收起 06-04">›</button><a href="#/math" data-anchor="math-06-04" class="toc-date-link">06-04</a></span>
     - <a href="#/math" data-anchor="math-06-04-01" class="toc-problem-link">错题 01</a>
@@ -30,6 +27,8 @@
   - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="math-06-05" aria-label="展开或收起 06-05">›</button><a href="#/math" data-anchor="math-06-05" class="toc-date-link">06-05</a></span>
     - <a href="#/math" data-anchor="math-06-05-01" class="toc-problem-link">错题 01</a>
     - <a href="#/math" data-anchor="math-06-05-02" class="toc-problem-link">错题 02</a>
+  - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="math-06-14" aria-label="展开或收起 06-14">›</button><a href="#/math" data-anchor="math-06-14" class="toc-date-link">06-14</a></span>
+    - <a href="#/math" data-anchor="math-06-14-01" class="toc-problem-link">错题 01</a>
 - <a href="#/major" data-route="#/major" class="toc-subject-link">专业课</a>
   - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="major-06-04" aria-label="展开或收起 06-04">›</button><a href="#/major" data-anchor="major-06-04" class="toc-date-link">06-04</a></span>
     - <a href="#/major" data-anchor="major-06-04-01" class="toc-problem-link">错题 01</a>
