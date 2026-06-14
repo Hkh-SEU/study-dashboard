@@ -49,11 +49,15 @@ def load_config() -> dict[str, Any]:
     return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 
 
-def auto_publish_config() -> tuple[bool, bool]:
+def auto_publish_config() -> tuple[bool, bool, bool]:
     raw = load_config().get("auto_publish", {})
     if not isinstance(raw, dict):
-        return True, True
-    return bool(raw.get("enabled", True)), bool(raw.get("git_push", True))
+        return True, False, True
+    return (
+        bool(raw.get("enabled", True)),
+        bool(raw.get("git_push", False)),
+        bool(raw.get("open_github_desktop", True)),
+    )
 
 
 def run_command(
@@ -206,11 +210,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Generate, commit, and optionally push the study dashboard.")
     parser.add_argument("--dry-run", action="store_true", help="Show git actions without committing or pushing.")
     parser.add_argument("--no-push", action="store_true", help="Commit changes but skip git push.")
+    parser.add_argument("--no-open-desktop", action="store_true", help="Do not open GitHub Desktop after committing.")
     parser.add_argument("--verbose", action="store_true", help="Print detailed command output.")
     args = parser.parse_args()
 
     try:
-        enabled, git_push_enabled = auto_publish_config()
+        enabled, git_push_enabled, open_desktop_enabled = auto_publish_config()
         print("")
         print("Study Dashboard Auto Update")
         print("")
@@ -273,8 +278,15 @@ def main() -> int:
             if args.dry_run:
                 print("[dry-run] 已完成生成和检查；这里只是模拟 commit，没有真正提交。")
             else:
-                print("已生成网页并提交 commit。")
-                print("auto_publish.git_push=false 或传入了 --no-push，因此没有执行 git push。")
+                print("完成：网页已生成，本地 commit 已完成。")
+                if open_desktop_enabled and not args.no_open_desktop:
+                    opened = open_github_desktop()
+                    if opened:
+                        print("已尝试打开 GitHub Desktop，请点击 Push origin 发布网页。")
+                    else:
+                        print("请打开 GitHub Desktop，选择 study-dashboard，然后点击 Push origin。")
+                else:
+                    print("请打开 GitHub Desktop，选择 study-dashboard，然后点击 Push origin。")
 
         return 0
     except Exception as exc:  # noqa: BLE001

@@ -8,9 +8,9 @@
 https://hkh-seu.github.io/study-dashboard/
 ```
 
-## 一键自动发布
+## 半自动发布
 
-现在三个 controller 已经接入自动发布流程：
+现在三个 controller 已经接入半自动发布流程：
 
 - `Notebook/run_controller_数学.py`
 - `Notebook/run_controller_专业课.py`
@@ -21,9 +21,10 @@ https://hkh-seu.github.io/study-dashboard/
 1. 生成最新 `cloud_site`
 2. 检查 GitHub Pages 部署文件
 3. 自动提交 `study-dashboard` 相关文件
-4. 自动 `git push`
-5. 等 GitHub Actions 部署
-6. 手机网页检测到新版本后自动刷新
+4. 自动打开 GitHub Desktop
+5. 你点击 `Push origin`
+6. 等 GitHub Actions 部署
+7. 手机网页检测到新版本后自动刷新
 
 自动提交信息形如：
 
@@ -31,22 +32,24 @@ https://hkh-seu.github.io/study-dashboard/
 Update study notes 2026-06-14 16:30
 ```
 
-## 自动发布开关
+## 半自动发布开关
 
 `config.json` 中有：
 
 ```json
 "auto_publish": {
   "enabled": true,
-  "git_push": true
+  "git_push": false,
+  "open_github_desktop": true
 }
 ```
 
-- `enabled=false`：只生成网页，不 commit，不 push。
-- `git_push=false`：自动 commit，但不 push。
-- `git_push=true`：自动 commit 并 push。
+- `enabled=false`：只生成网页，不 commit。
+- `git_push=false`：自动 commit，但不使用终端 push，推荐保持这个设置。
+- `open_github_desktop=true`：commit 后自动尝试打开 GitHub Desktop。
+- `git_push=true`：自动 commit 并尝试终端 push，不推荐作为日常方式。
 
-自动发布只会添加 `study-dashboard` 内的白名单文件，不会 `git add` 整个仓库，不会强推，不会 reset，也不会写入 token、账号或密码。
+半自动发布只会添加 `study-dashboard` 内的白名单文件，不会 `git add` 整个仓库，不会强推，不会 reset，也不会写入 token、账号或密码。
 
 ## 网页自动刷新
 
@@ -66,7 +69,7 @@ cloud_site/version.json
 
 ## 手动发布
 
-如果自动 push 失败，仍然可以手动发布：
+如果想完全手动，也可以运行：
 
 ```powershell
 D:\Python3_13\python.exe publish.py --clean
@@ -75,20 +78,19 @@ D:\Python3_13\python.exe publish.py --deploy-check
 
 然后打开 GitHub Desktop，手动 Commit + Push。
 
-## 自动 push 失败怎么办
+## GitHub Desktop 没有自动打开怎么办
 
 常见原因：
 
 - GitHub Desktop 没登录
-- 网络不稳定
-- 远端仓库有更新，需要先同步
-- Git 存在冲突
+- GitHub Desktop 没有关联 `study-dashboard`
+- 系统没有注册 GitHub Desktop 的打开协议
 
 处理建议：
 
-1. 打开 GitHub Desktop 检查登录状态。
-2. 检查网络。
-3. 手动 Commit + Push。
+1. 手动打开 GitHub Desktop。
+2. 选择 `study-dashboard` 仓库。
+3. 点击 `Push origin`。
 4. 不要随便执行 `git reset --hard`。
 5. 不要强推。
 

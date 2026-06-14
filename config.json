@@ -42,6 +42,7 @@
   },
   "auto_publish": {
     "enabled": true,
-    "git_push": true
+    "git_push": false,
+    "open_github_desktop": true
   }
 }
