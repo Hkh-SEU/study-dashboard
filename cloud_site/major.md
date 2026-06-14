@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link active" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-14 17:08</span>
+  <span>更新：2026-06-14 17:20</span>
 </div>
 
 <a id="major-06-04" class="section-anchor"></a>
@@ -19,9 +19,9 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 
@@ -50,9 +50,9 @@
 - 备注：信号
 
 复习状态：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="major-06-05" class="section-anchor"></a>
