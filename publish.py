@@ -67,7 +67,11 @@ class PublishedDocument:
 
 
 def now_text() -> str:
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+def today_short_text() -> str:
+    return datetime.now().strftime("%m-%d")
 
 
 def read_text(path: Path) -> str:
@@ -384,12 +388,16 @@ def build_document_markdown(
     published_at: str,
     documents: list[PublishedDocument] | None = None,
 ) -> str:
+    stem = Path(document.target).stem.lower()
     content = strip_duplicate_title(document.content, document.title)
-    if Path(document.target).stem.lower() == "plan":
+    if stem == "plan":
         content = strip_plan_overview(content)
     content = add_document_heading_anchors(document, content).strip()
+    display_title = document.title
+    if stem == "plan":
+        display_title = f"{document.title} {today_short_text()}"
     parts = [
-        f"# {document.title}",
+        f"# {display_title}",
         "",
         document_nav(document.target),
         "",
@@ -398,7 +406,7 @@ def build_document_markdown(
         "</div>",
     ]
 
-    if Path(document.target).stem.lower() == "plan" and documents is not None:
+    if stem == "plan" and documents is not None:
         parts.extend(["", build_plan_summary(documents)])
 
     parts.extend(["", content, ""])
@@ -1524,7 +1532,7 @@ body {
   gap: 6px;
   margin: 0 0 6px;
   color: #4e5b55;
-  font-size: 0.82rem;
+  font-size: 0.76rem;
 }
 
 .publish-meta span {
@@ -1950,6 +1958,9 @@ body {
   .study-drawer-problem-link {
     position: relative;
     display: inline-flex;
+    justify-self: start;
+    width: fit-content;
+    max-width: calc(100% - 10px);
     min-height: 32px;
     align-items: center;
     border-radius: 9px;
@@ -2037,7 +2048,7 @@ body {
   .publish-meta {
     gap: 4px;
     margin: 0 0 6px;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
   }
 
   .publish-meta span {
