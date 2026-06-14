@@ -345,6 +345,64 @@ body {
   cursor: zoom-in;
 }
 
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 14, 13, 0.9);
+}
+
+.image-lightbox[hidden] {
+  display: none;
+}
+
+.image-lightbox-open {
+  overflow: hidden;
+}
+
+.image-lightbox-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.image-lightbox-img {
+  max-width: min(96vw, 1200px);
+  max-height: 88vh;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.image-lightbox-close {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 10000;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  color: #1f2925;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 26px;
+  line-height: 1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+}
+
+.image-lightbox-close:active {
+  transform: scale(0.96);
+}
+
 .markdown-section ul,
 .markdown-section ol {
   padding-left: 1.35rem;

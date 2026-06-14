@@ -731,6 +731,12 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
     <div id="app">加载中...</div>
     {mobile_bottom_nav()}
     {build_mobile_drawer(documents)}
+    <div class="image-lightbox" aria-hidden="true" hidden>
+      <button class="image-lightbox-close" type="button" aria-label="关闭图片预览">×</button>
+      <div class="image-lightbox-stage">
+        <img class="image-lightbox-img" src="" alt="">
+      </div>
+    </div>
     <script>
       if (!window.location.hash || window.location.hash === "#" || window.location.hash === "#/") {{
         window.location.replace("#/plan");
@@ -900,6 +906,33 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       }}
       function scrollPendingAnchor() {{
         scrollToAnchorWithRetry(readPendingAnchor(), 0);
+      }}
+      function imageLightboxElements() {{
+        return {{
+          box: document.querySelector(".image-lightbox"),
+          image: document.querySelector(".image-lightbox-img")
+        }};
+      }}
+      function openImageLightbox(src, alt) {{
+        var parts = imageLightboxElements();
+        if (!parts.box || !parts.image || !src) {{
+          return;
+        }}
+        parts.image.src = src;
+        parts.image.alt = alt || "题目截图";
+        parts.box.hidden = false;
+        parts.box.setAttribute("aria-hidden", "false");
+        document.body.classList.add("image-lightbox-open");
+      }}
+      function closeImageLightbox() {{
+        var parts = imageLightboxElements();
+        if (!parts.box || !parts.image) {{
+          return;
+        }}
+        parts.box.hidden = true;
+        parts.box.setAttribute("aria-hidden", "true");
+        parts.image.src = "";
+        document.body.classList.remove("image-lightbox-open");
       }}
       function drawerElements() {{
         return {{
@@ -1076,6 +1109,39 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           }}
         }});
       }}
+      document.addEventListener("click", function (event) {{
+        var imageLink = event.target.closest(".image-link");
+        if (!imageLink) {{
+          return;
+        }}
+        var image = imageLink.querySelector("img");
+        if (!image) {{
+          return;
+        }}
+        event.preventDefault();
+        event.stopPropagation();
+        openImageLightbox(imageLink.getAttribute("href") || image.src, image.alt);
+      }}, true);
+      document.addEventListener("click", function (event) {{
+        var parts = imageLightboxElements();
+        if (!parts.box || parts.box.hidden) {{
+          return;
+        }}
+        if (
+          event.target.closest(".image-lightbox-close") ||
+          event.target === parts.box ||
+          (event.target.closest(".image-lightbox-stage") && event.target !== parts.image)
+        ) {{
+          event.preventDefault();
+          event.stopPropagation();
+          closeImageLightbox();
+        }}
+      }}, true);
+      document.addEventListener("keydown", function (event) {{
+        if (event.key === "Escape") {{
+          closeImageLightbox();
+        }}
+      }});
       document.addEventListener("click", function (event) {{
         var openButton = event.target.closest(".study-drawer-button");
         if (!openButton) {{
@@ -1603,6 +1669,64 @@ body {
 .markdown-section a img,
 .image-link img {
   cursor: zoom-in;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 14, 13, 0.9);
+}
+
+.image-lightbox[hidden] {
+  display: none;
+}
+
+.image-lightbox-open {
+  overflow: hidden;
+}
+
+.image-lightbox-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.image-lightbox-img {
+  max-width: min(96vw, 1200px);
+  max-height: 88vh;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 4px;
+}
+
+.image-lightbox-close {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 10000;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  color: #1f2925;
+  background: rgba(255, 255, 255, 0.92);
+  font-size: 26px;
+  line-height: 1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+}
+
+.image-lightbox-close:active {
+  transform: scale(0.96);
 }
 
 .markdown-section ul,
