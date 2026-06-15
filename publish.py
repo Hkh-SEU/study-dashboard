@@ -805,12 +805,61 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       if (!window.location.hash || window.location.hash === "#" || window.location.hash === "#/") {{
         window.location.replace("#/plan");
       }}
+      function studyQueryParam(name) {{
+        return new URLSearchParams(window.location.search || "").get(name);
+      }}
+      window.studyContentVersion = studyQueryParam("v") ||
+        localStorage.getItem("study-dashboard-content-version") ||
+        String(Date.now());
+      window.studyKnownPublishedTimestamp = Number(
+        studyQueryParam("v") ||
+        localStorage.getItem("study-dashboard-version-timestamp") ||
+        0
+      );
+      function shouldBustStudyCache(url) {{
+        return /(^|\\/)(README|plan|math|major|_sidebar)\\.md([?#].*)?$/i.test(String(url || ""));
+      }}
+      function appendStudyVersion(url) {{
+        if (!shouldBustStudyCache(url)) {{
+          return url;
+        }}
+        var text = String(url);
+        if (/[?&]v=/.test(text)) {{
+          return text;
+        }}
+        var hashIndex = text.indexOf("#");
+        var hash = hashIndex >= 0 ? text.slice(hashIndex) : "";
+        var base = hashIndex >= 0 ? text.slice(0, hashIndex) : text;
+        return base + (base.indexOf("?") >= 0 ? "&" : "?") +
+          "v=" + encodeURIComponent(window.studyContentVersion) + hash;
+      }}
+      (function patchStudyMarkdownRequests() {{
+        var originalOpen = XMLHttpRequest.prototype.open;
+        XMLHttpRequest.prototype.open = function (method, url) {{
+          arguments[1] = appendStudyVersion(url);
+          return originalOpen.apply(this, arguments);
+        }};
+        if (window.fetch) {{
+          var originalFetch = window.fetch;
+          window.fetch = function (resource, options) {{
+            if (typeof resource === "string") {{
+              resource = appendStudyVersion(resource);
+            }} else if (resource && resource.url && shouldBustStudyCache(resource.url)) {{
+              resource = new Request(appendStudyVersion(resource.url), resource);
+            }}
+            return originalFetch.call(this, resource, options);
+          }};
+        }}
+      }})();
       window.$docsify = {{
         name: {js_title},
         homepage: "plan.md",
         loadSidebar: true,
         subMaxLevel: 0,
         auto2top: false,
+        requestHeaders: {{
+          "cache-control": "no-cache"
+        }},
         plugins: [
           function (hook) {{
             hook.doneEach(function () {{
@@ -852,6 +901,10 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
       function reloadWithVersion(latestTimestamp) {{
         var base = window.location.href.split("#")[0].split("?")[0];
         var hash = window.location.hash || "#/plan";
+        if (latestTimestamp) {{
+          localStorage.setItem("study-dashboard-version-timestamp", String(latestTimestamp));
+          localStorage.setItem("study-dashboard-content-version", String(latestTimestamp));
+        }}
         window.location.href = base + "?v=" + encodeURIComponent(latestTimestamp || Date.now()) + hash;
       }}
       function scheduleSiteReload(latestTimestamp) {{
@@ -882,6 +935,16 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
         }}
         if (!window.studyInitialVersion) {{
           window.studyInitialVersion = version;
+          if (
+            window.studyKnownPublishedTimestamp &&
+            Number(version.timestamp) > Number(window.studyKnownPublishedTimestamp)
+          ) {{
+            scheduleSiteReload(version.timestamp);
+            window.studyVersionChecking = false;
+            return true;
+          }}
+          localStorage.setItem("study-dashboard-version-timestamp", String(version.timestamp));
+          localStorage.setItem("study-dashboard-content-version", String(version.timestamp));
           window.studyVersionChecking = false;
           return false;
         }}
@@ -890,6 +953,8 @@ def build_index(site: SiteConfig, documents: list[PublishedDocument]) -> str:
           window.studyVersionChecking = false;
           return true;
         }}
+        localStorage.setItem("study-dashboard-version-timestamp", String(version.timestamp));
+        localStorage.setItem("study-dashboard-content-version", String(version.timestamp));
         window.studyVersionChecking = false;
         return false;
       }}
