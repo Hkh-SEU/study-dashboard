@@ -28,7 +28,10 @@ DEFAULT_OUTPUT_DIR = "cloud_site"
 TEXT_ENCODINGS = ("utf-8-sig", "utf-8", "gb18030")
 
 IMAGE_PATTERN = re.compile(r"!\[([^\]]*)\]\((<[^>]+>|[^)]+)\)")
-HTML_IMG_PATTERN = re.compile(r'(<img\b[^>]*\bsrc=["\'])([^"\']+)(["\'][^>]*>)', re.IGNORECASE)
+HTML_IMG_PATTERN = re.compile(
+    r'<img\b(?P<attrs>[^>]*\bsrc=(?P<quote>["\'])(?P<src>[^"\']+)(?P=quote)[^>]*)>',
+    re.IGNORECASE,
+)
 
 
 @dataclass(frozen=True)
@@ -545,6 +548,30 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
     media_dir = output_dir / "assets" / "media" / Path(target_name).stem
     used_names: set[str] = set()
 
+    def is_remark_ref(raw_ref: str, attrs: str = "") -> bool:
+        value = unquote(f"{raw_ref} {attrs}").replace("\\", "/").lower()
+        return "备注" in value or "remark" in value or "note" in value
+
+    def add_img_class(attrs: str, class_name: str) -> str:
+        attrs = attrs.rstrip()
+        has_self_close = attrs.endswith("/")
+        if has_self_close:
+            attrs = attrs[:-1].rstrip()
+
+        class_match = re.search(r'\bclass=(["\'])(.*?)\1', attrs, flags=re.IGNORECASE)
+        if class_match:
+            classes = class_match.group(2).split()
+            if class_name not in classes:
+                classes.append(class_name)
+            replacement = f'class="{html.escape(" ".join(classes), quote=True)}"'
+            attrs = attrs[: class_match.start()] + replacement + attrs[class_match.end() :]
+        else:
+            attrs = f'{attrs} class="{class_name}"'
+
+        if has_self_close:
+            attrs = f"{attrs} /"
+        return attrs
+
     def copy_asset(raw_ref: str) -> str:
         resolved = resolve_asset_path(raw_ref, source)
         if resolved is None or not resolved.exists() or resolved.is_dir():
@@ -578,8 +605,44 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
         rewritten = copy_asset(match.group(2))
         return f"{match.group(1)}{rewritten}{match.group(3)}"
 
-    content = IMAGE_PATTERN.sub(replace_markdown, content)
-    return HTML_IMG_PATTERN.sub(replace_html, content)
+    def rewrite_markdown_image(match: re.Match[str]) -> str:
+        alt = match.group(1)
+        raw_ref = match.group(2)
+        rewritten = copy_asset(raw_ref)
+        if rewritten == raw_ref or is_external_link(rewritten):
+            return f"![{alt}]({rewritten})"
+        escaped_alt = html.escape(alt or "题目截图", quote=True)
+        escaped_ref = html.escape(rewritten, quote=True)
+        is_remark = is_remark_ref(raw_ref)
+        link_class = "image-link remark-image-link" if is_remark else "image-link"
+        img_class = ' class="remark-image"' if is_remark else ""
+        return f'<a class="{link_class}" href="{escaped_ref}" target="_blank" rel="noopener"><img src="{escaped_ref}" alt="{escaped_alt}"{img_class}></a>'
+
+    def rewrite_html_image(match: re.Match[str]) -> str:
+        raw_ref = match.group("src")
+        attrs = match.group("attrs")
+        rewritten = copy_asset(raw_ref)
+        if rewritten == raw_ref or is_external_link(rewritten):
+            return match.group(0)
+
+        escaped_ref = html.escape(rewritten, quote=True)
+        attrs = re.sub(
+            r'\bsrc=(["\'])([^"\']+)\1',
+            f'src="{escaped_ref}"',
+            attrs,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+
+        link_class = "image-link"
+        if is_remark_ref(raw_ref, attrs):
+            link_class = "image-link remark-image-link"
+            attrs = add_img_class(attrs, "remark-image")
+
+        return f'<a class="{link_class}" href="{escaped_ref}" target="_blank" rel="noopener"><img{attrs}></a>'
+
+    content = IMAGE_PATTERN.sub(rewrite_markdown_image, content)
+    return HTML_IMG_PATTERN.sub(rewrite_html_image, content)
 
 
 def extract_plan_summary(documents: list[PublishedDocument]) -> dict[str, str]:
@@ -1758,6 +1821,20 @@ body {
   cursor: zoom-in;
 }
 
+.markdown-section .remark-image-link {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  justify-content: center;
+  margin: 12px auto 18px;
+}
+
+.markdown-section .remark-image-link img {
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+}
+
 .image-lightbox {
   position: fixed;
   inset: 0;
@@ -2127,6 +2204,18 @@ body {
     width: 100%;
     border-radius: 6px;
     margin: 10px auto 16px;
+  }
+
+  .markdown-section .remark-image-link {
+    width: fit-content;
+    max-width: min(82vw, 280px);
+    margin: 8px auto 14px;
+  }
+
+  .markdown-section .remark-image-link img {
+    width: auto !important;
+    max-width: min(82vw, 280px);
+    margin: 0 auto;
   }
 
   .markdown-section table {
@@ -2581,7 +2670,7 @@ def markdown_image_refs(text: str) -> list[str]:
             ref = ref[1:-1].strip()
         refs.append(ref)
     for match in HTML_IMG_PATTERN.finditer(text):
-        refs.append(match.group(2).strip())
+        refs.append(match.group("src").strip())
     return refs
 
 

@@ -345,6 +345,20 @@ body {
   cursor: zoom-in;
 }
 
+.markdown-section .remark-image-link {
+  display: flex;
+  width: fit-content;
+  max-width: 100%;
+  justify-content: center;
+  margin: 12px auto 18px;
+}
+
+.markdown-section .remark-image-link img {
+  width: auto;
+  max-width: 100%;
+  margin: 0;
+}
+
 .image-lightbox {
   position: fixed;
   inset: 0;
@@ -714,6 +728,18 @@ body {
     width: 100%;
     border-radius: 6px;
     margin: 10px auto 16px;
+  }
+
+  .markdown-section .remark-image-link {
+    width: fit-content;
+    max-width: min(82vw, 280px);
+    margin: 8px auto 14px;
+  }
+
+  .markdown-section .remark-image-link img {
+    width: auto !important;
+    max-width: min(82vw, 280px);
+    margin: 0 auto;
   }
 
   .markdown-section table {
