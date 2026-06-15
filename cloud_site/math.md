@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-15 01:50</span>
+  <span>更新：2026-06-15 11:28</span>
 </div>
 
 <a id="math-06-04" class="section-anchor"></a>
@@ -14,10 +14,11 @@
 
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001.png" alt="题目截图"></a>
 
-- 题型：待填写
-- 错因：待填写
+- 题型：向量的乘法
+- 错因：大意了
 - 备注：矩阵
-  <a class="image-link" href="assets/media/math/06-04%20%E6%95%B0%E5%AD%A6.png" target="_blank" rel="noopener"><img src="assets/media/math/06-04%20%E6%95%B0%E5%AD%A6.png" alt="题目截图"></a>
+  
+  <img src="assets/media/math/06-04%20%E6%95%B0%E5%AD%A6.png" style="zoom:67%;" />
 
 复习状态：
 
