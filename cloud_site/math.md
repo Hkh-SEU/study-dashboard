@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-15 11:57</span>
+  <span>更新：2026-06-15 11:59</span>
 </div>
 
 <a id="math-06-04" class="section-anchor"></a>
@@ -36,7 +36,7 @@
 - 错因：待填写
 - 备注：
 
-  <a class="image-link remark-image-link" href="assets/media/math/06-04%20%E9%94%99%E9%A2%9802.png" target="_blank" rel="noopener"><img src="assets/media/math/06-04%20%E9%94%99%E9%A2%9802.png" style="zoom:150%;" class="remark-image" /></a>
+  <a class="image-link remark-image-link" href="assets/media/math/06-04%20%E9%94%99%E9%A2%9802.png" target="_blank" rel="noopener"><img src="assets/media/math/06-04%20%E9%94%99%E9%A2%9802.png" class="remark-image" /></a>
 
 复习状态：
 
