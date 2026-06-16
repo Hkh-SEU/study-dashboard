@@ -1,9 +1,9 @@
-# 今日复习计划 06-15
+# 今日复习计划 06-16
 
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link active" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-15 12:49</span>
+  <span>更新：2026-06-16 15:58</span>
 </div>
 
 <div class="today-summary"><div class="summary-chip"><span>今日任务</span><strong>10 道</strong></div>
