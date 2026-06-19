@@ -1907,6 +1907,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   padding: 24px;
   background: rgba(12, 14, 13, 0.9);
 }
@@ -1922,16 +1923,24 @@ body {
 .image-lightbox-stage {
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: pinch-zoom;
 }
 
 .image-lightbox-img {
-  max-width: min(96vw, 1200px);
-  max-height: 88vh;
+  display: block;
+  flex: 0 1 auto;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 1200px);
+  max-height: 100%;
   object-fit: contain;
   background: #fff;
   border-radius: 4px;
