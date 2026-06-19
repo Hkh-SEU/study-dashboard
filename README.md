@@ -99,6 +99,54 @@ cloud_site/version.json
 
 GitHub Pages 部署完成后，手机通常会在 10-90 秒内看到新内容。如果仍然没有更新，可以手动刷新浏览器，或关闭当前标签页后重新打开。
 
+## 桌面 Markdown 是唯一源文件
+
+现在项目只把桌面 Markdown 当作正式源文件：
+
+```text
+C:/Desktop/错题本—数学.md
+C:/Desktop/错题本—专业课.md
+C:/Desktop/今日复习计划.md
+```
+
+Notebook 文件夹不再维护错题本或复习计划 Markdown 副本。你可以直接在桌面 Markdown 中修改文字、备注和图片引用；刷新网页时，发布器只读取这些桌面文件并生成 `cloud_site`，不会反向覆盖桌面 Markdown。
+
+备注图片建议放在：
+
+```text
+C:/Desktop/SEU/错题截图—数学/备注/
+C:/Desktop/SEU/错题截图—专业课/备注/
+```
+
+这两个 `备注` 文件夹不会被 controller 当作新错题截图扫描，也不会被移动或删除。新错题截图仍然放在：
+
+```text
+C:/Desktop/SEU/错题截图—数学
+C:/Desktop/SEU/错题截图—专业课
+```
+
+处理后的正式错题截图会进入 `study_tools/error_correction/archive`。
+
+## 正式学习前重置
+
+如果要清空测试错题、从正式学习重新开始，可以使用仓库根目录下的重置脚本：
+
+```powershell
+D:\Python3_13\python.exe study_tools/reset_study_notes.py --check
+```
+
+`--check` 只预览，不修改文件。确认无误后，再由你手动运行：
+
+```powershell
+D:\Python3_13\python.exe study_tools/reset_study_notes.py --yes
+```
+
+`--yes` 会先备份，再重置三个桌面 Markdown 为干净模板，并把当前截图输入目录里的待处理截图移动到备份目录。它不会删除：
+
+- `C:/Desktop/SEU/错题截图—数学/备注/`
+- `C:/Desktop/SEU/错题截图—专业课/备注/`
+- `study_tools/error_correction/archive`
+
 ## GitHub Pages
 
 项目使用 GitHub Pages 单站点模式。`.github/workflows/pages.yml` 会把 `cloud_site` 发布到 GitHub Pages。
