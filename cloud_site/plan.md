@@ -20,6 +20,7 @@
 <a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001.png" alt="题目截图"></a>
 
 - 当前状态：**Good：能独立订正**
+- 备注：基础30讲  p67
 
 复习反馈：
 - [ ] Again：仍不会
