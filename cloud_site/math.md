@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-20 16:30</span>
+  <span>更新：2026-06-20 18:46</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -107,7 +107,7 @@
 
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-2.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-2.png" alt="题目截图"></a>
 
-- 题型：
+- 题型：**绝对值——："分类讨论"**
 - 错因：
 - 备注：基础30讲  p117
 
@@ -130,4 +130,34 @@
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-20-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004_001.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004_001.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：基础30讲  p128
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-20-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-2.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-2.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：基础30讲  p129
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握

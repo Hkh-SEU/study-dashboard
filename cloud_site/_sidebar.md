@@ -14,3 +14,5 @@
     - <a href="#/math" data-anchor="math-06-20-01" class="toc-problem-link">错题 01</a>
     - <a href="#/math" data-anchor="math-06-20-02" class="toc-problem-link">错题 02</a>
     - <a href="#/math" data-anchor="math-06-20-03" class="toc-problem-link">错题 03</a>
+    - <a href="#/math" data-anchor="math-06-20-04" class="toc-problem-link">错题 04</a>
+    - <a href="#/math" data-anchor="math-06-20-05" class="toc-problem-link">错题 05</a>
