@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-20 18:57</span>
+  <span>更新：2026-06-20 23:17</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -158,9 +158,9 @@
 
   
 
-  <a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_1.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_1.png" style="zoom: 50%;" class="remark-image" /></a>
+  <a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_1.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_1.png" style="zoom: 67%;" class="remark-image" /></a>
 
-<a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_2.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_2.png" style="zoom: 50%;" class="remark-image" /></a>
+<a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_2.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9805_2.png" style="zoom: 67%;" class="remark-image" /></a>
 
 
 复习状态：
@@ -168,4 +168,23 @@
 - [x] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-20-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006.png" alt="题目截图"></a>
+
+- 题型：归结原则的逆命题
+
+- 错因：
+
+- 备注：基础30讲  p131
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9806.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9806.png" style="zoom: 67%;" class="remark-image" /></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
