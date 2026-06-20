@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-20 23:17</span>
+  <span>更新：2026-06-21 00:14</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -181,10 +181,25 @@
 
 - 备注：基础30讲  p131
 
-  <a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9806.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9806.png" style="zoom: 67%;" class="remark-image" /></a>
+  <a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9806.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9806.png" style="zoom: 50%;" class="remark-image" /></a>
 
 复习状态：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-20-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007.png" alt="题目截图"></a>
+
+- 题型：**有限项相加**的放缩
+- 错因：做题前先判断是<u>无穷项相加</u>还是<u>有限项相加</u>
+- 备注：基础30讲  p135
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
