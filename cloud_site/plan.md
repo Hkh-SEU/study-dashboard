@@ -3,11 +3,11 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link active" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-20 00:20</span>
+  <span>更新：2026-06-20 16:30</span>
 </div>
 
 <div class="today-summary"><div class="summary-chip"><span>今日任务</span><strong>2 道</strong></div>
-<div class="summary-chip"><span>已完成</span><strong>0/2</strong></div>
+<div class="summary-chip"><span>已完成</span><strong>2/2</strong></div>
 <div class="summary-chip"><span>数学</span><strong>2/8</strong></div>
 <div class="summary-chip"><span>专业课</span><strong>0/5</strong></div></div>
 
@@ -27,7 +27,7 @@
 复习反馈：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -45,7 +45,7 @@
 复习反馈：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
