@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import fnmatch
+import hashlib
 import html
 import http.server
 import json
@@ -579,17 +580,19 @@ def copy_and_rewrite_assets(content: str, source: Path, output_dir: Path, target
 
         media_dir.mkdir(parents=True, exist_ok=True)
         safe_name = sanitize_asset_name(resolved.name)
-        candidate = safe_name
-        counter = 2
-        while candidate.lower() in used_names:
-            stem = Path(safe_name).stem
-            suffix = Path(safe_name).suffix
-            candidate = f"{stem}-{counter}{suffix}"
-            counter += 1
-        used_names.add(candidate.lower())
+        digest = hashlib.sha256()
+        with resolved.open("rb") as asset_file:
+            for chunk in iter(lambda: asset_file.read(1024 * 1024), b""):
+                digest.update(chunk)
+        content_hash = digest.hexdigest()[:10]
+        safe_path = Path(safe_name)
+        candidate = f"{safe_path.stem}-{content_hash}{safe_path.suffix.lower()}"
+        candidate_key = candidate.lower()
 
         target = media_dir / candidate
-        shutil.copy2(resolved, target)
+        if candidate_key not in used_names:
+            shutil.copy2(resolved, target)
+            used_names.add(candidate_key)
         return markdown_url(target.relative_to(output_dir).as_posix())
 
     def replace_markdown(match: re.Match[str]) -> str:
