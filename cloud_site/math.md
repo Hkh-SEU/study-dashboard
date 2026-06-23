@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-22 21:40</span>
+  <span>更新：2026-06-23 15:27</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -105,7 +105,7 @@
 <a id="math-06-20-02" class="section-anchor"></a>
 ### 错题 02
 
-<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-2259e6f96a.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-2259e6f96a.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-2259e6f96a.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-2259e6f96a.png" alt="题目截图" style="zoom:67%;" /></a>
 
 - 题型：**绝对值——："分类讨论"**
 - 错因：
@@ -200,8 +200,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21" class="section-anchor"></a>
@@ -239,8 +239,8 @@
 - 备注：基础30讲  p141
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -258,8 +258,8 @@
   <a class="image-link remark-image-link" href="assets/media/math/06-21%20%E9%94%99%E9%A2%9803-c54e034762.png" target="_blank" rel="noopener"><img src="assets/media/math/06-21%20%E9%94%99%E9%A2%9803-c54e034762.png" style="zoom: 50%;" class="remark-image" /></a>
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -278,8 +278,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-05" class="section-anchor"></a>
@@ -326,8 +326,8 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -341,8 +341,8 @@
 - 备注：辅导讲义  p7
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -356,8 +356,8 @@
 - 备注：辅导讲义  p7
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -396,4 +396,82 @@
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-22-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-d92bd2440b.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-d92bd2440b.png" alt="题目截图" style="zoom: 67%;" /></a>
+
+- 题型：
+- 错因：注意泰勒展开的**阶数**！
+- 备注：辅导讲义  p23
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23" class="section-anchor"></a>
+## 06-23
+
+<a id="math-06-23-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-d6b08f7e9e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-d6b08f7e9e.png" alt="题目截图" style="zoom: 33%;" /></a>
+
+- 题型：
+- 错因：分子分母同除以分子和分母各项中**最高阶的无穷大**——**”抓大头“**
+- 备注：辅导讲义  p25
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-90113e9b1a.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-90113e9b1a.png" alt="题目截图" style="zoom: 33%;" /></a>
+
+- 题型：
+- 错因：分子分母同除以分子和分母各项中**最高阶的无穷大**——**”抓大头“**
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-6a3ff9747f.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-6a3ff9747f.png" alt="题目截图" style="zoom:50%;" /></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p26
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-e4d9aa3df3.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-e4d9aa3df3.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p27
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
