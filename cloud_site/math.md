@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-23 15:27</span>
+  <span>更新：2026-06-23 20:05</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -469,6 +469,25 @@
 - 题型：
 - 错因：
 - 备注：辅导讲义  p27
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-ee6123b1ce.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-ee6123b1ce.png" alt="题目截图"></a>
+
+- 题型：
+
+- 错因：
+
+- 备注：”**正项**级数的**比值判别法**“——级数收敛**—>**数列通项极限趋于0
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-23%20%E9%94%99%E9%A2%9805-8c368ccd78.png" target="_blank" rel="noopener"><img src="assets/media/math/06-23%20%E9%94%99%E9%A2%9805-8c368ccd78.png" style="zoom: 50%;" class="remark-image" /></a>
 
 复习状态：
 - [x] Again：仍不会
