@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-24 16:11</span>
+  <span>更新：2026-06-25 00:18</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -623,8 +623,8 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -638,8 +638,8 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -651,6 +651,116 @@
 - 题型：
 - 错因：
 - 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+
+<a id="math-06-24-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-e78f79be0f.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-e78f79be0f.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-08" class="section-anchor"></a>
+### 错题 08
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2008-6cea08e255.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2008-6cea08e255.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p43
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-09" class="section-anchor"></a>
+### 错题 09
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2009-5c140697f1.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2009-5c140697f1.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-10" class="section-anchor"></a>
+### 错题 10
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2010-f9e01d60ac.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2010-f9e01d60ac.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p48
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-11" class="section-anchor"></a>
+### 错题 11
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2011-a141e05916.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2011-a141e05916.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：间断点要判断完全——小心”**ln(x)放在分母**“
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-12" class="section-anchor"></a>
+### 错题 12
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2012-079eebd000.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2012-079eebd000.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-13" class="section-anchor"></a>
+### 错题 13
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2013-b144899402.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2013-b144899402.png" alt="题目截图"></a>
+
+- 题型：
+
+- 错因：
+
+- 备注：
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-24%20%E9%94%99%E9%A2%9813-95a4d67de7.png" target="_blank" rel="noopener"><img src="assets/media/math/06-24%20%E9%94%99%E9%A2%9813-95a4d67de7.png" style="zoom:50%;" class="remark-image" /></a>
 
 复习状态：
 - [x] Again：仍不会
