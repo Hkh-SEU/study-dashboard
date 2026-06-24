@@ -51,3 +51,7 @@
   - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="math-06-24" aria-label="展开或收起 06-24">›</button><a href="#/math" data-anchor="math-06-24" class="toc-date-link">06-24</a></span>
     - <a href="#/math" data-anchor="math-06-24-01" class="toc-problem-link">错题 01</a>
     - <a href="#/math" data-anchor="math-06-24-02" class="toc-problem-link">错题 02</a>
+    - <a href="#/math" data-anchor="math-06-24-03" class="toc-problem-link">错题 03</a>
+    - <a href="#/math" data-anchor="math-06-24-04" class="toc-problem-link">错题 04</a>
+    - <a href="#/math" data-anchor="math-06-24-05" class="toc-problem-link">错题 05</a>
+    - <a href="#/math" data-anchor="math-06-24-06" class="toc-problem-link">错题 06</a>
