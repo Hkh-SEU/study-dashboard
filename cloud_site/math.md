@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-23 20:25</span>
+  <span>更新：2026-06-24 08:43</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -194,9 +194,15 @@
 
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-17b7f6909f.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-17b7f6909f.png" alt="题目截图"></a>
 
-- 题型：**有限项相加**的放缩
+- 题型：**有限项相加**的放缩——本题比较特殊——**”最大项主导型“**
+
 - 错因：做题前先判断是<u>无穷项相加</u>还是<u>有限项相加</u>
+
 - 备注：基础30讲  p135
+
+  本题将<u>m改成n</u>，变为<u>无穷项相加</u>，依旧<u>采用相同的放缩方式</u>
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-20%20%E9%94%99%E9%A2%9807-824c1b4314.png" target="_blank" rel="noopener"><img src="assets/media/math/06-20%20%E9%94%99%E9%A2%9807-824c1b4314.png" style="zoom:50%;" class="remark-image" /></a>
 
 复习状态：
 - [ ] Again：仍不会
@@ -240,8 +246,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-03" class="section-anchor"></a>
@@ -259,8 +265,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-04" class="section-anchor"></a>
@@ -327,8 +333,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-08" class="section-anchor"></a>
@@ -342,8 +348,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-09" class="section-anchor"></a>
@@ -488,6 +494,103 @@
 - 备注：”**正项**级数的**比值判别法**“——级数收敛**—>**数列通项极限趋于0
 
   <a class="image-link remark-image-link" href="assets/media/math/06-23%20%E9%94%99%E9%A2%9805-8c368ccd78.png" target="_blank" rel="noopener"><img src="assets/media/math/06-23%20%E9%94%99%E9%A2%9805-8c368ccd78.png" style="zoom: 50%;" class="remark-image" /></a>
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-1b3098a23a.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-1b3098a23a.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p33
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-dc3a1d3ac9.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-dc3a1d3ac9.png" alt="题目截图"></a>
+
+- 题型：定积分定义求极限
+
+- 错因：
+
+- 备注：
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-23%20%E9%94%99%E9%A2%9807-124d298ea8.png" target="_blank" rel="noopener"><img src="assets/media/math/06-23%20%E9%94%99%E9%A2%9807-124d298ea8.png" style="zoom: 33%;" class="remark-image" /></a>
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-08" class="section-anchor"></a>
+### 错题 08
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2008-fc1fb3e535.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2008-fc1fb3e535.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-23-09" class="section-anchor"></a>
+### 错题 09
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2009-49de2729ec.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2009-49de2729ec.png" alt="题目截图"></a>
+
+- 题型：**n项和的数列极限**
+- 错因：
+- 备注：**n项和的数列极限**——1、夹逼  2、定积分定义  **3、级数求和**
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24" class="section-anchor"></a>
+## 06-24
+
+<a id="math-06-24-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-4e81d26f0c.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-4e81d26f0c.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-24-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-687a163268.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-687a163268.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
 
 复习状态：
 - [x] Again：仍不会
