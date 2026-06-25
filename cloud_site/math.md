@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-25 00:18</span>
+  <span>更新：2026-06-26 00:01</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -231,8 +231,8 @@
 复习状态：
 
 - [ ] Again：仍不会
-- [ ] Hard：会做但很吃力
-- [x] Good：能独立订正
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-02" class="section-anchor"></a>
@@ -303,8 +303,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [ ] Hard：会做但很吃力
-- [x] Good：能独立订正
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-06" class="section-anchor"></a>
@@ -578,8 +578,8 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -593,8 +593,8 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -744,8 +744,8 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -761,6 +761,96 @@
 - 备注：
 
   <a class="image-link remark-image-link" href="assets/media/math/06-24%20%E9%94%99%E9%A2%9813-95a4d67de7.png" target="_blank" rel="noopener"><img src="assets/media/math/06-24%20%E9%94%99%E9%A2%9813-95a4d67de7.png" style="zoom:50%;" class="remark-image" /></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-25" class="section-anchor"></a>
+## 06-25
+
+<a id="math-06-25-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-3c2ac54238.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-3c2ac54238.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：880——p2
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-25-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-c6fb2f5d25.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-c6fb2f5d25.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：间断点要考虑完全，区间端点不考虑间断
+- 备注：880——p3
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-25-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-71fa26231c.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-71fa26231c.png" alt="题目截图"></a>
+
+- 题型：
+
+- 错因：
+
+- 备注：880——p3
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9803-44f288159d.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9803-44f288159d.png" style="zoom: 50%;" class="remark-image" /></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-25-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-0a2efe4f62.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-0a2efe4f62.png" alt="题目截图"></a>
+
+- 题型：
+
+- 错因：
+
+- 备注：
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9804-671c1c4242.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9804-671c1c4242.png" style="zoom: 50%;" class="remark-image" /></a>
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-25-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-8f0c61971c.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-8f0c61971c.png" alt="题目截图"></a>
+
+- 题型：
+
+- 错因：
+
+- 备注：
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9805-5cc0f54170.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9805-5cc0f54170.png" style="zoom:50%;" class="remark-image" /></a>
 
 复习状态：
 - [x] Again：仍不会
