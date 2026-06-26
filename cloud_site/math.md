@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-26 09:14</span>
+  <span>更新：2026-06-26 23:47</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -834,8 +834,8 @@
   <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9804-671c1c4242.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9804-671c1c4242.png" style="zoom: 50%;" class="remark-image" /></a>
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -851,6 +851,144 @@
 - 备注：
 
   <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9805-5cc0f54170.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9805-5cc0f54170.png" style="zoom:50%;" class="remark-image" /></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26" class="section-anchor"></a>
+## 06-26
+
+<a id="math-06-26-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-92d73fcffa.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-92d73fcffa.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-8afd032c16.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-8afd032c16.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-38be9e7043.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-38be9e7043.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-78f19cbfe6.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-78f19cbfe6.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-24a5f7219e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-24a5f7219e.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-d7307e7b8e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-d7307e7b8e.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-9ce6f5f16e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-9ce6f5f16e.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-08" class="section-anchor"></a>
+### 错题 08
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2008-0f740c6cfd.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2008-0f740c6cfd.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [x] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-26-09" class="section-anchor"></a>
+### 错题 09
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2009-ddbe1f3652.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2009-ddbe1f3652.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
 
 复习状态：
 - [x] Again：仍不会
