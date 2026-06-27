@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link active" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-27 00:37</span>
+  <span>更新：2026-06-27 18:23</span>
 </div>
 
 <div class="today-summary"><div class="summary-chip"><span>今日任务</span><strong>8 道</strong></div>

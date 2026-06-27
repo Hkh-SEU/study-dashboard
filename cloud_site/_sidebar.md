@@ -78,3 +78,7 @@
     - <a href="#/math" data-anchor="math-06-26-07" class="toc-problem-link">错题 07</a>
     - <a href="#/math" data-anchor="math-06-26-08" class="toc-problem-link">错题 08</a>
     - <a href="#/math" data-anchor="math-06-26-09" class="toc-problem-link">错题 09</a>
+  - <span class="toc-date-row"><button type="button" class="toc-toggle" data-toggle-anchor="math-06-27" aria-label="展开或收起 06-27">›</button><a href="#/math" data-anchor="math-06-27" class="toc-date-link">06-27</a></span>
+    - <a href="#/math" data-anchor="math-06-27-01" class="toc-problem-link">错题 01</a>
+    - <a href="#/math" data-anchor="math-06-27-02" class="toc-problem-link">错题 02</a>
+    - <a href="#/math" data-anchor="math-06-27-03" class="toc-problem-link">错题 03</a>

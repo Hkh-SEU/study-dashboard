@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-27 00:37</span>
+  <span>更新：2026-06-27 18:23</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -575,7 +575,7 @@
 
 - 题型：n项连乘的数列极限
 - 错因：
-- 备注：
+- 备注：辅导讲义  p35
 
 复习状态：
 - [ ] Again：仍不会
@@ -590,7 +590,7 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：辅导讲义  p36
 
 复习状态：
 - [ ] Again：仍不会
@@ -620,7 +620,7 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：辅导讲义  p39
 
 复习状态：
 - [ ] Again：仍不会
@@ -650,7 +650,7 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：辅导讲义  p40
 
 复习状态：
 - [ ] Again：仍不会
@@ -666,7 +666,7 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：辅导讲义  p41
 
 复习状态：
 - [ ] Again：仍不会
@@ -696,7 +696,7 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：辅导讲义  p46
 
 复习状态：
 - [ ] Again：仍不会
@@ -741,7 +741,7 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：辅导讲义  p50
 
 复习状态：
 - [ ] Again：仍不会
@@ -758,7 +758,7 @@
 
 - 错因：
 
-- 备注：
+- 备注：辅导讲义  p51
 
   <a class="image-link remark-image-link" href="assets/media/math/06-24%20%E9%94%99%E9%A2%9813-95a4d67de7.png" target="_blank" rel="noopener"><img src="assets/media/math/06-24%20%E9%94%99%E9%A2%9813-95a4d67de7.png" style="zoom:50%;" class="remark-image" /></a>
 
@@ -829,7 +829,7 @@
 
 - 错因：
 
-- 备注：
+- 备注：880——p3
 
   <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9804-671c1c4242.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9804-671c1c4242.png" style="zoom: 50%;" class="remark-image" /></a>
 
@@ -848,7 +848,7 @@
 
 - 错因：
 
-- 备注：
+- 备注：880——p3
 
   <a class="image-link remark-image-link" href="assets/media/math/06-25%20%E9%94%99%E9%A2%9805-5cc0f54170.png" target="_blank" rel="noopener"><img src="assets/media/math/06-25%20%E9%94%99%E9%A2%9805-5cc0f54170.png" style="zoom:50%;" class="remark-image" /></a>
 
@@ -867,8 +867,14 @@
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-92d73fcffa.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-92d73fcffa.png" alt="题目截图"></a>
 
 - 题型：
+
 - 错因：
-- 备注：
+
+- 备注：880——p3
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-26%20%E9%94%99%E9%A2%9801_1-ab60cc8281.png" target="_blank" rel="noopener"><img src="assets/media/math/06-26%20%E9%94%99%E9%A2%9801_1-ab60cc8281.png" alt="题目截图" class="remark-image"></a>
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-26%20%E9%94%99%E9%A2%9801_2-d28013e0eb.png" target="_blank" rel="noopener"><img src="assets/media/math/06-26%20%E9%94%99%E9%A2%9801_2-d28013e0eb.png" alt="06-26 错题01_2" class="remark-image"></a>
 
 复习状态：
 - [ ] Again：仍不会
@@ -882,12 +888,16 @@
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-8afd032c16.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-8afd032c16.png" alt="题目截图"></a>
 
 - 题型：
+
 - 错因：
-- 备注：
+
+- 备注：880——p4
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-26%20%E9%94%99%E9%A2%9802-b11ed29bea.png" target="_blank" rel="noopener"><img src="assets/media/math/06-26%20%E9%94%99%E9%A2%9802-b11ed29bea.png" style="zoom: 67%;" class="remark-image" /></a>
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -896,13 +906,13 @@
 
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-38be9e7043.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-38be9e7043.png" alt="题目截图"></a>
 
-- 题型：
+- 题型：函数在开区间内有界性的判定
 - 错因：
-- 备注：
+- 备注：880——p4
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -912,13 +922,17 @@
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-78f19cbfe6.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-78f19cbfe6.png" alt="题目截图"></a>
 
 - 题型：
+
 - 错因：
+
 - 备注：
 
+  <a class="image-link remark-image-link" href="assets/media/math/06-26%20%E9%94%99%E9%A2%9804-a934309ea3.png" target="_blank" rel="noopener"><img src="assets/media/math/06-26%20%E9%94%99%E9%A2%9804-a934309ea3.png" style="zoom:67%;" class="remark-image" /></a>
+
 复习状态：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-26-05" class="section-anchor"></a>
@@ -931,9 +945,9 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-26-06" class="section-anchor"></a>
@@ -942,12 +956,12 @@
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-d7307e7b8e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-d7307e7b8e.png" alt="题目截图"></a>
 
 - 题型：
-- 错因：
-- 备注：
+- 错因：要充分利用f~n~(x)的变型
+- 备注：880——p5
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -957,13 +971,13 @@
 <a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-9ce6f5f16e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-9ce6f5f16e.png" alt="题目截图"></a>
 
 - 题型：
-- 错因：
+- 错因：**加减法中**，拉格朗日法的ξ=ξ(x)，是一个变量，<u>不可以直接带入极限值</u>
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-26-08" class="section-anchor"></a>
@@ -973,11 +987,11 @@
 
 - 题型：
 - 错因：
-- 备注：
+- 备注：880——p6
 
 复习状态：
-- [x] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -991,7 +1005,59 @@
 - 备注：
 
 复习状态：
-- [x] Again：仍不会
+- [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-27" class="section-anchor"></a>
+## 06-27
+
+<a id="math-06-27-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-9908b67814.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-9908b67814.png" alt="题目截图"></a>
+
+- 题型：
+
+- 错因：**不可以使用压缩映射原理**——找不到k<1
+
+- 备注：880——p6
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-27%20%E9%94%99%E9%A2%9801-d142c770b5.png" target="_blank" rel="noopener"><img src="assets/media/math/06-27%20%E9%94%99%E9%A2%9801-d142c770b5.png" style="zoom:50%;" class="remark-image" /></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-27-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-719b38210b.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-719b38210b.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p50
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-27-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-1842efe491.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-1842efe491.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p51
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
