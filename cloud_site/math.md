@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-27 18:23</span>
+  <span>更新：2026-06-28 08:45</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -897,8 +897,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-26-03" class="section-anchor"></a>
@@ -991,8 +991,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-26-09" class="section-anchor"></a>
