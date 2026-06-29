@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-28 17:51</span>
+  <span>更新：2026-06-29 13:30</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -1118,6 +1118,99 @@
 - 题型：复合函数的求导
 - 错因：<u>具体一点处</u>的导数值，不需要先求出导函数再带入数值
 - 备注：基础30讲  p169
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-28-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-67ec709c3b.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-67ec709c3b.png" alt="题目截图"></a>
+
+- 题型：对数求导+隐函数求导
+- 错因：未知函数的导数表达式需要转化后带入最终的方程
+- 备注：基础30讲  p175
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-28-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-440d86f44f.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-440d86f44f.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：基础30讲  p182
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29" class="section-anchor"></a>
+## 06-29
+
+<a id="math-06-29-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-c43230cdbe.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-c43230cdbe.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：基础30讲  p190
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-62a54f128d.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-62a54f128d.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：基础30讲  p191
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-07fc55ca4d.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-07fc55ca4d.png" alt="题目截图"></a>
+
+- 题型：极值点与拐点的定义、第一充分条件
+- 错因：”**不可导点**“可以<u>同时为极值点和拐点</u>
+- 备注：基础30讲  p196
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-e7ed5d10f0.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-e7ed5d10f0.png" alt="题目截图"></a>
+
+- 题型：**”穿针引线法“**——**奇穿偶不穿**
+- 错因：**n>1**
+- 备注：基础30讲  p197
 
 复习状态：
 - [ ] Again：仍不会
