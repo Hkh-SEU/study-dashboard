@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-29 13:30</span>
+  <span>更新：2026-06-30 10:57</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -207,8 +207,8 @@
 复习状态：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [x] Good：能独立订正
-- [ ] Easy：熟练掌握
+- [ ] Good：能独立订正
+- [x] Easy：熟练掌握
 
 <a id="math-06-21" class="section-anchor"></a>
 ## 06-21
@@ -363,8 +363,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-21-10" class="section-anchor"></a>
@@ -416,8 +416,8 @@
 复习状态：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [x] Good：能独立订正
-- [ ] Easy：熟练掌握
+- [ ] Good：能独立订正
+- [x] Easy：熟练掌握
 
 <a id="math-06-23" class="section-anchor"></a>
 ## 06-23
@@ -609,8 +609,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-24-04" class="section-anchor"></a>
@@ -639,8 +639,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-24-06" class="section-anchor"></a>
@@ -715,9 +715,9 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
+- [ ] Hard：会做但很吃力
 - [ ] Good：能独立订正
-- [ ] Easy：熟练掌握
+- [x] Easy：熟练掌握
 
 <a id="math-06-24-11" class="section-anchor"></a>
 ### 错题 11
@@ -745,8 +745,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-24-13" class="section-anchor"></a>
@@ -764,9 +764,9 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
+- [ ] Hard：会做但很吃力
 - [ ] Good：能独立订正
-- [ ] Easy：熟练掌握
+- [x] Easy：熟练掌握
 
 <a id="math-06-25" class="section-anchor"></a>
 ## 06-25
@@ -835,8 +835,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-25-05" class="section-anchor"></a>
@@ -854,8 +854,8 @@
 
 复习状态：
 - [ ] Again：仍不会
-- [x] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 <a id="math-06-26" class="section-anchor"></a>
@@ -1216,4 +1216,173 @@
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-832ff61408.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-832ff61408.png" alt="题目截图" style="zoom: 80%;" /></a>
+
+- 题型：曲率与曲率半径
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-b99e934dae.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-b99e934dae.png" alt="题目截图"></a>
+
+- 题型："平均值定理"
+- 错因：应该对区间进行缩小后再分析
+- 备注：基础30讲  p216
+  <a class="image-link remark-image-link" href="assets/media/math/06-29%20%E9%94%99%E9%A2%9806-350bd9dd0f.png" target="_blank" rel="noopener"><img src="assets/media/math/06-29%20%E9%94%99%E9%A2%9806-350bd9dd0f.png" alt="题目截图" class="remark-image"></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-e6fd2fe08a.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-e6fd2fe08a.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-08" class="section-anchor"></a>
+### 错题 08
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2008-711bf81112.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2008-711bf81112.png" alt="题目截图"></a>
+
+- 题型：拉格朗日——建立$f(x)$与$f'(x)$之间的联系
+- 错因：
+- 备注：基础30讲  p218
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-09" class="section-anchor"></a>
+### 错题 09
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2009-8e716844cd.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2009-8e716844cd.png" alt="题目截图"></a>
+
+- 题型：泰勒公式
+- 错因：
+- 备注：基础30讲  p221
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-10" class="section-anchor"></a>
+### 错题 10
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2010-45b91f4a21.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2010-45b91f4a21.png" alt="题目截图" style="zoom: 50%;" /></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-29-11" class="section-anchor"></a>
+### 错题 11
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2011-043e3180db.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2011-043e3180db.png" alt="题目截图" style="zoom:67%;" /></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30" class="section-anchor"></a>
+## 06-30
+
+<a id="math-06-30-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-75eead6a83.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-75eead6a83.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：基础30讲  p228
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-c543ce3277.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-c543ce3277.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-5f8e42c699.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-5f8e42c699.png" alt="题目截图"></a>
+
+- 题型：”**分式+双参数**“——柯西中值定理
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-1760636578.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-1760636578.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
