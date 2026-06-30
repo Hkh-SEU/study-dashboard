@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-06-30 10:57</span>
+  <span>更新：2026-06-30 23:50</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -66,8 +66,8 @@
 复习状态：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [x] Good：能独立订正
-- [ ] Easy：熟练掌握
+- [ ] Good：能独立订正
+- [x] Easy：熟练掌握
 
 <a id="math-06-19-05" class="section-anchor"></a>
 ### 错题 05
@@ -401,8 +401,8 @@
 复习状态：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [x] Good：能独立订正
-- [ ] Easy：熟练掌握
+- [ ] Good：能独立订正
+- [x] Easy：熟练掌握
 
 <a id="math-06-22-02" class="section-anchor"></a>
 ### 错题 02
@@ -1385,4 +1385,147 @@
 - [ ] Again：仍不会
 - [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-1f2c078848.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-1f2c078848.png" alt="题目截图"></a>
+
+- 题型：利用<u>导数定义判断可导性</u>
+- 错因：
+- 备注：辅导讲义  p59
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-c7f4283719.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-c7f4283719.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p61
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-c521a34ec7.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-c521a34ec7.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：例如$f(x)=\sqrt[3]{x}$求导后在$x=0$处，导数值不存在——注意**幂函数指数小于1**
+- 备注：辅导讲义  p61
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-08" class="section-anchor"></a>
+### 错题 08
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2008-42fff115f0.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2008-42fff115f0.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p61
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-09" class="section-anchor"></a>
+### 错题 09
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2009-0baee13b03.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2009-0baee13b03.png" alt="题目截图"></a>
+
+- 题型：$f(x)$与$|f(x)|$可导性之间的关系
+
+- 错因：
+
+- 备注：辅导讲义  p62
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-30%20%E9%94%99%E9%A2%9809-9e446484ab.png" target="_blank" rel="noopener"><img src="assets/media/math/06-30%20%E9%94%99%E9%A2%9809-9e446484ab.png" alt="题目截图" class="remark-image"></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-10" class="section-anchor"></a>
+### 错题 10
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2010-8a888e05b6.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2010-8a888e05b6.png" alt="题目截图"></a>
+
+- 题型：涉及分段函数的复合函数的求导
+
+- 错因：复合函数求导法也**适用于分段点**
+
+- 备注：辅导讲义  p65
+
+  <a class="image-link remark-image-link" href="assets/media/math/06-30%20%E9%94%99%E9%A2%9810-d3afa3b408.png" target="_blank" rel="noopener"><img src="assets/media/math/06-30%20%E9%94%99%E9%A2%9810-d3afa3b408.png" alt="题目截图" class="remark-image"></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-11" class="section-anchor"></a>
+### 错题 11
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2011-d07177bdc3.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2011-d07177bdc3.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：取对数前，先加绝对值
+- 备注：辅导讲义  p69
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-12" class="section-anchor"></a>
+### 错题 12
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2012-77d2906a18.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2012-77d2906a18.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-06-30-13" class="section-anchor"></a>
+### 错题 13
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2013-e4994e66c8.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2013-e4994e66c8.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
