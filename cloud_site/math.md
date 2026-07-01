@@ -3,7 +3,7 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link" href="#/plan">计划</a><a class="doc-nav-link active" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-07-01 08:40</span>
+  <span>更新：2026-07-02 00:09</span>
 </div>
 
 <a id="math-06-19" class="section-anchor"></a>
@@ -1528,4 +1528,116 @@
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
 - [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01" class="section-anchor"></a>
+## 07-01
+
+<a id="math-07-01-01" class="section-anchor"></a>
+### 错题 01
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2001-2af0c3035e.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2001-2af0c3035e.png" alt="题目截图"></a>
+
+- 题型：保号性的应用
+
+- 错因：
+
+- 备注：辅导讲义  p75
+
+  <a class="image-link remark-image-link" href="assets/media/math/07-01%20%E9%94%99%E9%A2%9801-3909adbd13.png" target="_blank" rel="noopener"><img src="assets/media/math/07-01%20%E9%94%99%E9%A2%9801-3909adbd13.png" alt="题目截图" class="remark-image"></a>
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01-02" class="section-anchor"></a>
+### 错题 02
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2002-497adef74f.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2002-497adef74f.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：$x=1$取不到——那就取“极限”
+- 备注：辅导讲义  p75
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01-03" class="section-anchor"></a>
+### 错题 03
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2003-a9d6ec6c01.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2003-a9d6ec6c01.png" alt="题目截图"></a>
+
+- 题型：罗尔定理
+- 错因：零点定理不好判断——“罗尔定理”
+- 备注：辅导讲义  p80
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01-04" class="section-anchor"></a>
+### 错题 04
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2004-7125bc4c38.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2004-7125bc4c38.png" alt="题目截图"></a>
+
+- 题型：泰勒公式/拉格朗日——放缩
+- 错因：
+- 备注：辅导讲义  p83
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01-05" class="section-anchor"></a>
+### 错题 05
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2005-8489ddccb2.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2005-8489ddccb2.png" alt="题目截图"></a>
+
+- 题型：
+- 错因：
+- 备注：辅导讲义  p89
+
+复习状态：
+- [ ] Again：仍不会
+- [ ] Hard：会做但很吃力
+- [x] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01-06" class="section-anchor"></a>
+### 错题 06
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2006-f61b0815b7.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2006-f61b0815b7.png" alt="题目截图"></a>
+
+- 题型：“两次构造函数+两次运用罗尔定理”
+- 错因：
+- 备注：辅导讲义  p91
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
+- [ ] Easy：熟练掌握
+
+<a id="math-07-01-07" class="section-anchor"></a>
+### 错题 07
+
+<a class="image-link" href="assets/media/math/%E9%94%99%E9%A2%98%2007-5808f5378f.png" target="_blank" rel="noopener"><img src="assets/media/math/%E9%94%99%E9%A2%98%2007-5808f5378f.png" alt="题目截图"></a>
+
+- 题型：在同一个区间$[a,b]$上用两次中值定理（如：拉格朗日、柯西中值定理）
+- 错因：
+- 备注：辅导讲义  p91
+
+复习状态：
+- [ ] Again：仍不会
+- [x] Hard：会做但很吃力
+- [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
