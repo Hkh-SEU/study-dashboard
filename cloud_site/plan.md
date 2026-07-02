@@ -1,9 +1,9 @@
-# 今日复习计划 07-02
+# 今日复习计划 07-03
 
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link active" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-07-02 00:13</span>
+  <span>更新：2026-07-03 00:01</span>
 </div>
 
 <div class="today-summary"><div class="summary-chip"><span>今日任务</span><strong>8 道</strong></div>
@@ -15,9 +15,9 @@
 ## 数学（共 8 道 / 上限 8）
 
 <a id="plan-section-01-01" class="section-anchor"></a>
-### 错题 01（06-26）
+### 错题 03（06-27）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001-92d73fcffa.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001-92d73fcffa.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2003-1842efe491.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2003-1842efe491.png" alt="题目截图"></a>
 
 - 当前状态：**Hard：会做但很吃力**
 
@@ -30,11 +30,11 @@
 ---
 
 <a id="plan-section-01-02" class="section-anchor"></a>
-### 错题 01（06-27）
+### 错题 03（06-23）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001-9908b67814.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001-9908b67814.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2003-6a3ff9747f.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2003-6a3ff9747f.png" alt="题目截图"></a>
 
-- 当前状态：**Hard：会做但很吃力**
+- 当前状态：**Good：能独立订正**
 
 复习反馈：
 - [ ] Again：仍不会
@@ -45,9 +45,9 @@
 ---
 
 <a id="plan-section-01-03" class="section-anchor"></a>
-### 错题 01（06-20）
+### 错题 05（06-23）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001-edca9ddd22.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001-edca9ddd22.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2005-ee6123b1ce.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2005-ee6123b1ce.png" alt="题目截图"></a>
 
 - 当前状态：**Good：能独立订正**
 
@@ -60,9 +60,9 @@
 ---
 
 <a id="plan-section-01-04" class="section-anchor"></a>
-### 错题 01（06-23）
+### 错题 06（06-23）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2001-d6b08f7e9e.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2001-d6b08f7e9e.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2006-1b3098a23a.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2006-1b3098a23a.png" alt="题目截图"></a>
 
 - 当前状态：**Good：能独立订正**
 
@@ -75,9 +75,9 @@
 ---
 
 <a id="plan-section-01-05" class="section-anchor"></a>
-### 错题 08（06-23）
+### 错题 09（06-23）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2008-fc1fb3e535.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2008-fc1fb3e535.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2009-49de2729ec.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2009-49de2729ec.png" alt="题目截图"></a>
 
 - 当前状态：**Good：能独立订正**
 
@@ -90,9 +90,9 @@
 ---
 
 <a id="plan-section-01-06" class="section-anchor"></a>
-### 错题 02（06-23）
+### 错题 07（06-24）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2002-90113e9b1a.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2002-90113e9b1a.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2007-e78f79be0f.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2007-e78f79be0f.png" alt="题目截图"></a>
 
 - 当前状态：**Good：能独立订正**
 
@@ -105,9 +105,9 @@
 ---
 
 <a id="plan-section-01-07" class="section-anchor"></a>
-### 错题 11（06-24）
+### 错题 03（06-20）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2011-a141e05916.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2011-a141e05916.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2003-70f0d7d423.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2003-70f0d7d423.png" alt="题目截图"></a>
 
 - 当前状态：**Good：能独立订正**
 
@@ -120,11 +120,11 @@
 ---
 
 <a id="plan-section-01-08" class="section-anchor"></a>
-### 错题 02（06-27）
+### 错题 10（06-21）
 
-<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2002-719b38210b.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2002-719b38210b.png" alt="题目截图"></a>
+<a class="image-link" href="assets/media/plan/%E9%94%99%E9%A2%98%2010-ff8f73d3f0.png" target="_blank" rel="noopener"><img src="assets/media/plan/%E9%94%99%E9%A2%98%2010-ff8f73d3f0.png" alt="题目截图"></a>
 
-- 当前状态：**Hard：会做但很吃力**
+- 当前状态：**Good：能独立订正**
 
 复习反馈：
 - [ ] Again：仍不会
