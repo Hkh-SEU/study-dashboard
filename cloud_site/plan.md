@@ -3,11 +3,11 @@
 <nav class="doc-nav" aria-label="文档切换"><a class="doc-nav-link active" href="#/plan">计划</a><a class="doc-nav-link" href="#/math">数学</a><a class="doc-nav-link" href="#/major">专业</a></nav>
 
 <div class="publish-meta">
-  <span>更新：2026-07-03 00:23</span>
+  <span>更新：2026-07-03 00:34</span>
 </div>
 
 <div class="today-summary"><div class="summary-chip"><span>今日任务</span><strong>8 道</strong></div>
-<div class="summary-chip"><span>已完成</span><strong>0/8</strong></div>
+<div class="summary-chip"><span>已完成</span><strong>4/8</strong></div>
 <div class="summary-chip"><span>数学</span><strong>8/8</strong></div>
 <div class="summary-chip"><span>专业课</span><strong>0/5</strong></div></div>
 
@@ -23,7 +23,7 @@
 
 复习反馈：
 - [ ] Again：仍不会
-- [ ] Hard：会做但很吃力
+- [x] Hard：会做但很吃力
 - [ ] Good：能独立订正
 - [ ] Easy：熟练掌握
 
@@ -39,7 +39,7 @@
 复习反馈：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -54,7 +54,7 @@
 复习反馈：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
@@ -69,7 +69,7 @@
 复习反馈：
 - [ ] Again：仍不会
 - [ ] Hard：会做但很吃力
-- [ ] Good：能独立订正
+- [x] Good：能独立订正
 - [ ] Easy：熟练掌握
 
 ---
